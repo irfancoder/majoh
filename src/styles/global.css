@@ -1,0 +1,24 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+a.activeLink {
+  color: rgb(255, 187, 0);
+}
+
+@import "../node_modules/react-multi-carousel/lib/styles.css";
+
+@font-face {
+  font-family: "HEADING";
+  src: url("/static/fonts/D-DIN-Bold.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BODY";
+  src: url("/static/fonts/D-DIN.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
