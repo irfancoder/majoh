@@ -6,9 +6,11 @@ import Account from "./pages/account";
 import Contact from "./pages/contact";
 import Home from "./pages/home";
 import Layout from "./components/Layout";
+import ReviewCard2 from "./components/SETTINGS/SettingsCard"
 
 const App = () => {
   return (
+    
     <Router>
       <Switch>
         <Layout>
@@ -19,6 +21,7 @@ const App = () => {
         </Layout>
       </Switch>
     </Router>
+    
   );
 };
 
