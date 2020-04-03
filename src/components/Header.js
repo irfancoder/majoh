@@ -8,7 +8,6 @@ import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
@@ -16,6 +15,8 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import dimensions from "../styles/dimensions";
 import color from "../styles/color";
+
+import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -147,13 +148,16 @@ export default function PrimarySearchAppBar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="primary">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
+        <NavLink to="/paidorders">
+          <IconButton aria-label="show 4 new mails" color="primary">
+            <Badge badgeContent={4} color="secondary">
+              <MailIcon />
+            </Badge>
+          </IconButton>
+          <p>Messages</p>
+        </NavLink>
       </MenuItem>
+
       <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="primary">
           <Badge badgeContent={11} color="secondary">
