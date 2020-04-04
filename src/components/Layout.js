@@ -1,15 +1,21 @@
 import React from "react";
-import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Header from "./Header";
 import Footer from "./Footer";
+import styled from "styled-components";
+import dimensions from "../styles/dimensions";
+
+const Container = styled.div`
+  max-width: ${dimensions.maxwidthDesktop}px;
+  margin: auto;
+`;
 
 const Layout = ({ children }) => {
   return (
     <div>
       <CssBaseline />
       <Header></Header>
-      <Container maxWidth={"md"}>{children}</Container>
+      <Container>{children}</Container>
       <Footer></Footer>
     </div>
   );

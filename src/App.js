@@ -6,18 +6,19 @@ import Account from "./pages/account";
 import Contact from "./pages/contact";
 import Home from "./pages/home";
 import Layout from "./components/Layout";
+import Header from "./components/Header";
 
 const App = () => {
   return (
     <Router>
-      <Switch>
-        <Layout>
+      <Layout>
+        <Switch>
+          <Route exact path="/" component={Home} />
           <Route path="/paidorders" component={PaidOrders} />
           <Route path="/account" component={Account} />
           <Route path="/contact" component={Contact} />
-          <Route exact path="/" component={Home} />
-        </Layout>
-      </Switch>
+        </Switch>
+      </Layout>
     </Router>
   );
 };
