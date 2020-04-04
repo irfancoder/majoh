@@ -4,7 +4,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Typography from '@material-ui/core/Typography';
-import InputSettings from "./InputSettings"
+import InputContact from "./InputContact"
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
@@ -16,23 +16,23 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function SettingsCard() {
+export default function ContactCard() {
   const classes = useStyles();
   
   return (
     <>
        
             <Typography component="h1" align="left" variant="h6" color="textPrimary" gutterBottom>
-              Account Settings
+              Contact
             </Typography>
             <Card className={classes.root}>
                 <CardContent>
                      {/*Pass in to InputText Later */}
-                    <InputSettings/>
+                    <InputContact/>
                 </CardContent>
     
                 <CardActions style={{justifyContent: 'flex-end'}}>
-                    <Button>Save</Button>
+                    <Button>Submit</Button>
                 </CardActions>
             </Card>
     

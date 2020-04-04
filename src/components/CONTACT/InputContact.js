@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function InputText()
+export default function InputContact()
 {
   const [selectedValue, setSelectedValue] = React.useState('a');
   const classes = useStyles();
@@ -33,7 +33,7 @@ export default function InputText()
   };
 
     return(
-      <div classes={classes.root}>
+      <>
     <Grid container spacing={6} >
         <Grid item xs={6}>
         <p>Name</p>
@@ -58,24 +58,11 @@ export default function InputText()
           fullWidth 
           variant="filled"
         />
-
-        <FormControlLabel
-        control={
-          <Checkbox
-            checked={state.checkedB}
-            onChange={handleChangeButton}
-            name="checkedB"
-            color="primary"
-            size="small"
-          />
-        }
-        label="Receive an email"
-      />
-
+        
         </Grid>
 
         <Grid item xs={6}>
-        <p>Address</p>
+        <p>Message</p>
         <TextField
           id="filled-multiline-static"
           multiline
@@ -86,6 +73,6 @@ export default function InputText()
         </Grid>
 
      </Grid>
-     </div>
+     </>
     );
 }

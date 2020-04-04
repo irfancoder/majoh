@@ -8,7 +8,9 @@ const Account = () => {
   return(
     <div>
  
-    <SettingsCard></SettingsCard>
+    <SettingsCard>
+    
+    </SettingsCard>
 
   </div>
   );
