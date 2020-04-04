@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { fade, makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -15,8 +15,12 @@ import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import dimensions from "../styles/dimensions";
 import color from "../styles/color";
+import Button from "@material-ui/core/Button";
+import ReceiptIcon from "@material-ui/icons/Receipt";
 
-import { NavLink } from "react-router-dom";
+import Order from "./Order";
+
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -76,7 +80,10 @@ const useStyles = makeStyles(theme => ({
   sectionDesktop: {
     display: "none",
     [theme.breakpoints.up("md")]: {
-      display: "flex"
+      display: "flex",
+      width: "100%",
+      justifyContent: "space-evenly",
+      alignItems: "baseline"
     }
   },
   sectionMobile: {
@@ -92,20 +99,29 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "space-between",
     width: dimensions.maxwidthDesktop,
     margin: "auto"
+  },
+  navItem: {
+    textTransform: "uppercase",
+    fontWeight: 500
+  },
+  viewOrder: {
+    paddingLeft: "2em",
+    paddingRight: "2em"
   }
 }));
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = event => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleProfileMenuOpen = event => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -118,6 +134,17 @@ export default function PrimarySearchAppBar() {
 
   const handleMobileMenuOpen = event => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const handleDrawer = open => event => {
+    if (
+      event &&
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+    setOpenDrawer(open);
   };
 
   const menuId = "primary-search-account-menu";
@@ -148,14 +175,14 @@ export default function PrimarySearchAppBar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <NavLink to="/paidorders">
+        <Link to="/paidorders">
           <IconButton aria-label="show 4 new mails" color="primary">
             <Badge badgeContent={4} color="secondary">
               <MailIcon />
             </Badge>
           </IconButton>
           <p>Messages</p>
-        </NavLink>
+        </Link>
       </MenuItem>
 
       <MenuItem>
@@ -166,7 +193,7 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      {/* <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -176,7 +203,7 @@ export default function PrimarySearchAppBar() {
           <AccountCircleIcon />
         </IconButton>
         <p>Profile</p>
-      </MenuItem>
+      </MenuItem> */}
     </Menu>
   );
 
@@ -191,9 +218,11 @@ export default function PrimarySearchAppBar() {
               justifyContent: "center"
             }}
           >
-            <Typography className={classes.title} variant="h5" noWrap>
-              majoh
-            </Typography>
+            <Link to="/">
+              <Typography className={classes.title} variant="h5" noWrap>
+                majoh
+              </Typography>
+            </Link>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon color="action" />
@@ -210,26 +239,55 @@ export default function PrimarySearchAppBar() {
           </div>
 
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="primary">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="primary">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
+            <Link to="/paidorders">
+              <Typography className={classes.navItem} variant="subheading1">
+                paid orders
+              </Typography>
+              {/* <IconButton aria-label="show 4 new mails" color="primary">
+                <Badge badgeContent={4} color="secondary">
+                  <MailIcon />
+                </Badge>
+              </IconButton> */}
+            </Link>
+            <Link to="/account">
+              <Typography className={classes.navItem} variant="subheading1">
+                account
+              </Typography>
+              {/* <IconButton
+                aria-label="show 17 new notifications"
+                color="primary"
+              >
+                <Badge badgeContent={17} color="secondary">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton> */}
+            </Link>
+            {/* <Link to="/contact">
+              <Typography className={classes.navItem} variant="subheading1">
+                contact
+              </Typography> */}
+            {/* <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                // onClick={handleProfileMenuOpen}
+                color="primary"
+              >
+                <AccountCircleIcon />
+              </IconButton> */}
+            {/* </Link> */}
+
+            <Button
+              variant="contained"
               color="primary"
+              startIcon={<ReceiptIcon />}
+              className={classes.viewOrder}
+              onClick={handleDrawer(true)}
             >
-              <AccountCircleIcon />
-            </IconButton>
+              view order
+            </Button>
+            <Order open={openDrawer} handleDrawer={handleDrawer} />
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
@@ -244,6 +302,7 @@ export default function PrimarySearchAppBar() {
           </div>
         </Toolbar>
       </AppBar>
+
       {renderMobileMenu}
       {renderMenu}
     </div>
