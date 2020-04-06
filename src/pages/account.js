@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import SignUpModal from "../components/SETTINGS/SignUpModal";
 import SignIn from "../components/SETTINGS/SignIn";
 import { isUserLoggedIn, signOutUser } from "../utils/index";
+import Firebase from "../fire";
 
 const UserActionButton = withStyles({
   root: {},
@@ -13,7 +14,18 @@ const UserActionButton = withStyles({
 const Account = () => {
   const [user, setUser] = useState(isUserLoggedIn());
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (user === null) {
+      Firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          setUser(user);
+          console.log(user);
+        }
+      });
+    }
+  }, [user]);
+
+  console.log(user);
 
   const handleUserLogout = () => {
     signOutUser();

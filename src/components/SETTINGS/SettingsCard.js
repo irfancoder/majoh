@@ -6,7 +6,6 @@ import CardActions from "@material-ui/core/CardActions";
 import Typography from "@material-ui/core/Typography";
 import InputSettings from "./InputSettings";
 import Button from "@material-ui/core/Button";
-import { signOutUser } from "../../utils/index";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,7 +30,7 @@ const SettingsCard = ({ user, logout }) => {
       <Card className={classes.root}>
         <CardContent>
           {/*Pass in to InputText Later */}
-          <InputSettings />
+          <InputSettings user={user} />
         </CardContent>
 
         <CardActions style={{ justifyContent: "flex-end" }}>

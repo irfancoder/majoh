@@ -8,7 +8,18 @@ var ui = new firebaseui.auth.AuthUI(firebase.auth());
 const SignUpModal = () => {
   useEffect(() => {
     ui.start("#firebaseui-auth-container", {
-      signInSuccessUrl: "/",
+      // callbacks: {
+      //   signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+      //     // console.log(redirectUrl);
+      //     return console.log(authResult);
+      //   },
+      //   uiShown: function () {
+      //     // The widget is rendered.
+      //     // Hide the loader.
+      //     // document.getElementById("loader").style.display = "none";
+      //   },
+      // },
+      signInSuccessUrl: "/account",
       signInOptions: [
         firebase.auth.EmailAuthProvider.PROVIDER_ID,
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,

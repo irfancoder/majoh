@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
     [theme.breakpoints.up("md")]: {
       display: "flex",
-      width: "100%",
+      width: "100vh",
       justifyContent: "space-evenly",
       alignItems: "baseline",
     },
@@ -223,7 +223,7 @@ export default function PrimarySearchAppBar() {
                 majoh
               </Typography>
             </Link>
-            <div className={classes.search}>
+            {/* <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon color="action" />
               </div>
@@ -235,7 +235,7 @@ export default function PrimarySearchAppBar() {
                 }}
                 inputProps={{ "aria-label": "search" }}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className={classes.sectionDesktop}>
