@@ -10,6 +10,14 @@ import Checkbox from '@material-ui/core/Checkbox';
 const useStyles = makeStyles((theme) => ({
   root: {
     
+  },
+  address: {
+    marginTop: "20px"
+  }
+  ,
+  zipcode: {
+    marginLeft: "20px",
+    marginTop: "20px"
   }
 }));
 
@@ -60,6 +68,7 @@ export default function InputContact()
         />
 
         <FormControlLabel
+        className = {classes.address}
         control={
           <Checkbox
             checked={state.checkedB}
@@ -79,13 +88,41 @@ export default function InputContact()
         <TextField
           id="filled-multiline-static"
           multiline
-          rows="8"
+          label="Street"
+          rows="3"
           variant="filled"
           fullWidth 
         />
-        </Grid>
 
+        <TextField
+          className = {classes.address}
+          id="filled-multiline-static"
+          variant="filled"
+          label="City"
+          fullWidth 
+        />
+  
+        <TextField
+          style = {{width: 155}} 
+          className = {classes.address}
+          id="filled-multiline-static"
+          variant="filled"
+          label="State"
+        />
+
+
+        <TextField
+          style = {{width: 160}} 
+          className = {classes.zipcode}
+          id="filled-multiline-static"
+          variant="filled"
+          label="Zip"
+        />
+
+        </Grid>
+        
      </Grid>
      </>
     );
 }
+
