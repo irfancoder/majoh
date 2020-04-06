@@ -22,38 +22,38 @@ import Order from "./Order";
 
 import { Link } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   appBar: {
     background: "transparent",
-    boxShadow: "0 4px 8px 0 rgba(0,0,0,0);"
+    boxShadow: "0 4px 8px 0 rgba(0,0,0,0);",
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(10)
+    marginRight: theme.spacing(10),
   },
   title: {
     display: "none",
     [theme.breakpoints.up("sm")]: {
-      display: "block"
+      display: "block",
     },
-    color: color.black
+    color: color.black,
   },
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.black, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.black, 0.25)
+      backgroundColor: fade(theme.palette.common.black, 0.25),
     },
     marginRight: theme.spacing(2),
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(8),
-      width: "auto"
-    }
+      width: "auto",
+    },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
@@ -62,10 +62,10 @@ const useStyles = makeStyles(theme => ({
     pointerEvents: "none",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   inputRoot: {
-    color: color.black
+    color: color.black,
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -74,8 +74,8 @@ const useStyles = makeStyles(theme => ({
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: "20ch"
-    }
+      width: "20ch",
+    },
   },
   sectionDesktop: {
     display: "none",
@@ -83,14 +83,14 @@ const useStyles = makeStyles(theme => ({
       display: "flex",
       width: "100%",
       justifyContent: "space-evenly",
-      alignItems: "baseline"
-    }
+      alignItems: "baseline",
+    },
   },
   sectionMobile: {
     display: "flex",
     [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
+      display: "none",
+    },
   },
   toolbar: {
     paddingTop: "1.5em",
@@ -98,16 +98,16 @@ const useStyles = makeStyles(theme => ({
     display: "flex",
     justifyContent: "space-between",
     width: dimensions.maxwidthDesktop,
-    margin: "auto"
+    margin: "auto",
   },
   navItem: {
     textTransform: "uppercase",
-    fontWeight: 500
+    fontWeight: 500,
   },
   viewOrder: {
     paddingLeft: "2em",
-    paddingRight: "2em"
-  }
+    paddingRight: "2em",
+  },
 }));
 
 export default function PrimarySearchAppBar() {
@@ -132,11 +132,11 @@ export default function PrimarySearchAppBar() {
     handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = event => {
+  const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
-  const handleDrawer = open => event => {
+  const handleDrawer = (open) => (event) => {
     if (
       event &&
       event.type === "keydown" &&
@@ -215,7 +215,7 @@ export default function PrimarySearchAppBar() {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
             <Link to="/">
@@ -231,7 +231,7 @@ export default function PrimarySearchAppBar() {
                 placeholder="Try Miri"
                 classes={{
                   root: classes.inputRoot,
-                  input: classes.inputInput
+                  input: classes.inputInput,
                 }}
                 inputProps={{ "aria-label": "search" }}
               />
