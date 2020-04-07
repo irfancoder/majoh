@@ -33,7 +33,7 @@ export default function ContactCard() {
                 </CardContent>
     
                 <CardActions style={{justifyContent: 'flex-end'}}>
-                    <Button onClick={SubmitNewCreditCard}>Submit</Button>
+                    <Button>Submit</Button>
                 </CardActions>
             </Card>
     

@@ -33,7 +33,7 @@ export default function SettingsCard() {
                 </CardContent>
     
                 <CardActions style={{justifyContent: 'flex-end'}}>
-                    <Button onClick ={SubmitNewCreditCard}>Save</Button>
+                    <Button>Save</Button>
                 </CardActions>
             </Card>
     
