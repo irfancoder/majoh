@@ -9,15 +9,15 @@ import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    width: "100%",
     maxWidth: 750,
-    flexGrow: 1,
   },
 }));
 
-const SettingsCard = ({ user, logout }) => {
+const SettingsCard = ({ logout }) => {
   const classes = useStyles();
   return (
-    <div>
+    <div className={classes.root}>
       <Typography
         component="h1"
         align="left"
@@ -27,17 +27,24 @@ const SettingsCard = ({ user, logout }) => {
       >
         Account Settings
       </Typography>
-      <Card className={classes.root}>
+      <Card>
         <CardContent>
           {/*Pass in to InputText Later */}
-          <InputSettings user={user} />
+          <InputSettings />
         </CardContent>
 
         <CardActions style={{ justifyContent: "flex-end" }}>
           <Button>Save</Button>
         </CardActions>
       </Card>
-      <Button onClick={logout}>sign out</Button>
+      <Button
+        className={classes.root}
+        onClick={logout}
+        color="primary"
+        variant="contained"
+      >
+        sign out
+      </Button>
     </div>
   );
 };
