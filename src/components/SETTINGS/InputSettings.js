@@ -85,7 +85,6 @@ const InputSettings = () => {
         </Grid>
 
         <Grid item xs={6}>
-<<<<<<< HEAD
         <p>Address</p>
         <TextField
           id="filled-multiline-static"
@@ -128,20 +127,4 @@ const InputSettings = () => {
     );
 }
 
-=======
-          <p>Address</p>
-          <TextField
-            id="filled-multiline-static"
-            multiline
-            rows="8"
-            variant="filled"
-            fullWidth
-          />
-        </Grid>
-      </Grid>
-    </>
-  );
-};
-
 export default InputSettings;
->>>>>>> ef4ea97d38ba9835356bbc9f61da2ae2c923e958
