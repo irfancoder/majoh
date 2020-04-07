@@ -1,146 +1,32 @@
-import React, { useState } from "react";
-import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+import React, { useState, useEffect } from "react";
+import UserSettings from "./UserSettings";
+
 import { isUserLoggedIn } from "../../utils";
+import { useFirestoreDocData, useFirestore, SuspenseWithPerf } from "reactfire";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    
-  },
-  address: {
-    marginTop: "20px"
-  }
-  ,
-  zipcode: {
-    marginLeft: "20px",
-    marginTop: "20px"
-  }
-}));
+const InputSettings = ({ handleInput, initInput }) => {
+  const UserInfo = () => {
+    const userRef = useFirestore()
+      .collection("stripe_customers")
+      .doc(isUserLoggedIn().uid);
+    const userData = useFirestoreDocData(userRef);
 
-const InputSettings = () => {
-  const [selectedValue, setSelectedValue] = useState("a");
-  const [user, setUser] = useState(isUserLoggedIn());
-  const classes = useStyles();
-  const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
-    checkedF: true,
-    checkedG: true,
-  });
-
-  const handleChangeText = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
-  const handleChangeButton = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
-
-  // console.log(user);
-  return (
-    <>
-      <Grid container spacing={6}>
-        <Grid item xs={6}>
-          <p>Name</p>
-          <TextField
-            id="outlined-number"
-            type="string"
-            fullWidth
-            variant="outlined"
-            defaultValue={user.displayName}
-          />
-          <p>Email</p>
-          <TextField
-            id="outlined-number"
-            type="string"
-            fullWidth
-            variant="outlined"
-            defaultValue={user.email}
-          />
-
-          <p>Phone Number</p>
-          <TextField
-            id="outlined-number"
-            type="number"
-            fullWidth
-            variant="outlined"
-          />
-
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={state.checkedB}
-                onChange={handleChangeButton}
-                name="checkedB"
-                color="primary"
-                size="small"
-              />
-            }
-            label="Receive an email"
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-<<<<<<< HEAD
-        <p>Address</p>
-        <TextField
-          id="filled-multiline-static"
-          multiline
-          label="Street"
-          rows="3"
-          variant="filled"
-          fullWidth 
-        />
-
-        <TextField
-          className = {classes.address}
-          id="filled-multiline-static"
-          variant="filled"
-          label="City"
-          fullWidth 
-        />
-  
-        <TextField
-          style = {{width: 155}} 
-          className = {classes.address}
-          id="filled-multiline-static"
-          variant="filled"
-          label="State"
-        />
-
-
-        <TextField
-          style = {{width: 160}} 
-          className = {classes.zipcode}
-          id="filled-multiline-static"
-          variant="filled"
-          label="Zip"
-        />
-
-        </Grid>
-        
-     </Grid>
-     </>
+    return (
+      <UserSettings
+        userData={userData}
+        handleInput={handleInput}
+        initInput={initInput}
+      />
     );
-}
+  };
 
-=======
-          <p>Address</p>
-          <TextField
-            id="filled-multiline-static"
-            multiline
-            rows="8"
-            variant="filled"
-            fullWidth
-          />
-        </Grid>
-      </Grid>
-    </>
+  return (
+    <SuspenseWithPerf
+      fallback={<p>loading user info...</p>}
+      traceId={"load-burrito-status"}
+    >
+      <UserInfo />
+    </SuspenseWithPerf>
   );
 };
-
 export default InputSettings;
->>>>>>> ef4ea97d38ba9835356bbc9f61da2ae2c923e958
