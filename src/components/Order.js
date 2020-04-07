@@ -49,7 +49,7 @@ const Order = ({ open, handleDrawer }) => {
         <PhoneNumber />
         <DeliveryTimeDate />
         <PaymentMethod />
-        
+
         {/* <PayButton
           variant="contained"
           color="primary"

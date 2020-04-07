@@ -13,30 +13,36 @@ import SubmitNewCreditCard from '../StripeInterface';
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 750,
-    flexGrow:1,
-  }
+    flexGrow: 1,
+  },
 }));
 
-export default function SettingsCard() {
+const SettingsCard = ({ user, logout }) => {
   const classes = useStyles();
-  
   return (
-    <>
-       
-            <Typography component="h1" align="left" variant="h6" color="textPrimary" gutterBottom>
-              Account Settings
-            </Typography>
-            <Card className={classes.root}>
-                <CardContent>
-                     {/*Pass in to InputText Later */}
-                    <InputSettings/>
-                </CardContent>
-    
-                <CardActions style={{justifyContent: 'flex-end'}}>
-                    <Button>Save</Button>
-                </CardActions>
-            </Card>
-    
-    </>
+    <div>
+      <Typography
+        component="h1"
+        align="left"
+        variant="h6"
+        color="textPrimary"
+        gutterBottom
+      >
+        Account Settings
+      </Typography>
+      <Card className={classes.root}>
+        <CardContent>
+          {/*Pass in to InputText Later */}
+          <InputSettings user={user} />
+        </CardContent>
+
+        <CardActions style={{ justifyContent: "flex-end" }}>
+          <Button>Save</Button>
+        </CardActions>
+      </Card>
+      <Button onClick={logout}>sign out</Button>
+    </div>
   );
-}
+};
+
+export default SettingsCard;
