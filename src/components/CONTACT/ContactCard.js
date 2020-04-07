@@ -8,6 +8,7 @@ import InputContact from "./InputContact"
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
+import SubmitNewCreditCard from '../StripeInterface'
 
 const useStyles = makeStyles((theme) => ({
   root: {

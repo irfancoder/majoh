@@ -7,7 +7,17 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { isUserLoggedIn } from "../../utils";
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    
+  },
+  address: {
+    marginTop: "20px"
+  }
+  ,
+  zipcode: {
+    marginLeft: "20px",
+    marginTop: "20px"
+  }
 }));
 
 const InputSettings = () => {
@@ -74,6 +84,50 @@ const InputSettings = () => {
         </Grid>
 
         <Grid item xs={6}>
+<<<<<<< HEAD
+        <p>Address</p>
+        <TextField
+          id="filled-multiline-static"
+          multiline
+          label="Street"
+          rows="3"
+          variant="filled"
+          fullWidth 
+        />
+
+        <TextField
+          className = {classes.address}
+          id="filled-multiline-static"
+          variant="filled"
+          label="City"
+          fullWidth 
+        />
+  
+        <TextField
+          style = {{width: 155}} 
+          className = {classes.address}
+          id="filled-multiline-static"
+          variant="filled"
+          label="State"
+        />
+
+
+        <TextField
+          style = {{width: 160}} 
+          className = {classes.zipcode}
+          id="filled-multiline-static"
+          variant="filled"
+          label="Zip"
+        />
+
+        </Grid>
+        
+     </Grid>
+     </>
+    );
+}
+
+=======
           <p>Address</p>
           <TextField
             id="filled-multiline-static"
@@ -89,3 +143,4 @@ const InputSettings = () => {
 };
 
 export default InputSettings;
+>>>>>>> ef4ea97d38ba9835356bbc9f61da2ae2c923e958
