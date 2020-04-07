@@ -8,6 +8,7 @@ import InputSettings from "./InputSettings"
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
+import SubmitNewCreditCard from '../StripeInterface';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,7 +33,7 @@ export default function SettingsCard() {
                 </CardContent>
     
                 <CardActions style={{justifyContent: 'flex-end'}}>
-                    <Button>Save</Button>
+                    <Button onClick ={SubmitNewCreditCard}>Save</Button>
                 </CardActions>
             </Card>
     
