@@ -4,12 +4,20 @@ import SettingsCard from "../components/SETTINGS/SettingsCard";
 import Button from "@material-ui/core/Button";
 import SignUpModal from "../components/SETTINGS/SignUpModal";
 import SignIn from "../components/SETTINGS/SignIn";
+import MuiContainer from "@material-ui/core/Container";
 import { isUserLoggedIn, signOutUser } from "../utils/index";
 import Firebase from "../fire";
 
 const UserActionButton = withStyles({
   root: {},
 })(Button);
+
+const Container = withStyles({
+  root: {
+    display: "flex",
+    justifyContent: "center",
+  },
+})(MuiContainer);
 
 const Account = () => {
   const [user, setUser] = useState(isUserLoggedIn());
@@ -33,13 +41,13 @@ const Account = () => {
   };
 
   return (
-    <div>
+    <Container>
       {user !== null ? (
-        <SettingsCard user={user} logout={handleUserLogout} />
+        <SettingsCard logout={handleUserLogout} />
       ) : (
         <SignUpModal />
       )}
-    </div>
+    </Container>
   );
 };
 

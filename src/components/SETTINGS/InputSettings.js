@@ -48,7 +48,6 @@ const InputSettings = () => {
           <TextField
             id="outlined-number"
             type="string"
-            label="name"
             fullWidth
             variant="outlined"
             defaultValue={user.displayName}
