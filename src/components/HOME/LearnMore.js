@@ -68,6 +68,7 @@ const LearnMore = ({ data }) => {
   return (
     <div>
       <Button
+        style={{ width: "100%" }}
         size="small"
         variant="contained"
         color="primary"

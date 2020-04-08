@@ -15,7 +15,7 @@ import instance from "../../fire";
 
 const MenuContainer = styled(Container)`
   margin-top: 2em;
-  margin-bottom: 6em;
+  margin-bottom: 2em;
 `;
 const HeaderContainer = styled.div`
   display: flex;
