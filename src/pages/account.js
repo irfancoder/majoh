@@ -7,7 +7,8 @@ import SignIn from "../components/SETTINGS/SignIn";
 import MuiContainer from "@material-ui/core/Container";
 import { isUserLoggedIn, signOutUser } from "../utils/index";
 import Firebase from "../fire";
-import StripeTest from "../components/StripeTest"
+import StripeComponent from "../components/StripeTest"
+import StripeTest from "../components/StripeTest";
 
 const UserActionButton = withStyles({
   root: {},
@@ -40,7 +41,13 @@ const Account = () => {
     signOutUser();
     setUser(null);
   };
-
+  const obj = {
+      quantity: 3,
+      amount: 15000,
+      name: "nasi rendang",
+      desc: "good all stuff", 
+      customerEmail: "marcosjconcon@gmail.com"
+  }
   return (
     <Container>
       {/*
@@ -50,7 +57,7 @@ const Account = () => {
         <SignUpModal />
       )}
       */}
-      <StripeTest></StripeTest>
+      <StripeComponent orders= {obj}/>
     </Container>
   );
 };
