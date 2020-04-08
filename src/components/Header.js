@@ -287,8 +287,8 @@ export default function PrimarySearchAppBar() {
             >
               view order
             </Button>
-            
-            {/*<Order open={openDrawer} handleDrawer={handleDrawer} />*/}
+
+            <Order open={openDrawer} handleDrawer={handleDrawer} />
           </div>
           <div className={classes.sectionMobile}>
             <IconButton

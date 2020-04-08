@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
-import Paper from "@material-ui/core/Paper";
+import {
+  useFirestoreCollectionData,
+  useFirestore,
+  SuspenseWithPerf,
+} from "reactfire";
+
 import Grid from "@material-ui/core/Grid";
 import styled from "styled-components";
 import ChildMenu from "./ChildMenu";
+import Firebase from "firebase";
+import instance from "../../fire";
 
 const MenuContainer = styled(Container)`
   margin-top: 2em;
@@ -21,9 +28,25 @@ const MenuTitle = styled(Typography)``;
 const DeliveryTimes = styled(Typography)`
   margin-left: 2em;
 `;
-const sample = [0, 1, 2, 3, 4, 5];
 
 const ParentMenu = ({ menu }) => {
+  const MenuData = () => {
+    const menuRef = useFirestore()
+      .collection("vendor")
+      .doc(" k8oheqc44eknonnybq8")
+      .collection("menu");
+
+    const dataMenu = useFirestoreCollectionData(menuRef);
+
+    return dataMenu.map((item, index) => {
+      return (
+        <Grid key={index} item xs={4}>
+          <ChildMenu menu={item} />
+        </Grid>
+      );
+    });
+  };
+
   return (
     <MenuContainer maxWidth="md">
       <HeaderContainer>
@@ -32,14 +55,14 @@ const ParentMenu = ({ menu }) => {
           {menu.start} - {menu.end}
         </DeliveryTimes>
       </HeaderContainer>
+
       <Grid container direction="row" justify="flex-start" xs={12} spacing={2}>
-        {sample.map((value, index) => {
-          return (
-            <Grid key={value} item xs={4}>
-              <ChildMenu />
-            </Grid>
-          );
-        })}
+        <SuspenseWithPerf
+          fallback={<p>loading delicious food</p>}
+          traceId={"load-burrito-status"}
+        >
+          <MenuData />
+        </SuspenseWithPerf>
       </Grid>
     </MenuContainer>
   );
