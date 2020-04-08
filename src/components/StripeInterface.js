@@ -1,29 +1,55 @@
+import React, { useEffect, useState } from "react";
+import { Button } from "@material-ui/core";
 
-import React from 'react';
-import firebase from '../fire';
-//var stripe = require('stripe')('pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU');
-//const stripe = require('stripe')(functions.config().stripe.token);
-var stripe = require('stripe')('sk_test_nozLmYBJO6jnsYSzz1aAY2ob00jGWsyG3H');
+/*
+  A typical customer object to be passed to stripe checkout 
+  const obj = {
+      currency: "myr",
+      quantity: 3,
+      amount: 15000,
+      name: "nasi rendang",
+      desc: "good all stuff", 
+      imageurl: "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
+      customerEmail: "marcosjconcon@gmail.com",
+  }
+  Use as a component
+   <StripeComponent orders= {obj}/>
 
-const SubmitNewCreditCard = ({cardDetails}) => {
-    /*
-    const [cardDetails, setCardDetails] = React.useState({
-        number: "",
-        exp_month: 0,
-        exp_year:0,
-        cvc:""
-    });
-    */
-   let paymentIntent;
-   (async () => {
-    paymentIntent = await stripe.paymentIntents.create({
-      amount: 1000,
-      currency: 'myr',
-      payment_method_types: ['card'],
-      receipt_email: 'jenny.rosen@example.com',
-    });
-  })();
-  console.log(paymentIntent)
+*/
+function StripeComponent({orders}){
+  //const stripe =   window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
+  const redirect = () => 
+  {
+    console.log("hi")
+    let sessionId;
+    const stripe =   window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
+    fetch("https://us-central1-majoh-8eea2.cloudfunctions.net/createOrderAndSession", {
+      method: "POST",
+      // Adding the order data to payload
+      body: JSON.stringify(orders)
+      }).then(response => {
+        return response.json();
+      }).then(data => {
+        // Getting the session id from firebase function
+        var body = JSON.parse(data.body);
+        return sessionId = body.sessionId;
+      }).then(sessionId => {
+        // Redirecting to payment form page
+        stripe.redirectToCheckout({
+          sessionId: sessionId
+        }).then(function (result) {
+          console.log(result.error.message)
+        });
+      });
+  }
+
+  return(
+    <div>
+      <Button onClick={redirect}>Checkout with Stripe</Button>
+    </div>
+
+  );
+
 }
 
-export default SubmitNewCreditCard;
+export default StripeComponent;
