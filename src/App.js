@@ -9,8 +9,6 @@ import Home from "./pages/home";
 import Layout from "./components/Layout";
 import Header from "./components/Header";
 
-<<<<<<< HEAD
-=======
 const firebaseConfig = {
   apiKey: "AIzaSyD0rkPJ6JfDKlHDaKhnzSogAJQk-0y47Mk",
   authDomain: "majoh-8eea2.firebaseapp.com",
@@ -21,7 +19,6 @@ const firebaseConfig = {
   appId: "1:692387040291:web:8421eda8a518b95d70b596",
   measurementId: "G-9M3WZRWZNB",
 };
->>>>>>> d4088b0c6e26a07628c0defa1fa3ebe8703a577b
 
 const App = () => {
   return (
