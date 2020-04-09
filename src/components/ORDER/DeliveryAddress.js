@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
+import { useFirestoreDocData, useFirestore, SuspenseWithPerf } from "reactfire";
+import { isUserLoggedIn } from "../../utils";
+import { Link } from "react-router-dom";
+
 const useStyles = makeStyles({
   root: {
     width: "100%",
@@ -17,6 +21,26 @@ const useStyles = makeStyles({
 
 const DeliveryAddress = () => {
   const classes = useStyles();
+
+  const Address = () => {
+    const userRef = useFirestore()
+      .collection("stripe_customers")
+      .doc(isUserLoggedIn().uid);
+    const userData = useFirestoreDocData(userRef);
+
+    return userData.street ? (
+      <Typography variant="body2" component="p">
+        {userData.street}
+        <br />
+        <span>
+          {userData.postcode}, {userData.city}, {userData.state}
+        </span>
+      </Typography>
+    ) : (
+      <Typography variant="body">Fill your address in Account.</Typography>
+    );
+  };
+
   return (
     <Card className={classes.root}>
       <CardContent>
@@ -27,15 +51,21 @@ const DeliveryAddress = () => {
         >
           Delivery Address
         </Typography>
-
-        <Typography variant="body2" component="p">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
-        </Typography>
+        {isUserLoggedIn() ? (
+          <SuspenseWithPerf
+            fallback={<p>loading user info...</p>}
+            traceId={"load-burrito-status"}
+          >
+            <Address />
+          </SuspenseWithPerf>
+        ) : (
+          <Typography variant="body">Sign in/up at Account</Typography>
+        )}
       </CardContent>
       <CardActions className={classes.action}>
-        <Button size="small">edit</Button>
+        <Link to="/account">
+          <Button size="small">edit</Button>
+        </Link>
       </CardActions>
     </Card>
   );

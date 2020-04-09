@@ -14,7 +14,7 @@ let db = admin.firestore();
 function send(res, code, body) {
   res.send({
     statusCode: code,
-    headers: {'Access-Control-Allow-Origin': '*'},
+    headers: { "Access-Control-Allow-Origin": "*" },
     body: JSON.stringify(body),
   });
 }
@@ -63,10 +63,10 @@ function createOrderAndSession(req, res) {
   });
 }
 // Creating a route
-createOrderAndSessionApp.post('/', (req, res) => {
+createOrderAndSessionApp.post("/", (req, res) => {
   try {
     createOrderAndSession(req, res);
-  } catch(e) {
+  } catch (e) {
     console.log(e);
     send(res, 500, {
       error: `The server received an unexpected error. Please try again and contact the site admin if the error persists.`,
@@ -74,20 +74,37 @@ createOrderAndSessionApp.post('/', (req, res) => {
   }
 });
 // Exporting our http function
-exports.createOrderAndSession = functions.https.onRequest(createOrderAndSessionApp);
-
+exports.createOrderAndSession = functions.https.onRequest(
+  createOrderAndSessionApp
+);
 
 const endpointSecret = "whsec_t2vF9aXdSvhdxu6JbGgTFARQt6Ms5OUt";
 // Our app has to use express
 const processTheOrderApp = express();
-processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (request, response) => {
-  const sig = request.headers['stripe-signature'];
-  let event;
-  try {
-    event = stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
-  } catch (err) {
-    console.log(err);
-    return response.status(400).send(`Webhook Error: ${err.message}`);
+processTheOrderApp.post(
+  "/",
+  bodyParser.raw({ type: "application/json" }),
+  (request, response) => {
+    const sig = request.headers["stripe-signature"];
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(
+        request.rawBody,
+        sig,
+        endpointSecret
+      );
+    } catch (err) {
+      console.log(err);
+      return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+    // Handle the checkout.session.completed event
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      // Here we can proccess the order data after successfull payment
+      // (e.g. change payment status in Firebase Database and call another function)
+    }
+    // Return a response to acknowledge receipt of the event
+    response.json({ received: true });
   }
   // Handle the checkout.session.completed event
   if (event.type === 'checkout.session.completed') {

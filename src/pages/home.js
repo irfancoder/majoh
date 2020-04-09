@@ -9,7 +9,6 @@ import {
   SuspenseWithPerf,
 } from "reactfire";
 import { groupBy } from "../utils";
-import { OrderConsumer } from "../utils/context";
 
 const MenuHeader = styled(Typography)`
   text-transform: uppercase;

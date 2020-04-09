@@ -6,9 +6,13 @@ import OrderList from "./ORDER/OrderList";
 import DeliveryAddress from "./ORDER/DeliveryAddress";
 import DeliveryTimeDate from "./ORDER/DeliveryTimeDate";
 import PhoneNumber from "./ORDER/PhoneNumber";
-import PaymentMethod from "./ORDER/PaymentMethod";
+
 import Button from "@material-ui/core/Button";
 import { OrderConsumer } from "../utils/context";
+import StripeButton from "./StripeInterface";
+
+import { useFirestoreDocData, useFirestore, SuspenseWithPerf } from "reactfire";
+import { isUserLoggedIn } from "../utils";
 // import { makeStyles } from "@material-ui/core/styles";
 
 import styled from "styled-components";
@@ -29,7 +33,44 @@ const PayButton = withStyles({
   },
 })(Button);
 
+const obj = {
+  currency: "myr",
+  quantity: 3,
+  amount: 15000,
+  name: "nasi rendang",
+  desc: "good all stuff",
+  imageurl:
+    "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
+  customerEmail: "marcosjconcon@gmail.com",
+};
+
 const Order = ({ open, handleDrawer }) => {
+  const [deliveryDate, setDeliveryDate] = useState("");
+
+  const handleSetDate = (date) => {
+    setDeliveryDate(date.toLocaleString().split(",")[0]);
+  };
+
+  const Stripe = ({ context }) => {
+    const userRef = useFirestore()
+      .collection("stripe_customers")
+      .doc(isUserLoggedIn().uid);
+    const userData = useFirestoreDocData(userRef);
+
+    const purchaseOrder = {
+      currency: "myr",
+      quantity: 1,
+      amount: 20000,
+      name: "nasi rendang",
+      desc: "good all stuff",
+      imageurl:
+        "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
+      customerEmail: userData.email,
+    };
+
+    return <StripeButton orders={purchaseOrder} />;
+  };
+
   return (
     <OrderConsumer>
       {(context) => {
@@ -45,18 +86,18 @@ const Order = ({ open, handleDrawer }) => {
               <OrderList order={context.order} />
               <DeliveryAddress />
               <PhoneNumber />
-              <DeliveryTimeDate />
-              <PaymentMethod />
+              <DeliveryTimeDate handleSetDate={handleSetDate} />
 
-              <PayButton
-                variant="contained"
-                color="primary"
-                disableElevation
-                size="large"
-                onClick={context.addOrder}
-              >
-                pay
-              </PayButton>
+              {isUserLoggedIn() ? (
+                <SuspenseWithPerf
+                  fallback={<p>loading user info...</p>}
+                  traceId={"load-burrito-status"}
+                >
+                  <Stripe context={context} />
+                </SuspenseWithPerf>
+              ) : (
+                <StripeButton disabled />
+              )}
             </Container>
           </SwipeableDrawer>
         );
