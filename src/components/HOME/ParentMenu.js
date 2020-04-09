@@ -29,40 +29,24 @@ const DeliveryTimes = styled(Typography)`
   margin-left: 2em;
 `;
 
-const ParentMenu = ({ menu }) => {
-  const MenuData = () => {
-    const menuRef = useFirestore()
-      .collection("vendor")
-      .doc(" k8oheqc44eknonnybq8")
-      .collection("menu");
-
-    const dataMenu = useFirestoreCollectionData(menuRef);
-
-    return dataMenu.map((item, index) => {
-      return (
-        <Grid key={index} item xs={4}>
-          <ChildMenu menu={item} />
-        </Grid>
-      );
-    });
-  };
-
+const ParentMenu = ({ meal, menu }) => {
   return (
     <MenuContainer maxWidth="md">
       <HeaderContainer>
-        <MenuTitle variant="h6">{menu.title}</MenuTitle>
+        <MenuTitle variant="h6">{meal.title}</MenuTitle>
         <DeliveryTimes variant="subtitle2">
-          {menu.start} - {menu.end}
+          {meal.start} - {meal.end}
         </DeliveryTimes>
       </HeaderContainer>
 
       <Grid container direction="row" justify="flex-start" xs={12} spacing={2}>
-        <SuspenseWithPerf
-          fallback={<p>loading delicious food</p>}
-          traceId={"load-burrito-status"}
-        >
-          <MenuData />
-        </SuspenseWithPerf>
+        {menu.map((item, index) => {
+          return (
+            <Grid key={index} item xs={4}>
+              <ChildMenu menu={item} />
+            </Grid>
+          );
+        })}
       </Grid>
     </MenuContainer>
   );

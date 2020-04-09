@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -8,6 +8,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import LearnMore from "./LearnMore";
+import { OrderConsumer } from "../../utils/context";
 const useStyles = makeStyles({
   root: {
     marginBottom: "1em",
@@ -45,15 +46,24 @@ const ChildMenu = ({ menu }) => {
         </CardContent>
       </CardActionArea>
       <CardActions className={classes.buttonAction}>
-        <Button
-          size="small"
-          variant="outlined"
-          color="primary"
-          disableElevation
-        >
-          Order
-        </Button>
-        <LearnMore data={menu} />
+        <OrderConsumer>
+          {(context) => {
+            return (
+              <Fragment>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  disableElevation
+                  onClick={() => context.addOrder(menu)}
+                >
+                  Order
+                </Button>
+                <LearnMore data={menu} addOrder={context.addOrder} />
+              </Fragment>
+            );
+          }}
+        </OrderConsumer>
       </CardActions>
     </Card>
   );

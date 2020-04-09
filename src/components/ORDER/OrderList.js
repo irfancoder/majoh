@@ -8,6 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
+import { OrderConsumer } from "../../utils/context";
 
 const TAX_RATE = 0.0;
 
@@ -49,21 +50,15 @@ function createRow(desc, qty, unit) {
   return { desc, qty, unit, price };
 }
 
-function subtotal(items) {
-  return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
-}
+// function subtotal(items) {
+//   return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
+// }
 
-const rows = [
-  createRow("Paperclips (Box)", 100, 1.15),
-  createRow("Paper (Case)", 10, 45.99),
-  createRow("Waste Basket", 2, 17.99),
-];
+// const invoiceSubtotal = subtotal(rows);
+// const invoiceTaxes = TAX_RATE * invoiceSubtotal;
+// const invoiceTotal = invoiceTaxes + invoiceSubtotal;
 
-const invoiceSubtotal = subtotal(rows);
-const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-const invoiceTotal = invoiceTaxes + invoiceSubtotal;
-
-const OrderList = () => {
+const OrderList = ({ order }) => {
   const classes = useStyles();
 
   return (
@@ -79,49 +74,78 @@ const OrderList = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.desc}>
-              <TableCell align="center">
-                <TextField
-                  className={classes.qty}
-                  id="filled-number"
-                  type="number"
-                  size="small"
-                  defaultValue={row.qty}
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="standard"
-                  InputProps={{ classes }}
-                />
-                x
-              </TableCell>
-              <TableCell>{row.desc}</TableCell>
-
-              <TableCell align="right">{row.unit}</TableCell>
-              <TableCell align="right">{ccyFormat(row.price)}</TableCell>
-            </TableRow>
-          ))}
-
-          <TableRow>
-            <TableCell rowSpan={3} />
-            <TableCell colSpan={2}>Subtotal</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceSubtotal)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>Tax</TableCell>
-            <TableCell align="right">{`${(TAX_RATE * 100).toFixed(
-              0
-            )} %`}</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceTaxes)}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={2}>Total</TableCell>
-            <TableCell align="right">{ccyFormat(invoiceTotal)}</TableCell>
-          </TableRow>
+          {order.map((item) => {
+            return <OrderItem item={item} classes={classes} />;
+          })}
+          <OrderConsumer>
+            {(context) => {
+              return (
+                <React.Fragment>
+                  <TableRow>
+                    <TableCell rowSpan={3} />
+                    <TableCell colSpan={2}>Subtotal</TableCell>
+                    <TableCell align="right">
+                      {context.invoice.subtotal}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Tax</TableCell>
+                    <TableCell align="right">{`${(TAX_RATE * 100).toFixed(
+                      0
+                    )} %`}</TableCell>
+                    <TableCell align="right">{context.invoice.tax}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell colSpan={2}>Total</TableCell>
+                    <TableCell align="right">{context.invoice.total}</TableCell>
+                  </TableRow>
+                </React.Fragment>
+              );
+            }}
+          </OrderConsumer>
         </TableBody>
       </Table>
     </TableContainer>
+  );
+};
+
+const OrderItem = ({ item, classes }) => {
+  return (
+    <OrderConsumer>
+      {(context) => {
+        return (
+          <TableRow key={item.item}>
+            <TableCell align="center">
+              <TextField
+                className={classes.qty}
+                id="filled-number"
+                type="number"
+                size="small"
+                defaultValue={item.qty}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="standard"
+                InputProps={{
+                  classes,
+                  inputProps: {
+                    max: 10,
+                    min: 0,
+                  },
+                }}
+                onChange={(e) =>
+                  context.editOrder({ item: item, qty: e.target.value })
+                }
+              />
+              x
+            </TableCell>
+            <TableCell>{item.item}</TableCell>
+            <TableCell align="right">{item.price}</TableCell>
+            <TableCell align="right">{ccyFormat(item.total)}</TableCell>
+          </TableRow>
+        );
+      }}
+    </OrderConsumer>
   );
 };
 

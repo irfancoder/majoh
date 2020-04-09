@@ -50,7 +50,7 @@ const Thumbnail = styled.img`
   width: 100%;
 `;
 
-const LearnMore = ({ data }) => {
+const LearnMore = ({ data, addOrder }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [menu, setMenu] = React.useState({});
@@ -62,8 +62,6 @@ const LearnMore = ({ data }) => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  console.log(data);
 
   return (
     <div>
@@ -124,6 +122,7 @@ const LearnMore = ({ data }) => {
             variant="outlined"
             color="primary"
             disableElevation
+            onClick={() => addOrder(menu)}
           >
             Order
           </Button>

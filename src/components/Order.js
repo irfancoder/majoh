@@ -8,6 +8,7 @@ import DeliveryTimeDate from "./ORDER/DeliveryTimeDate";
 import PhoneNumber from "./ORDER/PhoneNumber";
 import PaymentMethod from "./ORDER/PaymentMethod";
 import Button from "@material-ui/core/Button";
+import { OrderConsumer } from "../utils/context";
 // import { makeStyles } from "@material-ui/core/styles";
 
 import styled from "styled-components";
@@ -28,38 +29,39 @@ const PayButton = withStyles({
   },
 })(Button);
 
-// const useStyles = makeStyles(() => ({
-//   title: {
-//     fontWeight: 500
-//   }
-// }));
-
 const Order = ({ open, handleDrawer }) => {
   return (
-    <SwipeableDrawer
-      anchor={anchor}
-      open={open}
-      onClose={handleDrawer(false)}
-      onOpen={handleDrawer(true)}
-    >
-      <Container>
-        <Typography variant="h5">My Orders</Typography>
-        <OrderList />
-        <DeliveryAddress />
-        <PhoneNumber />
-        <DeliveryTimeDate />
-        <PaymentMethod />
+    <OrderConsumer>
+      {(context) => {
+        return (
+          <SwipeableDrawer
+            anchor={anchor}
+            open={open}
+            onClose={handleDrawer(false)}
+            onOpen={handleDrawer(true)}
+          >
+            <Container>
+              <Typography variant="h5">My Orders</Typography>
+              <OrderList order={context.order} />
+              <DeliveryAddress />
+              <PhoneNumber />
+              <DeliveryTimeDate />
+              <PaymentMethod />
 
-        {/* <PayButton
-          variant="contained"
-          color="primary"
-          disableElevation
-          size="large"
-        >
-          pay
-        </PayButton> */}
-      </Container>
-    </SwipeableDrawer>
+              <PayButton
+                variant="contained"
+                color="primary"
+                disableElevation
+                size="large"
+                onClick={context.addOrder}
+              >
+                pay
+              </PayButton>
+            </Container>
+          </SwipeableDrawer>
+        );
+      }}
+    </OrderConsumer>
   );
 };
 
