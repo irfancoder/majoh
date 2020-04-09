@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors')({origin: true});
 const express = require('express');
 const stripe = require('stripe')(functions.config().stripe.token);
+var app = admin.initializeApp(functions.config().firebase);
 let db = admin.firestore();
 //const { MessengerClient } = require('messaging-api-messenger');
 
