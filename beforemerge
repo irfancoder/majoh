@@ -102,5 +102,149 @@ processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (reques
 // Exporting our http function
 exports.processTheOrder = functions.https.onRequest(processTheOrderApp);
 
+//
+
+import React, { useEffect, useState } from "react";
+import { Button } from "@material-ui/core";
+
+/*
+  A typical customer object to be passed to stripe checkout 
+  const obj = {
+      currency: "myr",
+      quantity: 3,
+      amount: 15000,
+      name: "nasi rendang",
+      desc: "good all stuff", 
+      imageurl: "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
+      customerEmail: "marcosjconcon@gmail.com",
+  }
+
+  Use as a component
+   <StripeComponent orders= {obj}/>
+
+*/
+function StripeComponent({orders}){
+  //const stripe =   window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
+  const redirect = () => 
+  {
+    let sessionId;
+    const stripe = window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
+    fetch("https://us-central1-majoh-8eea2.cloudfunctions.net/createOrderAndSession", {
+      method: "POST",
+      // Adding the order data to payload
+      body: JSON.stringify(orders)
+      }).then(response => {
+        return response.json();
+      }).then(data => {
+        // Getting the session id from firebase function
+        var body = JSON.parse(data.body);
+        return sessionId = body.sessionId;
+      }).then(sessionId => {
+        // Redirecting to payment form page
+        stripe.redirectToCheckout({
+          sessionId: sessionId
+        }).then(function (result) {
+          console.log(result.error.message)
+        });
+      });
+  }
+
+  return(
+    <div>
+      <Button onClick={redirect}>Checkout with Stripe</Button>
+    </div>
+
+  );
+
+}
+
+export default StripeComponent;
+
+import React, { useState, useEffect } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import SettingsCard from "../components/SETTINGS/SettingsCard";
+import Button from "@material-ui/core/Button";
+import SignUpModal from "../components/SETTINGS/SignUpModal";
+import SignIn from "../components/SETTINGS/SignIn";
+import MuiContainer from "@material-ui/core/Container";
+import { isUserLoggedIn, signOutUser } from "../utils/index";
+import Firebase from "../fire";
+import StripeComponent from "../components/StripeInterface";
+
+const UserActionButton = withStyles({
+  root: {},
+})(Button);
+
+const Container = withStyles({
+  root: {
+    display: "flex",
+    justifyContent: "center",
+  },
+})(MuiContainer);
+
+const Account = () => {
+  const [user, setUser] = useState(isUserLoggedIn());
+
+  useEffect(() => {
+    if (user === null) {
+      Firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          setUser(user);
+          console.log(user);
+        }
+      });
+    }
+  }, [user]);
+
+  console.log(user);
+
+  const handleUserLogout = () => {
+    signOutUser();
+    setUser(null);
+  };
+
+  const obj = {
+    customer_email: "marcosjconcon@gmail.com",
+    metadata: {'test': 'hello'},
+    order_items:[
+    {
+    currency: "myr",
+    quantity: 3,
+    amount: 15000,
+    name: "nasi rendang",
+    description: "good all stuff", 
+    images: ["https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg"],
+    },
+    {
+      currency: "myr",
+      quantity: 7,
+      amount: 15000,
+      name: "nasi rendang",
+      description: "good not stuff", 
+      images: ["https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg"],
+      }
+    ]
+}
+
+  return (
+    
+    <Container>
+      <StripeComponent orders = {obj}/>
+      {/*
+      {user !== null ? (
+        <SettingsCard logout={handleUserLogout} />
+      ) : (
+        <SignUpModal />
+      )}
+      */}
+    </Container>
+  
+    
+  );
+};
+
+export default Account;
+
+
 
 
