@@ -66,7 +66,7 @@ const OrderList = ({ order }) => {
       <Table className={classes.table} aria-label="spanning table">
         <TableHead>
           <TableRow>
-            <TableCell align="center">Qty.</TableCell>
+            <TableCell align="center">Qty</TableCell>
             <TableCell>Desc</TableCell>
 
             <TableCell align="right">Unit</TableCell>

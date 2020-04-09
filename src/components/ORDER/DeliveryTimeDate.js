@@ -5,9 +5,16 @@ import Typography from "@material-ui/core/Typography";
 
 import CardContent from "@material-ui/core/CardContent";
 
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from "@material-ui/pickers";
+
 const useStyles = makeStyles({
   root: {
     width: "100%",
+    boxShadow: 0,
   },
   action: {
     display: "flex",
@@ -15,24 +22,53 @@ const useStyles = makeStyles({
   },
 });
 
-const DeliveryTimeDate = () => {
+const DeliveryTimeDate = ({ handleSetDate }) => {
   const classes = useStyles();
   return (
-    <Card className={classes.root}>
-      <CardContent>
-        <Typography
-          className={classes.title}
-          color="textSecondary"
-          gutterBottom
-        >
-          Delivery Time &amp; Date
-        </Typography>
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <Card className={classes.root}>
+        <CardContent>
+          <Typography
+            className={classes.title}
+            color="textSecondary"
+            gutterBottom
+          >
+            Delivery Time &amp; Date
+          </Typography>
 
-        <Typography variant="body2" component="p">
-          All deliveries will be made within the following timeframe:
-        </Typography>
-      </CardContent>
-    </Card>
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="dd/MM/yyyy"
+            margin="normal"
+            id="date-picker-inline"
+            label="Date"
+            onChange={(e) => handleSetDate(e)}
+            defaultValue={new Date()}
+            KeyboardButtonProps={{
+              "aria-label": "change date",
+            }}
+          />
+
+          <Typography
+            variant="body2"
+            gutterBottom
+            style={{ marginTop: "1em", fontWeight: "500" }}
+          >
+            Deliveries will be made within the following timeframe:
+          </Typography>
+          <Typography
+            variant="body2"
+            gutterBottom
+            style={{ marginLeft: "2em" }}
+          >
+            <p>BREAKFAST - 8AM-9AM</p>
+            <p>LUNCH - 11AM-12PM</p>
+            <p>DINNER - 5PM-6PM</p>
+          </Typography>
+        </CardContent>
+      </Card>
+    </MuiPickersUtilsProvider>
   );
 };
 
