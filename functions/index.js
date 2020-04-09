@@ -1,10 +1,14 @@
+const admin = require('firebase-admin');
 const functions = require('firebase-functions');
 // We should install required packages (stripe, body-parser) using npm install inside /functions/ folder
 const bodyParser = require('body-parser');
 const cors = require('cors')({origin: true});
 const express = require('express');
+const stripe = require('stripe')(functions.config().stripe.token);
+let db = admin.firestore();
+//const { MessengerClient } = require('messaging-api-messenger');
+
 // Secret Key from Stripe Dashboard
-const stripe = require('stripe')('sk_test_nozLmYBJO6jnsYSzz1aAY2ob00jGWsyG3H');
 // The function for sending responses
 function send(res, code, body) {
   res.send({
@@ -25,11 +29,11 @@ function createOrderAndSession(req, res) {
   const quantity = body.quantity;
   const amount = body.amount;
   const name = body.name;
-  const description = body.description;
+  const description = body.desc;
   let images = [];
-  images[0] = body.image;
+  images[0] = body.imageurl;
   const customerEmail = body.customerEmail;
-  const clientId = body.clientId;
+  const metaData = body.metadata
   // Also we can process the order data, e.g. save it to firebase database
   // Creating session using the data above
   stripe.checkout.sessions.create({
@@ -42,12 +46,13 @@ function createOrderAndSession(req, res) {
       currency: currency,
       quantity: quantity,
     }],
-    client_reference_id: clientId,
     customer_email: customerEmail,
-    // We will add the only app page for simplicity
-    success_url: 'https://localhost:3000/',
-    cancel_url: 'https://localhost:3000/',
+    metadata: metaData,
+    /* Redirect them to these URLS */
+    success_url: 'https://majoh-8eea2.web.app/',
+    cancel_url: 'https://majoh-8eea2.web.app/',
   }).then(session => {
+    
   // Getting the session id
   var sessionId = session.id;
   // Here we can do something with the session id, e.g. add it to the order data in firebase database
@@ -91,11 +96,15 @@ processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (reques
   // Handle the checkout.session.completed event
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-    // Here we can proccess the order data after successfull payment
-    // (e.g. change payment status in Firebase Database and call another function)
+    // Test, here we can proccess the order data after successfull payment
+    let firestoreRef = db.collection('test-stripe').doc('2owIIqom5dCfVeDpr4PC');
+    firestoreRef.set(session);
   }
   // Return a response to acknowledge receipt of the event
   response.json({received: true});
 });
 // Exporting our http function
 exports.processTheOrder = functions.https.onRequest(processTheOrderApp);
+
+
+

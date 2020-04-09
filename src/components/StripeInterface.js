@@ -12,6 +12,7 @@ import { Button } from "@material-ui/core";
       imageurl: "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
       customerEmail: "marcosjconcon@gmail.com",
   }
+
   Use as a component
    <StripeComponent orders= {obj}/>
 
@@ -20,9 +21,8 @@ function StripeComponent({orders}){
   //const stripe =   window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
   const redirect = () => 
   {
-    console.log("hi")
     let sessionId;
-    const stripe =   window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
+    const stripe = window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
     fetch("https://us-central1-majoh-8eea2.cloudfunctions.net/createOrderAndSession", {
       method: "POST",
       // Adding the order data to payload
