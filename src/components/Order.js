@@ -6,13 +6,14 @@ import OrderList from "./ORDER/OrderList";
 import DeliveryAddress from "./ORDER/DeliveryAddress";
 import DeliveryTimeDate from "./ORDER/DeliveryTimeDate";
 import PhoneNumber from "./ORDER/PhoneNumber";
-
+import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import { OrderConsumer } from "../utils/context";
 import StripeButton from "./StripeInterface";
+import CloseIcon from "@material-ui/icons/Close";
 
 import { useFirestoreDocData, useFirestore, SuspenseWithPerf } from "reactfire";
-import { isUserLoggedIn } from "../utils";
+import { isUserLoggedIn, getUserAddress } from "../utils";
 // import { makeStyles } from "@material-ui/core/styles";
 
 import styled from "styled-components";
@@ -33,19 +34,45 @@ const PayButton = withStyles({
   },
 })(Button);
 
-const obj = {
-  currency: "myr",
-  quantity: 3,
-  amount: 15000,
-  name: "nasi rendang",
-  desc: "good all stuff",
-  imageurl:
-    "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
-  customerEmail: "marcosjconcon@gmail.com",
+const createPurchaseOrder = (order_list, userData, date) => {
+  console.log(order_list);
+  const purchaseOrder = {
+    customer_email: userData.email,
+    metadata: {
+      deliveryDate: date,
+      deliveryAddress: getUserAddress(
+        userData.street,
+        userData.city,
+        userData.postcode,
+        userData.state
+      ),
+      customerPhone: userData.phone,
+    },
+    order_items: createOrderItem(order_list),
+  };
+
+  return purchaseOrder;
+};
+
+const createOrderItem = (order_list) => {
+  let newList = [];
+  order_list.forEach((order) => {
+    let item = {
+      currency: "myr",
+      quantity: order.qty,
+      amount: order.price * 100,
+      name: order.item,
+    };
+    newList.push(item);
+  });
+
+  return newList;
 };
 
 const Order = ({ open, handleDrawer }) => {
-  const [deliveryDate, setDeliveryDate] = useState("");
+  const [deliveryDate, setDeliveryDate] = useState(
+    new Date().toLocaleString().split(",")[0]
+  );
 
   const handleSetDate = (date) => {
     setDeliveryDate(date.toLocaleString().split(",")[0]);
@@ -57,24 +84,21 @@ const Order = ({ open, handleDrawer }) => {
       .doc(isUserLoggedIn().uid);
     const userData = useFirestoreDocData(userRef);
 
-    const purchaseOrder = {
-      currency: "myr",
-      quantity: 1,
-      amount: 20000,
-      name: "nasi rendang",
-      desc: "good all stuff",
-      imageurl:
-        "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
-      customerEmail: userData.email,
-      metadata: {
-        // order: context.order,
-        // payment: context.invoice,
-        test: "test",
-        // customer: userData,
-      },
-    };
+    console.log(createPurchaseOrder(context.order, userData, deliveryDate));
 
-    return <StripeButton orders={purchaseOrder} />;
+    if (!userData.street) {
+      return (
+        <Typography variant="body1">
+          Please insert your details before checkout
+        </Typography>
+      );
+    } else
+      return (
+        <StripeButton
+          total={context.invoice.total}
+          orders={createPurchaseOrder(context.order, userData, deliveryDate)}
+        />
+      );
   };
 
   return (
@@ -88,11 +112,23 @@ const Order = ({ open, handleDrawer }) => {
             onOpen={handleDrawer(true)}
           >
             <Container>
-              <Typography variant="h5">My Orders</Typography>
+              <IconButton
+                aria-label="delete"
+                style={{ alignSelf: "flex-start" }}
+                onClick={handleDrawer(false)}
+              >
+                <CloseIcon />
+              </IconButton>
+              <Typography variant="h5" style={{ paddingBottom: "0.5em" }}>
+                My Orders
+              </Typography>
               <OrderList order={context.order} />
               <DeliveryAddress />
               <PhoneNumber />
-              <DeliveryTimeDate handleSetDate={handleSetDate} />
+              <DeliveryTimeDate
+                date={deliveryDate}
+                handleSetDate={handleSetDate}
+              />
 
               {isUserLoggedIn() ? (
                 <SuspenseWithPerf
@@ -102,7 +138,13 @@ const Order = ({ open, handleDrawer }) => {
                   <Stripe context={context} />
                 </SuspenseWithPerf>
               ) : (
-                <StripeButton disabled />
+                <Button
+                  variant="contained"
+                  style={{ width: "100%", marginTop: "1em" }}
+                  disabled
+                >
+                  Checkout
+                </Button>
               )}
             </Container>
           </SwipeableDrawer>

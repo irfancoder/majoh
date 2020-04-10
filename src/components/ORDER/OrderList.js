@@ -9,12 +9,14 @@ import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import { OrderConsumer } from "../../utils/context";
+import Divider from "@material-ui/core/Divider";
 
 const TAX_RATE = 0.0;
 
 const useStyles = makeStyles({
   table: {
     minWidth: "100%",
+    marginBottom: "2em",
   },
   qty: {
     maxWidth: "3em",
@@ -67,23 +69,49 @@ const OrderList = ({ order }) => {
         <TableHead>
           <TableRow>
             <TableCell align="center">Qty</TableCell>
-            <TableCell>Desc</TableCell>
+            <TableCell>Item</TableCell>
 
-            <TableCell align="right">Unit</TableCell>
-            <TableCell align="right">Price</TableCell>
+            <TableCell align="right">Unit (RM)</TableCell>
+            <TableCell align="right">Price (RM)</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {order.map((item) => {
-            return <OrderItem item={item} classes={classes} />;
-          })}
+        <TableBody
+          style={{
+            minHeight: "60vh",
+            width: "100%",
+          }}
+        >
+          {order.length > 0 ? (
+            order.map((item) => {
+              return <OrderItem item={item} classes={classes} />;
+            })
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={4}
+                style={{
+                  textAlign: "center",
+
+                  boxSizing: "border-box",
+                  padding: "6em",
+                }}
+              >
+                You have no orders yet!
+              </TableCell>
+            </TableRow>
+          )}
           <OrderConsumer>
             {(context) => {
               return (
                 <React.Fragment>
                   <TableRow>
+                    <TableCell colSpan={6}>
+                      <Divider />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
                     <TableCell rowSpan={3} />
-                    <TableCell colSpan={2}>Subtotal</TableCell>
+                    <TableCell colSpan={2}>Subtotal (RM)</TableCell>
                     <TableCell align="right">
                       {context.invoice.subtotal}
                     </TableCell>
@@ -96,7 +124,7 @@ const OrderList = ({ order }) => {
                     <TableCell align="right">{context.invoice.tax}</TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell colSpan={2}>Total</TableCell>
+                    <TableCell colSpan={2}>Total (RM)</TableCell>
                     <TableCell align="right">{context.invoice.total}</TableCell>
                   </TableRow>
                 </React.Fragment>

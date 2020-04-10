@@ -70,14 +70,13 @@ const Account = () => {
 
   return (
     <Container>
-      <StripeComponent orders={obj} />
-      {/*
+      {/* <StripeComponent orders={obj} /> */}
+
       {user !== null ? (
         <SettingsCard logout={handleUserLogout} />
       ) : (
         <SignUpModal />
       )}
-      */}
     </Container>
   );
 };

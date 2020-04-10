@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
@@ -12,6 +11,7 @@ import { Link } from "react-router-dom";
 const useStyles = makeStyles({
   root: {
     width: "100%",
+    marginTop: "0.5em",
   },
   action: {
     display: "flex",
@@ -29,7 +29,7 @@ const DeliveryAddress = () => {
     const userData = useFirestoreDocData(userRef);
 
     return userData.street ? (
-      <Typography variant="body2" component="p">
+      <Typography variant="body1" component="p">
         {userData.street}
         <br />
         <span>
@@ -42,7 +42,7 @@ const DeliveryAddress = () => {
   };
 
   return (
-    <Card className={classes.root}>
+    <div className={classes.root}>
       <CardContent>
         <Typography
           className={classes.title}
@@ -67,7 +67,7 @@ const DeliveryAddress = () => {
           <Button size="small">edit</Button>
         </Link>
       </CardActions>
-    </Card>
+    </div>
   );
 };
 
