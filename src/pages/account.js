@@ -41,7 +41,6 @@ const Account = () => {
     setUser(null);
   };
 
-}
   return (
     <Container>
       {user !== null ? (

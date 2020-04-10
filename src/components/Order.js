@@ -66,6 +66,12 @@ const Order = ({ open, handleDrawer }) => {
       imageurl:
         "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
       customerEmail: userData.email,
+      metadata: {
+        // order: context.order,
+        // payment: context.invoice,
+        test: "test",
+        // customer: userData,
+      },
     };
 
     return <StripeButton orders={purchaseOrder} />;
