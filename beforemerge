@@ -1,0 +1,250 @@
+const admin = require('firebase-admin');
+const functions = require('firebase-functions');
+// We should install required packages (stripe, body-parser) using npm install inside /functions/ folder
+const bodyParser = require('body-parser');
+const cors = require('cors')({origin: true});
+const express = require('express');
+const stripe = require('stripe')(functions.config().stripe.token);
+var app = admin.initializeApp(functions.config().firebase);
+let db = admin.firestore();
+//const { MessengerClient } = require('messaging-api-messenger');
+
+// Secret Key from Stripe Dashboard
+// The function for sending responses
+function send(res, code, body) {
+  res.send({
+    statusCode: code,
+    headers: {'Access-Control-Allow-Origin': '*'},
+    body: JSON.stringify(body),
+  });
+}
+// Our app has to use express
+const createOrderAndSessionApp = express();
+// Our app has to use cors
+createOrderAndSessionApp.use(cors);
+// The function that get data from front-end and create a payment session
+function createOrderAndSession(req, res) {
+  const body = JSON.parse(req.body);
+  // Creating session data from payload
+  /*
+  const currency = body.currency;
+  const quantity = body.quantity;
+  const amount = body.amount;
+  const name = body.name;
+  const description = body.desc;
+  let images = [];
+  images[0] = body.imageurl;
+  const customerEmail = body.customerEmail;
+  const metaData = body.metadata
+  */
+  // Also we can process the order data, e.g. save it to firebase database
+  // Creating session using the data above
+  stripe.checkout.sessions.create({
+    payment_method_types: ['card', 'fpx'],
+    line_items: body.order_items,
+    customer_email: body.customer_email,
+    metadata: body.metadata,
+    /* Redirect them to these URLS */
+    success_url: 'https://majoh-8eea2.web.app/',
+    cancel_url: 'https://majoh-8eea2.web.app/',
+  }).then(session => {
+    
+  // Getting the session id
+  var sessionId = session.id;
+  // Here we can do something with the session id, e.g. add it to the order data in firebase database
+  // Sending the session id to front-end
+  send(res, 200, {
+    sessionId: sessionId
+  });
+  return;
+  }).catch(error => {
+    console.log(error);
+    return;
+  });
+}
+// Creating a route
+createOrderAndSessionApp.post('/', (req, res) => {
+  try {
+    createOrderAndSession(req, res);
+  } catch(e) {
+    console.log(e);
+    send(res, 500, {
+      error: `The server received an unexpected error. Please try again and contact the site admin if the error persists.`,
+    });
+  }
+});
+// Exporting our http function
+exports.createOrderAndSession = functions.https.onRequest(createOrderAndSessionApp);
+
+
+const endpointSecret = "whsec_t2vF9aXdSvhdxu6JbGgTFARQt6Ms5OUt";
+// Our app has to use express
+const processTheOrderApp = express();
+processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (request, response) => {
+  const sig = request.headers['stripe-signature'];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(request.rawBody, sig, endpointSecret);
+  } catch (err) {
+    console.log(err);
+    return response.status(400).send(`Webhook Error: ${err.message}`);
+  }
+  // Handle the checkout.session.completed event
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    // Test, here we can proccess the order data after successfull payment
+    let firestoreRef = db.collection('test-stripe').doc('2owIIqom5dCfVeDpr4PC');
+    firestoreRef.set(session);
+  }
+  // Return a response to acknowledge receipt of the event
+  response.json({received: true});
+});
+// Exporting our http function
+exports.processTheOrder = functions.https.onRequest(processTheOrderApp);
+
+//
+
+import React, { useEffect, useState } from "react";
+import { Button } from "@material-ui/core";
+
+/*
+  A typical customer object to be passed to stripe checkout 
+  const obj = {
+      currency: "myr",
+      quantity: 3,
+      amount: 15000,
+      name: "nasi rendang",
+      desc: "good all stuff", 
+      imageurl: "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
+      customerEmail: "marcosjconcon@gmail.com",
+  }
+
+  Use as a component
+   <StripeComponent orders= {obj}/>
+
+*/
+function StripeComponent({orders}){
+  //const stripe =   window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
+  const redirect = () => 
+  {
+    let sessionId;
+    const stripe = window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
+    fetch("https://us-central1-majoh-8eea2.cloudfunctions.net/createOrderAndSession", {
+      method: "POST",
+      // Adding the order data to payload
+      body: JSON.stringify(orders)
+      }).then(response => {
+        return response.json();
+      }).then(data => {
+        // Getting the session id from firebase function
+        var body = JSON.parse(data.body);
+        return sessionId = body.sessionId;
+      }).then(sessionId => {
+        // Redirecting to payment form page
+        stripe.redirectToCheckout({
+          sessionId: sessionId
+        }).then(function (result) {
+          console.log(result.error.message)
+        });
+      });
+  }
+
+  return(
+    <div>
+      <Button onClick={redirect}>Checkout with Stripe</Button>
+    </div>
+
+  );
+
+}
+
+export default StripeComponent;
+
+import React, { useState, useEffect } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import SettingsCard from "../components/SETTINGS/SettingsCard";
+import Button from "@material-ui/core/Button";
+import SignUpModal from "../components/SETTINGS/SignUpModal";
+import SignIn from "../components/SETTINGS/SignIn";
+import MuiContainer from "@material-ui/core/Container";
+import { isUserLoggedIn, signOutUser } from "../utils/index";
+import Firebase from "../fire";
+import StripeComponent from "../components/StripeInterface";
+
+const UserActionButton = withStyles({
+  root: {},
+})(Button);
+
+const Container = withStyles({
+  root: {
+    display: "flex",
+    justifyContent: "center",
+  },
+})(MuiContainer);
+
+const Account = () => {
+  const [user, setUser] = useState(isUserLoggedIn());
+
+  useEffect(() => {
+    if (user === null) {
+      Firebase.auth().onAuthStateChanged(function (user) {
+        if (user) {
+          setUser(user);
+          console.log(user);
+        }
+      });
+    }
+  }, [user]);
+
+  console.log(user);
+
+  const handleUserLogout = () => {
+    signOutUser();
+    setUser(null);
+  };
+
+  const obj = {
+    customer_email: "marcosjconcon@gmail.com",
+    metadata: {'test': 'hello'},
+    order_items:[
+    {
+    currency: "myr",
+    quantity: 3,
+    amount: 15000,
+    name: "nasi rendang",
+    description: "good all stuff", 
+    images: ["https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg"],
+    },
+    {
+      currency: "myr",
+      quantity: 7,
+      amount: 15000,
+      name: "nasi rendang",
+      description: "good not stuff", 
+      images: ["https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg"],
+      }
+    ]
+}
+
+  return (
+    
+    <Container>
+      <StripeComponent orders = {obj}/>
+      {/*
+      {user !== null ? (
+        <SettingsCard logout={handleUserLogout} />
+      ) : (
+        <SignUpModal />
+      )}
+      */}
+    </Container>
+  
+    
+  );
+};
+
+export default Account;
+
+
+
+
