@@ -43,41 +43,41 @@ const Account = () => {
 
   const obj = {
     customer_email: "marcosjconcon@gmail.com",
-    metadata: {'test': 'hello'},
-    order_items:[
-    {
-    currency: "myr",
-    quantity: 3,
-    amount: 15000,
-    name: "nasi rendang",
-    description: "good all stuff", 
-    images: ["https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg"],
-    },
-    {
-      currency: "myr",
-      quantity: 7,
-      amount: 15000,
-      name: "nasi rendang",
-      description: "good not stuff", 
-      images: ["https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg"],
-      }
-    ]
-}
+    metadata: { test: "hello" },
+    order_items: [
+      {
+        currency: "myr",
+        quantity: 3,
+        amount: 15000,
+        name: "nasi rendang",
+        description: "good all stuff",
+        images: [
+          "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
+        ],
+      },
+      {
+        currency: "myr",
+        quantity: 7,
+        amount: 15000,
+        name: "nasi rendang",
+        description: "good not stuff",
+        images: [
+          "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
+        ],
+      },
+    ],
+  };
 
   return (
-    
     <Container>
-      <StripeComponent orders = {obj}/>
-      {/*
+      {/* <StripeComponent orders={obj} /> */}
+
       {user !== null ? (
         <SettingsCard logout={handleUserLogout} />
       ) : (
         <SignUpModal />
       )}
-      */}
     </Container>
-  
-    
   );
 };
 

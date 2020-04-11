@@ -30,3 +30,8 @@ export function groupBy(array, property) {
   }
   return hash;
 }
+
+export function getUserAddress(street, city, postcode, state) {
+  let addressString = street + ", " + city + ", " + postcode + ", " + state;
+  return addressString;
+}

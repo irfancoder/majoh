@@ -17,39 +17,49 @@ import { Button } from "@material-ui/core";
    <StripeComponent orders= {obj}/>
 
 */
-function StripeComponent({orders}){
+function StripeComponent({ total, orders }) {
   //const stripe =   window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
-  const redirect = () => 
-  {
+  const redirect = () => {
     let sessionId;
     const stripe = window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
-    fetch("https://us-central1-majoh-8eea2.cloudfunctions.net/createOrderAndSession", {
-      method: "POST",
-      // Adding the order data to payload
-      body: JSON.stringify(orders)
-      }).then(response => {
+    fetch(
+      "https://us-central1-majoh-8eea2.cloudfunctions.net/createOrderAndSession",
+      {
+        method: "POST",
+        // Adding the order data to payload
+        body: JSON.stringify(orders),
+      }
+    )
+      .then((response) => {
         return response.json();
-      }).then(data => {
+      })
+      .then((data) => {
         // Getting the session id from firebase function
         var body = JSON.parse(data.body);
-        return sessionId = body.sessionId;
-      }).then(sessionId => {
+        return (sessionId = body.sessionId);
+      })
+      .then((sessionId) => {
         // Redirecting to payment form page
-        stripe.redirectToCheckout({
-          sessionId: sessionId
-        }).then(function (result) {
-          console.log(result.error.message)
-        });
+        stripe
+          .redirectToCheckout({
+            sessionId: sessionId,
+          })
+          .then(function (result) {
+            console.log(result.error.message);
+          });
       });
-  }
+  };
 
-  return(
-    <div>
-      <Button onClick={redirect}>Checkout with Stripe</Button>
-    </div>
-
+  return (
+    <Button
+      variant="contained"
+      color="primary"
+      style={{ width: "100%", marginTop: "1em" }}
+      onClick={redirect}
+    >
+      Checkout {total ? "(RM" + total + ")" : ""}
+    </Button>
   );
-
 }
 
 export default StripeComponent;
