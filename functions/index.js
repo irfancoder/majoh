@@ -1,3 +1,4 @@
+const nodemailer = require('nodemailer');
 const admin = require('firebase-admin');
 const functions = require('firebase-functions');
 // We should install required packages (stripe, body-parser) using npm install inside /functions/ folder
@@ -7,6 +8,7 @@ const express = require('express');
 const stripe = require('stripe')(functions.config().stripe.token);
 var app = admin.initializeApp(functions.config().firebase);
 let db = admin.firestore();
+
 //const { MessengerClient } = require('messaging-api-messenger');
 
 // Secret Key from Stripe Dashboard
@@ -18,6 +20,44 @@ function send(res, code, body) {
     body: JSON.stringify(body),
   });
 }
+
+const options = {
+  service: 'gmail',
+  auth: {
+    user: "sprouty.co@gmail.com",
+    pass: "Sprouty123"
+  }
+}
+
+const time = () => {
+var today = new Date();
+var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+var dateTime = date+' '+time;
+  return dateTime
+}
+
+
+// When a user is created, register them with Stripe
+exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
+  console.log(user);
+  const customer = await stripe.customers.create({ email: user.email });
+  console.log(customer.id);
+
+  const stripe_customer = {
+    stripeAcc: customer,
+    name: user.displayName,
+    email: user.email,
+    uid: user.uid,
+  };
+
+  return admin
+    .firestore()
+    .collection("stripe_customers")
+    .doc(user.uid)
+    .set(stripe_customer);
+});
+
 // Our app has to use express
 const createOrderAndSessionApp = express();
 // Our app has to use cors
@@ -90,14 +130,40 @@ processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (reques
     return response.status(400).send(`Webhook Error: ${err.message}`);
   }
   // Handle the checkout.session.completed event
+  let batch = db.batch();
+  let timeID = time();
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
+    const orderInfo = event.data.object;
     // Test, here we can proccess the order data after successfull payment
-    let firestoreRef = db.collection('test-stripe').doc('2owIIqom5dCfVeDpr4PC');
-    firestoreRef.set(session);
+    let customerRef = db.collection('stripe_customers').doc(orderInfo.customer).collection('paid_orders').doc();
+    let ownRef = db.collection('success_orders').doc(timeID);
+    batch.set(customerRef, {orderInfo});
+    batch.set(ownRef, {orderInfo});
+    console.log(orderInfo);
+    //sendMail(session);
+
+    const mailOptions ={
+      from: "sprouty.co@gmail.com", // sender address
+      to: orderInfo.customer_email, // list of receivers
+      subject: "Hello ✔", // Subject line
+      text: "hi", // plain text body
+      html: "<b>Hello world?</b>" // html body
+      }
+  
+      let transporter = nodemailer.createTransport(options);
+      transporter.sendMail(mailOptions, function(err, info){
+        if(err)
+        console.log(err)
+      else
+        console.log(info);
+      });
+  
   }
   // Return a response to acknowledge receipt of the event
-  response.json({received: true});
+  return batch.commit().then(function () {
+    response.json({received: true});
+  })
 });
 // Exporting our http function
 exports.processTheOrder = functions.https.onRequest(processTheOrderApp);
+
