@@ -1,11 +1,6 @@
-<<<<<<< HEAD
 const nodemailer = require('nodemailer');
 const admin = require('firebase-admin');
 const functions = require('firebase-functions');
-=======
-const admin = require("firebase-admin");
-const functions = require("firebase-functions");
->>>>>>> 9b81f0017a2aef01e38e5bfc65a757196bb5f37b
 // We should install required packages (stripe, body-parser) using npm install inside /functions/ folder
 const bodyParser = require("body-parser");
 const cors = require("cors")({ origin: true });
