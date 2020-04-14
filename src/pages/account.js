@@ -40,10 +40,11 @@ const Account = () => {
     signOutUser();
     setUser(null);
   };
-
+/*
   const obj = {
-    customer_email: "marcosjconcon@gmail.com",
-    metadata: { test: "hello" },
+    mode: 'payment',
+    customer: 'cus_H5xdctLSPKqvTm',
+    metadata: {deliveryDate: '13/04/97', deliveryAddress: 'tress', phoneNo: 666, Name: 'Big Dick', uID: 'F4cobyo9JZZXw2Q4xTgV6VDaJJw1'},
     order_items: [
       {
         currency: "myr",
@@ -67,11 +68,11 @@ const Account = () => {
       },
     ],
   };
-
+*/
   return (
+  
     <Container>
       {/* <StripeComponent orders={obj} /> */}
-
       {user !== null ? (
         <SettingsCard logout={handleUserLogout} />
       ) : (

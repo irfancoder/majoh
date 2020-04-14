@@ -8,6 +8,11 @@ const express = require("express");
 const stripe = require("stripe")(functions.config().stripe.token);
 var app = admin.initializeApp(functions.config().firebase);
 let db = admin.firestore();
+var telegram = require('telegram-bot-api');
+
+var api = new telegram({
+	token: '1158313226:AAF8bqiLK_GJMhHB8AirzvFCVgl5tjDS4fI',
+});
 
 //const { MessengerClient } = require('messaging-api-messenger');
 
@@ -58,11 +63,13 @@ exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
     .set(stripe_customer);
 });
 
+
 // Our app has to use express
 const createOrderAndSessionApp = express();
 // Our app has to use cors
 createOrderAndSessionApp.use(cors);
 // The function that get data from front-end and create a payment session
+//https://us-central1-majoh-8eea2.cloudfunctions.net/createOrderAndSession
 function createOrderAndSession(req, res) {
   const body = JSON.parse(req.body);
   // Creating session data from payload
@@ -83,8 +90,9 @@ function createOrderAndSession(req, res) {
     .create({
       payment_method_types: ["card", "fpx"],
       line_items: body.order_items,
-      customer_email: body.customer_email,
+      customer: body.customer,
       metadata: body.metadata,
+      mode: 'payment',
       /* Redirect them to these URLS */
       success_url: "https://majoh-8eea2.web.app/",
       cancel_url: "https://majoh-8eea2.web.app/",
@@ -122,8 +130,8 @@ exports.createOrderAndSession = functions.https.onRequest(
 
 const endpointSecret = "whsec_t2vF9aXdSvhdxu6JbGgTFARQt6Ms5OUt";
 // Our app has to use express
+//https://us-central1-majoh-8eea2.cloudfunctions.net/processTheOrder
 const processTheOrderApp = express();
-<<<<<<< HEAD
 processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (request, response) => {
   const sig = request.headers['stripe-signature'];
   let event;
@@ -139,19 +147,44 @@ processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (reques
   if (event.type === 'checkout.session.completed') {
     const orderInfo = event.data.object;
     // Test, here we can proccess the order data after successfull payment
-    let customerRef = db.collection('stripe_customers').doc(orderInfo.customer).collection('paid_orders').doc();
+    let customerRef = db.collection('stripe_customers').doc(orderInfo.metadata.uID).collection('paid_orders').doc();
     let ownRef = db.collection('success_orders').doc(timeID);
     batch.set(customerRef, {orderInfo});
     batch.set(ownRef, {orderInfo});
     console.log(orderInfo);
-    //sendMail(session);
+  
+    let total = 0;
+    let sendCustomer = "";
+    let sendVendor ="";
+    for(i = 0; i<orderInfo.display_items.length; i++)
+    {
+      total+=(orderInfo.display_items[i].amount)*(orderInfo.display_items[i].quantity);
+      sendCustomer+= "Dish: " + orderInfo.display_items[i].custom.name + '\n' + "Cost per unit: " + orderInfo.display_items[i].amount + '\n' + "Quantity: " + orderInfo.display_items[i].quantity + '\n';
+      sendVendor+= orderInfo.display_items[i].custom.name + " " + orderInfo.display_items[i].quantity + "\n";
+    }
 
+    /* Send to vendor */
+    api.sendMessage(
+      {
+        chat_id: -483824294,
+        text: "Orders: \n" + sendVendor + "\nDelivery: \n" + "Name - " + orderInfo.metadata.Name + "\n" + "Address - " + orderInfo.metadata.deliveryAddress + "\n" + "PhoneNo - " + orderInfo.metadata.phoneNo + "\n" + "Date - " + orderInfo.metadata.deliveryDate
+      }
+      ).then(function(data)
+      {
+        console.log("Telegram message sent");
+      });
+  
+
+    /* Emailing invoice to customer */
+    sendCustomer += "Total: " + total;
     const mailOptions ={
       from: "sprouty.co@gmail.com", // sender address
-      to: orderInfo.customer_email, // list of receivers
-      subject: "Hello ✔", // Subject line
-      text: "hi", // plain text body
-      html: "<b>Hello world?</b>" // html body
+      to: "marcosjconcon@gmail.com" /*orderInfo.customer_email*/, // do later should be dynamic
+      subject: "Invoice", // Subject line
+      text: sendCustomer
+
+      /* Todo - HTML templating https://email-templates.js.org/#/ */
+      // html: "<b>Hello world?</b>" // html body
       }
   
       let transporter = nodemailer.createTransport(options);
@@ -163,6 +196,7 @@ processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (reques
       });
   
   }
+
   // Return a response to acknowledge receipt of the event
   return batch.commit().then(function () {
     response.json({received: true});
@@ -171,27 +205,6 @@ processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (reques
 // Exporting our http function
 exports.processTheOrder = functions.https.onRequest(processTheOrderApp);
 
-=======
-processTheOrderApp.post(
-  "/",
-  bodyParser.raw({ type: "application/json" }),
-  (request, response) => {
-    const sig = request.headers["stripe-signature"];
-    let event;
-    try {
-      event = stripe.webhooks.constructEvent(
-        request.rawBody,
-        sig,
-        endpointSecret
-      );
-    } catch (err) {
-      console.log(err);
-      return response.status(400).send(`Webhook Error: ${err.message}`);
-    }
-  }
-);
-// Exporting our http function
-exports.processTheOrder = functions.https.onRequest(processTheOrderApp);
 
 // When a user is created, register them with Stripe
 exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
@@ -212,4 +225,33 @@ exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
     .doc(user.uid)
     .set(stripe_customer);
 });
->>>>>>> 9b81f0017a2aef01e38e5bfc65a757196bb5f37b
+
+//Telegram https://api.telegram.org/bot<YourBOTToken>/getUpdates to get channel ID's
+// https://us-central1-majoh-8eea2.cloudfunctions.net/MessengerSend
+/*
+exports.testTelegramSend = functions.https.onRequest((req, res) => {
+  // ...
+  const obj = {
+    orders: [{
+      quantity:3,
+      name:"nasi lemak"
+    },
+    {
+      quantity:3,
+      name:"nasi lemak"
+    }]
+  }
+
+  const textMessage = JSON.stringify(obj);
+  api.sendMessage(
+    {
+      chat_id: -483824294,
+      text: textMessage
+    }
+  ).then(function(data)
+  {
+    console.log(util.inspect(data, false, null));
+  });
+  res.send(200);
+});
+*/
