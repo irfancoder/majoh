@@ -15,7 +15,6 @@ const Layout = ({ children }) => {
   return (
     <div>
       <OrderProvider>
-        <CssBaseline />
         <Header></Header>
         <Container>{children}</Container>
         <Footer></Footer>
