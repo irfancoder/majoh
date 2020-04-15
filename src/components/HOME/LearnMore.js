@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import styled from "styled-components";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-
-import { Typography, Tooltip } from "@material-ui/core";
+import dimensions from "../../styles/dimensions";
+import {
+  Typography,
+  Tooltip,
+  Dialog,
+  Button,
+  DialogActions,
+  DialogContent,
+} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -36,6 +39,9 @@ const Container = styled.div`
 
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 1em;
+  @media (max-width: ${dimensions.maxwidthMobile}px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const Content = styled.div`
@@ -44,6 +50,9 @@ const Content = styled.div`
   justify-content: space-between;
   box-sizing: border-box;
   padding: 2em;
+  @media (max-width: ${dimensions.maxwidthTablet}px) {
+    padding: 0.5em;
+  }
 `;
 const Thumbnail = styled.img`
   height: auto;
@@ -86,28 +95,18 @@ const LearnMore = ({ data, addOrder }) => {
             <Thumbnail src={menu.thumbnail} alt={menu.item} />
             <Content>
               <div>
-                <Typography gutterBottom variant="h4" component="h2">
-                  {menu.item}
-                </Typography>
+                <Typography variant="h5">{menu.item}</Typography>
 
-                <Typography
-                  className={classes.description}
-                  variant="body1"
-                  component="h2"
-                >
+                <Typography className={classes.description} variant="body1">
                   {menu.description}
                 </Typography>
               </div>
               <div>
-                <Typography className={classes.price} variant="p">
-                  By delivery.
+                <Typography className={classes.price} variant="caption">
+                  Food will be fulfilled by delivery.
                 </Typography>
-                <Typography
-                  className={classes.price}
-                  variant="h4"
-                  component="h2"
-                >
-                  RM {menu.price}{" "}
+                <Typography className={classes.price} variant="h5">
+                  RM {menu.price}
                   <Tooltip title="pax = ~200g" placement="top-start">
                     <span style={{ fontSize: "14px" }}> / pax*</span>
                   </Tooltip>

@@ -10,22 +10,19 @@ const useStyle = makeStyles({
     paddingRight: "2em",
   },
   order: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
     paddingLeft: "2em",
   },
 });
 
-const OrderItem = () => {
+const OrderItem = ({ item }) => {
   const classes = useStyle();
   return (
     <div className={classes.root}>
-      <Typography variant="subtitle1">1 x</Typography>
-      <div className={classes.order}>
-        <Typography variant="caption">BREAKFAST</Typography>
-        <Typography variant="subtitle1">Nasi Lemak</Typography>
-      </div>
+      <Typography variant="subtitle1">{item.quantity} x</Typography>
+
+      <Typography className={classes.order} variant="subtitle1">
+        {item.custom.name}
+      </Typography>
     </div>
   );
 };

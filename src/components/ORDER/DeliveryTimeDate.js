@@ -42,8 +42,8 @@ const DeliveryTimeDate = ({ date, handleSetDate }) => {
           margin="normal"
           id="date-picker-inline"
           label="Date"
-          onChange={(e) => handleSetDate(e)}
-          defaultValue={date}
+          value={date}
+          onChange={handleSetDate}
           KeyboardButtonProps={{
             "aria-label": "change date",
           }}

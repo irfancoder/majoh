@@ -9,10 +9,6 @@ import { isUserLoggedIn, signOutUser } from "../utils/index";
 import Firebase from "../fire";
 import StripeComponent from "../components/StripeInterface";
 
-const UserActionButton = withStyles({
-  root: {},
-})(Button);
-
 const Container = withStyles({
   root: {
     display: "flex",
@@ -40,7 +36,7 @@ const Account = () => {
     signOutUser();
     setUser(null);
   };
-/*
+  /*
   const obj = {
     mode: 'payment',
     customer: 'cus_H5xdctLSPKqvTm',
@@ -70,7 +66,6 @@ const Account = () => {
   };
 */
   return (
-  
     <Container>
       {/* <StripeComponent orders={obj} /> */}
       {user !== null ? (

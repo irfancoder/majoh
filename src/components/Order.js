@@ -11,10 +11,10 @@ import Button from "@material-ui/core/Button";
 import { OrderConsumer } from "../utils/context";
 import StripeButton from "./StripeInterface";
 import CloseIcon from "@material-ui/icons/Close";
+import dimensions from "../styles/dimensions";
 
 import { useFirestoreDocData, useFirestore, SuspenseWithPerf } from "reactfire";
 import { isUserLoggedIn, getUserAddress } from "../utils";
-// import { makeStyles } from "@material-ui/core/styles";
 
 import styled from "styled-components";
 
@@ -26,27 +26,27 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
 
-const PayButton = withStyles({
-  root: {
-    width: "100%",
-  },
-})(Button);
+  @media (max-width: ${dimensions.maxwidthMobile}px) {
+    width: 100%;
+  }
+`;
 
 const createPurchaseOrder = (order_list, userData, date) => {
   console.log(order_list);
   const purchaseOrder = {
     customer_email: userData.email,
     metadata: {
-      deliveryDate: date,
+      deliveryDate: date.toLocaleString().split(",")[0],
       deliveryAddress: getUserAddress(
         userData.street,
         userData.city,
         userData.postcode,
         userData.state
       ),
-      customerPhone: userData.phone,
+      phoneNo: userData.phone,
+      Name: userData.name,
+      uID: userData.uid,
     },
     order_items: createOrderItem(order_list),
   };
@@ -70,12 +70,10 @@ const createOrderItem = (order_list) => {
 };
 
 const Order = ({ open, handleDrawer }) => {
-  const [deliveryDate, setDeliveryDate] = useState(
-    new Date().toLocaleString().split(",")[0]
-  );
+  const [deliveryDate, setDeliveryDate] = useState(new Date());
 
   const handleSetDate = (date) => {
-    setDeliveryDate(date.toLocaleString().split(",")[0]);
+    setDeliveryDate(date);
   };
 
   const Stripe = ({ context }) => {

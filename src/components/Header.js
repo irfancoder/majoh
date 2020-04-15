@@ -8,15 +8,13 @@ import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import SearchIcon from "@material-ui/icons/Search";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+
 import MoreIcon from "@material-ui/icons/MoreVert";
-import dimensions from "../styles/dimensions";
+
 import color from "../styles/color";
 import Button from "@material-ui/core/Button";
 import ReceiptIcon from "@material-ui/icons/Receipt";
+import Majoh from "../assets/images/majoh_logo.png";
 
 import Order from "./Order";
 
@@ -26,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     background: "transparent",
     boxShadow: "0 4px 8px 0 rgba(0,0,0,0);",
+    [theme.breakpoints.down("xs")]: {
+      top: "auto",
+      bottom: 0,
+    },
   },
   grow: {
     flexGrow: 1,
@@ -34,10 +36,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(10),
   },
   title: {
-    display: "none",
-    [theme.breakpoints.up("sm")]: {
-      display: "block",
-    },
+    display: "block",
+
     color: color.black,
   },
   search: {
@@ -88,6 +88,8 @@ const useStyles = makeStyles((theme) => ({
   },
   sectionMobile: {
     display: "flex",
+    width: "100%",
+    justifyContent: "flex-end",
     [theme.breakpoints.up("md")]: {
       display: "none",
     },
@@ -97,16 +99,30 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: "1.5em",
     display: "flex",
     justifyContent: "space-between",
-    width: dimensions.maxwidthDesktop,
-    margin: "auto",
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "90%",
+      justifyContent: "space-between",
+      margin: "auto",
+    },
   },
   navItem: {
     textTransform: "uppercase",
     fontWeight: 500,
+    textDecoration: "none",
+    color: color.black,
   },
   viewOrder: {
     paddingLeft: "2em",
     paddingRight: "2em",
+    [theme.breakpoints.down("md")]: {
+      paddingLeft: "1em",
+      paddingRight: "1em",
+    },
+    link: {
+      textDecoration: "none",
+      color: color.black,
+    },
   },
 }));
 
@@ -167,43 +183,26 @@ export default function PrimarySearchAppBar() {
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       id={mobileMenuId}
       keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      transformOrigin={{ vertical: "bottom", horizontal: "right" }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <Link to="/paidorders">
-          <IconButton aria-label="show 4 new mails" color="primary">
-            <Badge badgeContent={4} color="secondary">
-              <MailIcon />
-            </Badge>
-          </IconButton>
-          <p>Messages</p>
+        <Link className={classes.navItem} to="/paidorders">
+          <Typography variant="subheading1">paid orders</Typography>
         </Link>
       </MenuItem>
 
       <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="primary">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
+        <Link to="/account">
+          <Typography className={classes.navItem} variant="subheading1">
+            account
+          </Typography>
+        </Link>
       </MenuItem>
-      {/* <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="primary"
-        >
-          <AccountCircleIcon />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem> */}
     </Menu>
   );
 
@@ -219,64 +218,17 @@ export default function PrimarySearchAppBar() {
             }}
           >
             <Link to="/">
-              <Typography className={classes.title} variant="h5" noWrap>
-                majoh
-              </Typography>
+              <img style={{ width: "120px" }} src={Majoh} alt="Majoh Logo" />
             </Link>
-            {/* <div className={classes.search}>
-              <div className={classes.searchIcon}>
-                <SearchIcon color="action" />
-              </div>
-              <InputBase
-                placeholder="Try Miri"
-                classes={{
-                  root: classes.inputRoot,
-                  input: classes.inputInput,
-                }}
-                inputProps={{ "aria-label": "search" }}
-              />
-            </div> */}
           </div>
 
           <div className={classes.sectionDesktop}>
-            <Link to="/paidorders">
-              <Typography className={classes.navItem} variant="subheading1">
-                paid orders
-              </Typography>
-              {/* <IconButton aria-label="show 4 new mails" color="primary">
-                <Badge badgeContent={4} color="secondary">
-                  <MailIcon />
-                </Badge>
-              </IconButton> */}
+            <Link className={classes.navItem} to="/paidorders">
+              <Typography variant="subheading1">paid orders</Typography>
             </Link>
-            <Link to="/account">
-              <Typography className={classes.navItem} variant="subheading1">
-                account
-              </Typography>
-              {/* <IconButton
-                aria-label="show 17 new notifications"
-                color="primary"
-              >
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon />
-                </Badge>
-              </IconButton> */}
+            <Link className={classes.navItem} to="/account">
+              <Typography variant="subheading1">account</Typography>
             </Link>
-            {/* <Link to="/contact">
-              <Typography className={classes.navItem} variant="subheading1">
-                contact
-              </Typography> */}
-            {/* <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                // onClick={handleProfileMenuOpen}
-                color="primary"
-              >
-                <AccountCircleIcon />
-              </IconButton> */}
-            {/* </Link> */}
 
             <Button
               variant="contained"
@@ -291,6 +243,15 @@ export default function PrimarySearchAppBar() {
             <Order open={openDrawer} handleDrawer={handleDrawer} />
           </div>
           <div className={classes.sectionMobile}>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<ReceiptIcon />}
+              className={classes.viewOrder}
+              onClick={handleDrawer(true)}
+            >
+              view order
+            </Button>
             <IconButton
               aria-label="show more"
               aria-controls={mobileMenuId}
