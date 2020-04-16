@@ -8,7 +8,6 @@ import MuiContainer from "@material-ui/core/Container";
 import { isUserLoggedIn, signOutUser } from "../utils/index";
 import Firebase from "../fire";
 import StripeComponent from "../components/StripeInterface";
-import CashDelivery from "../components/SETTINGS/CashOnDelivery";
 
 const Container = withStyles({
   root: {
@@ -37,11 +36,7 @@ const Account = () => {
     signOutUser();
     setUser(null);
   };
-<<<<<<< HEAD
-
-=======
   /*
->>>>>>> c6c70519f3481caefcdb7b62c5631afe370485a0
   const obj = {
     mode: 'payment',
     customer: 'cus_H5xdctLSPKqvTm',
@@ -69,15 +64,15 @@ const Account = () => {
       },
     ],
   };
-
+*/  
   return (
     <Container>
-     <CashDelivery orders={obj} />
-      {/*user !== null ? (
+    {/* <CashDelivery orders={obj} />*/}
+      user !== null ? (
         <SettingsCard logout={handleUserLogout} />
       ) : (
         <SignUpModal />
-      )*/}
+      )
     </Container>
   );
 };

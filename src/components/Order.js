@@ -12,6 +12,12 @@ import { OrderConsumer } from "../utils/context";
 import StripeButton from "./StripeInterface";
 import CloseIcon from "@material-ui/icons/Close";
 import dimensions from "../styles/dimensions";
+import Grid from '@material-ui/core/Grid';
+import Modal from '@material-ui/core/Modal';
+import { makeStyles } from '@material-ui/core/styles';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import ModalCheckout from "../components/ORDER/ModalCheckout"
 
 import { useFirestoreDocData, useFirestore, SuspenseWithPerf } from "reactfire";
 import { isUserLoggedIn, getUserAddress } from "../utils";
@@ -69,11 +75,22 @@ const createOrderItem = (order_list) => {
   return newList;
 };
 
+
 const Order = ({ open, handleDrawer }) => {
+  const [openModal, setOpenModal] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState(new Date());
 
   const handleSetDate = (date) => {
     setDeliveryDate(date);
+  };
+
+  const handleOpenModal= () => {
+    setOpenModal(true);
+    console.log("Pressed yes");
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
   };
 
   const Stripe = ({ context }) => {
@@ -127,7 +144,20 @@ const Order = ({ open, handleDrawer }) => {
                 date={deliveryDate}
                 handleSetDate={handleSetDate}
               />
-
+              <Grid container spacing ={1}>
+              <Grid item md={6}>
+              {isUserLoggedIn() ? (
+                <SuspenseWithPerf
+                  fallback={<p>loading user info...</p>}
+                  traceId={"load-burrito-status"}
+                >
+                  <Stripe context={context} />
+                </SuspenseWithPerf>
+              ) : (
+                <ModalCheckout></ModalCheckout>
+              )}
+              </Grid>
+              <Grid item md={6}>
               {isUserLoggedIn() ? (
                 <SuspenseWithPerf
                   fallback={<p>loading user info...</p>}
@@ -141,9 +171,12 @@ const Order = ({ open, handleDrawer }) => {
                   style={{ width: "100%", marginTop: "1em" }}
                   disabled
                 >
-                  Checkout
+                 Stripe Checkout
                 </Button>
               )}
+              </Grid>
+
+              </Grid>
             </Container>
           </SwipeableDrawer>
         );
