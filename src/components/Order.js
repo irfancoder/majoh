@@ -12,6 +12,12 @@ import StripeButton from "./StripeInterface";
 import CloseIcon from "@material-ui/icons/Close";
 import dimensions from "../styles/dimensions";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import Grid from "@material-ui/core/Grid";
+import Modal from "@material-ui/core/Modal";
+import { makeStyles } from "@material-ui/core/styles";
+import Backdrop from "@material-ui/core/Backdrop";
+import Fade from "@material-ui/core/Fade";
+import ModalCheckout from "../components/ORDER/ModalCheckout";
 
 import { useFirestoreDocData, useFirestore, SuspenseWithPerf } from "reactfire";
 import { isUserLoggedIn, getUserAddress } from "../utils";
@@ -79,11 +85,21 @@ const createOrderItem = (order_list, invoice) => {
 };
 
 const Order = ({ open, handleDrawer }) => {
+  const [openModal, setOpenModal] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
 
   const handleSetDate = (date) => {
     setDeliveryDate(date);
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+    console.log("Pressed yes");
+  };
+
+  const handleClose = () => {
+    setOpenModal(false);
   };
 
   const Stripe = ({ context }) => {
@@ -155,40 +171,53 @@ const Order = ({ open, handleDrawer }) => {
                 date={deliveryDate}
                 handleSetDate={handleSetDate}
               />
-
-              {isUserLoggedIn() ? (
-                <SuspenseWithPerf
-                  fallback={<p>loading user info...</p>}
-                  traceId={"load-burrito-status"}
-                >
-                  {loading ? (
-                    <div>
-                      <Typography
-                        style={{ textAlign: "center" }}
-                        variant="caption"
-                      >
-                        Bringing you to checkout...
-                      </Typography>
-                      <LinearProgress
-                        style={{ marginBotton: "1em", width: "100%" }}
-                      />
-                    </div>
+              <Grid container spacing={1}>
+                <Grid item md={6}>
+                  {isUserLoggedIn() ? (
+                    <SuspenseWithPerf
+                      fallback={<p>loading user info...</p>}
+                      traceId={"load-burrito-status"}
+                    >
+                      <Stripe context={context} />
+                    </SuspenseWithPerf>
                   ) : (
-                    <LinearProgress style={{ width: "0" }} />
+                    <ModalCheckout></ModalCheckout>
                   )}
-                  <Stripe context={context} />
-                </SuspenseWithPerf>
-              ) : (
-                <div>
-                  <Button
-                    variant="contained"
-                    style={{ width: "100%", marginTop: "1em" }}
-                    disabled
-                  >
-                    Checkout
-                  </Button>
-                </div>
-              )}
+                </Grid>
+                <Grid item md={6}>
+                  {isUserLoggedIn() ? (
+                    <SuspenseWithPerf
+                      fallback={<p>loading user info...</p>}
+                      traceId={"load-burrito-status"}
+                    >
+                      {loading ? (
+                        <div>
+                          <Typography
+                            style={{ textAlign: "center" }}
+                            variant="caption"
+                          >
+                            Bringing you to checkout...
+                          </Typography>
+                          <LinearProgress
+                            style={{ marginBotton: "1em", width: "100%" }}
+                          />
+                        </div>
+                      ) : (
+                        <LinearProgress style={{ width: "0" }} />
+                      )}
+                      <Stripe context={context} />
+                    </SuspenseWithPerf>
+                  ) : (
+                    <Button
+                      variant="contained"
+                      style={{ width: "100%", marginTop: "1em" }}
+                      disabled
+                    >
+                      Stripe Checkout
+                    </Button>
+                  )}
+                </Grid>
+              </Grid>
             </Container>
           </SwipeableDrawer>
         );

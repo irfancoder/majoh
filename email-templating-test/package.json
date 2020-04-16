@@ -1,0 +1,19 @@
+{
+  "name": "nodemailer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "index"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.0.2",
+    "email-templates": "^7.0.4",
+    "express": "^4.17.1",
+    "pug": "^2.0.4",
+    "python-shell": "^1.0.8"
+  }
+}

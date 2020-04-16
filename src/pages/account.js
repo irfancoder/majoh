@@ -41,13 +41,13 @@ const Account = () => {
   const obj = {
     mode: 'payment',
     customer: 'cus_H5xdctLSPKqvTm',
-    metadata: {deliveryDate: '13/04/97', deliveryAddress: 'tress', phoneNo: 666, Name: 'Big Dick', uID: 'F4cobyo9JZZXw2Q4xTgV6VDaJJw1'},
+    metadata: {customerEmail: 'marcosjconcon@gmail.com',deliveryDate: '13/04/97', deliveryAddress: 'tress', phoneNo: 666, Name: 'Big Dick', uID: 'F4cobyo9JZZXw2Q4xTgV6VDaJJw1'},
     order_items: [
       {
         currency: "myr",
         quantity: 3,
         amount: 15000,
-        name: "nasi rendang",
+        name: "nasi vagene",
         description: "good all stuff",
         images: [
           "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
@@ -57,7 +57,7 @@ const Account = () => {
         currency: "myr",
         quantity: 7,
         amount: 15000,
-        name: "nasi rendang",
+        name: "nasi penis",
         description: "good not stuff",
         images: [
           "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
@@ -66,6 +66,7 @@ const Account = () => {
     ],
   };
 */
+
   return (
     <>
       <Helmet>
