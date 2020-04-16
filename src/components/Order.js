@@ -102,45 +102,70 @@ const Order = ({ open, handleDrawer }) => {
     setOpenModal(false);
   };
 
-  const Stripe = ({ context }) => {
+  const Checkout = ({ context, tag }) => {
     const userRef = useFirestore()
       .collection("stripe_customers")
       .doc(isUserLoggedIn().uid);
     const userData = useFirestoreDocData(userRef);
 
-    if (!userData.street) {
-      return (
-        <Button
-          variant="contained"
-          style={{ width: "100%", marginTop: "1em" }}
-          disabled
-        >
-          Checkout
-        </Button>
-      );
-    } else if (context.invoice.subtotal <= 1.5) {
-      return (
-        <Button
-          variant="contained"
-          style={{ width: "100%", marginTop: "1em" }}
-          disabled
-        >
-          Checkout
-        </Button>
-      );
-    } else
-      return (
-        <StripeButton
-          total={context.invoice.total}
-          orders={createPurchaseOrder(
-            context.order,
-            userData,
-            deliveryDate,
-            Number(context.invoice.serviceCharge)
-          )}
-          setLoading={setLoading}
-        />
-      );
+    if (tag === "stripe") {
+      if (!userData.street) {
+        return (
+          <Button
+            variant="contained"
+            style={{ width: "100%", marginTop: "1em" }}
+            disabled
+          >
+            Checkout
+          </Button>
+        );
+      } else if (context.invoice.subtotal <= 1.5) {
+        return (
+          <Button
+            variant="contained"
+            style={{ width: "100%", marginTop: "1em" }}
+            disabled
+          >
+            Checkout
+          </Button>
+        );
+      } else
+        return (
+          <StripeButton
+            total={context.invoice.total}
+            orders={createPurchaseOrder(
+              context.order,
+              userData,
+              deliveryDate,
+              Number(context.invoice.serviceCharge)
+            )}
+            setLoading={setLoading}
+          />
+        );
+    } else {
+      if (context.invoice.subtotal <= 1.5) {
+        return (
+          <Button
+            variant="contained"
+            style={{ width: "100%", marginTop: "1em" }}
+            disabled
+          >
+            Cash on Delivery
+          </Button>
+        );
+      } else
+        return (
+          <ModalCheckout
+            total={context.invoice.total}
+            orders={createPurchaseOrder(
+              context.order,
+              userData,
+              deliveryDate,
+              Number(context.invoice.serviceCharge)
+            )}
+          />
+        );
+    }
   };
 
   return (
@@ -172,16 +197,46 @@ const Order = ({ open, handleDrawer }) => {
                 handleSetDate={handleSetDate}
               />
               <Grid container spacing={1}>
+                {loading ? (
+                  <div>
+                    <Typography
+                      style={{ textAlign: "center" }}
+                      variant="caption"
+                    >
+                      Bringing you to checkout...
+                    </Typography>
+                    <LinearProgress
+                      style={{ marginBotton: "1em", width: "100%" }}
+                    />
+                  </div>
+                ) : (
+                  <LinearProgress style={{ width: "0" }} />
+                )}
                 <Grid item md={6}>
                   {isUserLoggedIn() ? (
                     <SuspenseWithPerf
                       fallback={<p>loading user info...</p>}
                       traceId={"load-burrito-status"}
                     >
-                      <Stripe context={context} />
+                      <Checkout context={context} tag="cod" />
+                      {/* <ModalCheckout
+                        total={context.invoice.total}
+                        orders={createPurchaseOrder(
+                          context.order,
+                          userData,
+                          deliveryDate,
+                          Number(context.invoice.serviceCharge)
+                        )}
+                      ></ModalCheckout> */}
                     </SuspenseWithPerf>
                   ) : (
-                    <ModalCheckout></ModalCheckout>
+                    <Button
+                      variant="contained"
+                      style={{ width: "100%", marginTop: "1em" }}
+                      disabled
+                    >
+                      Cash on Delivery
+                    </Button>
                   )}
                 </Grid>
                 <Grid item md={6}>
@@ -190,22 +245,7 @@ const Order = ({ open, handleDrawer }) => {
                       fallback={<p>loading user info...</p>}
                       traceId={"load-burrito-status"}
                     >
-                      {loading ? (
-                        <div>
-                          <Typography
-                            style={{ textAlign: "center" }}
-                            variant="caption"
-                          >
-                            Bringing you to checkout...
-                          </Typography>
-                          <LinearProgress
-                            style={{ marginBotton: "1em", width: "100%" }}
-                          />
-                        </div>
-                      ) : (
-                        <LinearProgress style={{ width: "0" }} />
-                      )}
-                      <Stripe context={context} />
+                      <Checkout context={context} tag="stripe" />
                     </SuspenseWithPerf>
                   ) : (
                     <Button
