@@ -35,3 +35,35 @@ export function getUserAddress(street, city, postcode, state) {
   let addressString = street + ", " + city + ", " + postcode + ", " + state;
   return addressString;
 }
+
+export function splitOrderArray(array) {
+  let currentTime = new Date();
+  let upcomingOrders = [];
+  let pastOrders = [];
+
+  array.forEach((item) => {
+    if (stringToDate(item.orderInfo.metadata.deliveryDate) > currentTime) {
+      upcomingOrders.push(item);
+    } else {
+      pastOrders.push(item);
+    }
+  });
+  return {
+    upcomingOrders: upcomingOrders,
+    pastOrders: pastOrders,
+  };
+}
+
+export function stringToDate(_date) {
+  var formatLowerCase = "dd/mm/yyyy";
+  const _delimiter = "/";
+  var formatItems = formatLowerCase.split(_delimiter);
+  var dateItems = _date.split(_delimiter);
+  var monthIndex = formatItems.indexOf("mm");
+  var dayIndex = formatItems.indexOf("dd");
+  var yearIndex = formatItems.indexOf("yyyy");
+  var month = parseInt(dateItems[monthIndex]);
+  month -= 1;
+  var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+  return formatedDate;
+}

@@ -10,10 +10,6 @@ import Firebase from "../fire";
 import StripeComponent from "../components/StripeInterface";
 import CashDelivery from "../components/SETTINGS/CashOnDelivery";
 
-const UserActionButton = withStyles({
-  root: {},
-})(Button);
-
 const Container = withStyles({
   root: {
     display: "flex",
@@ -41,7 +37,11 @@ const Account = () => {
     signOutUser();
     setUser(null);
   };
+<<<<<<< HEAD
 
+=======
+  /*
+>>>>>>> c6c70519f3481caefcdb7b62c5631afe370485a0
   const obj = {
     mode: 'payment',
     customer: 'cus_H5xdctLSPKqvTm',
@@ -71,7 +71,6 @@ const Account = () => {
   };
 
   return (
-
     <Container>
      <CashDelivery orders={obj} />
       {/*user !== null ? (

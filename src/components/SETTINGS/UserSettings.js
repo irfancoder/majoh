@@ -81,7 +81,7 @@ const InputSettings = ({ userData }) => {
     <Card>
       <CardContent>
         <Grid container spacing={4} className={classes.container}>
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               className={classes.input}
               name="name"
@@ -116,22 +116,9 @@ const InputSettings = ({ userData }) => {
               onChange={handleInput}
               defaultValue={user.phone}
             />
-
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checked}
-                  onChange={handleChecked}
-                  name="checked"
-                  color="primary"
-                  size="small"
-                />
-              }
-              label="Receive an email"
-            />
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={12} md={6}>
             <TextField
               className={classes.input}
               multiline

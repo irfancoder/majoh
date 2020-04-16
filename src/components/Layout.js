@@ -9,14 +9,17 @@ import dimensions from "../styles/dimensions";
 const Container = styled.div`
   max-width: ${dimensions.maxwidthDesktop}px;
   margin: auto;
+  box-sizing: border-box;
+  padding-bottom: 6em;
+  min-height: 100vh;
 `;
 
 const Layout = ({ children }) => {
   return (
     <div>
       <OrderProvider>
-        <CssBaseline />
         <Header></Header>
+        <CssBaseline />
         <Container>{children}</Container>
         <Footer></Footer>
       </OrderProvider>

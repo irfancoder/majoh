@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { FirebaseAppProvider } from "reactfire";
+import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 import PaidOrders from "./pages/paidorders";
 import Account from "./pages/account";
@@ -8,6 +9,7 @@ import Contact from "./pages/contact";
 import Home from "./pages/home";
 import Layout from "./components/Layout";
 import Header from "./components/Header";
+import color from "./styles/color";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD0rkPJ6JfDKlHDaKhnzSogAJQk-0y47Mk",
@@ -20,18 +22,29 @@ const firebaseConfig = {
   measurementId: "G-9M3WZRWZNB",
 };
 
+const theme = createMuiTheme({
+  palette: {
+    type: "light",
+    primary: {
+      main: color.red,
+    },
+  },
+});
+
 const App = () => {
   return (
     <FirebaseAppProvider firebaseConfig={firebaseConfig}>
       <Router>
-        <Layout>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/paidorders" component={PaidOrders} />
-            <Route path="/account" component={Account} />
-            <Route path="/contact" component={Contact} />
-          </Switch>
-        </Layout>
+        <ThemeProvider theme={theme}>
+          <Layout>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/paidorders" component={PaidOrders} />
+              <Route path="/account" component={Account} />
+              <Route path="/contact" component={Contact} />
+            </Switch>
+          </Layout>
+        </ThemeProvider>
       </Router>
     </FirebaseAppProvider>
   );

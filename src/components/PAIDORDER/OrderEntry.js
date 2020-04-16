@@ -9,6 +9,7 @@ import OrderItem from "./OrderItem";
 const useStyles = makeStyles({
   root: {
     width: "100%",
+    marginBottom: "0.5em",
   },
   content: {
     display: "flex",
@@ -26,48 +27,40 @@ const useStyles = makeStyles({
   },
 });
 
-const History = () => {
+const getTotal = (orders) => {
+  let total = 0;
+  orders.forEach((order) => {
+    total += order.amount;
+  });
+  total = total / 100;
+  return total.toFixed(2);
+};
+
+const History = ({ order }) => {
   const classes = useStyles();
   return (
     <Card className={classes.root}>
       <CardContent className={classes.content}>
-        <Typography variant="caption" display="block" gutterBottom></Typography>
         <div className={classes.order_info}>
           <Typography color="textSecondary" variant="overline" gutterBottom>
-            Order ID #123-456
+            ID#{order.id.substr(order.id.length - 6)}
           </Typography>
-          <div className={classes.order_info}>
-            <Typography
-              className={classes.order_id}
-              color="textSecondary"
-              variant="caption"
-              gutterBottom
-            >
-              Mar 23, 2020
-            </Typography>
-            <Typography
-              className={classes.order_id}
-              color="textSecondary"
-              variant="caption"
-              gutterBottom
-            >
-              Paid by Credit Card, ends with 5018
-            </Typography>
-          </div>
         </div>
         <div className={classes.order_item}>
-          <OrderItem />
+          {order.display_items.map((item, index) => {
+            return <OrderItem item={item} key={index} />;
+          })}
         </div>
         <div className={classes.order_info}>
           <Typography color="textSecondary" variant="caption">
-            Delivered on Mar 24, 2020
+            Delivery: {order.metadata.deliveryDate}
           </Typography>
           <Typography
             className={classes.order_id}
             color="textSecondary"
             variant="subtitle1"
           >
-            RM XX.XX
+            RM {getTotal(order.display_items)}
           </Typography>
         </div>
       </CardContent>
