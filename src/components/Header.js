@@ -197,10 +197,8 @@ export default function PrimarySearchAppBar() {
       </MenuItem>
 
       <MenuItem>
-        <Link to="/account">
-          <Typography className={classes.navItem} variant="subheading1">
-            account
-          </Typography>
+        <Link className={classes.navItem} to="/account">
+          <Typography variant="subheading1">account</Typography>
         </Link>
       </MenuItem>
     </Menu>

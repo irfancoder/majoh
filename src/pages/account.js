@@ -7,6 +7,7 @@ import SignIn from "../components/SETTINGS/SignIn";
 import MuiContainer from "@material-ui/core/Container";
 import { isUserLoggedIn, signOutUser } from "../utils/index";
 import Firebase from "../fire";
+import { Helmet } from "react-helmet";
 import StripeComponent from "../components/StripeInterface";
 
 const Container = withStyles({
@@ -66,14 +67,21 @@ const Account = () => {
   };
 */
   return (
-    <Container>
-      {/* <StripeComponent orders={obj} /> */}
-      {user !== null ? (
-        <SettingsCard logout={handleUserLogout} />
-      ) : (
-        <SignUpModal />
-      )}
-    </Container>
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Account - Majoh</title>
+        <link rel="canonical" href="http://majoh.com.my/account" />
+      </Helmet>
+      <Container>
+        {/* <StripeComponent orders={obj} /> */}
+        {user !== null ? (
+          <SettingsCard logout={handleUserLogout} />
+        ) : (
+          <SignUpModal />
+        )}
+      </Container>
+    </>
   );
 };
 

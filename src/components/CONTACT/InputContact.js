@@ -1,78 +1,76 @@
-import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid'
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-
-
+import React from "react";
+import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core/styles";
+import Grid from "@material-ui/core/Grid";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    
-  }
+    boxSizing: "border-box",
+    paddingTop: "2em",
+    width: "100%",
+    margin: "auto",
+  },
+  input: {
+    marginBottom: "2em",
+  },
 }));
 
-export default function InputContact()
-{
-  const [selectedValue, setSelectedValue] = React.useState('a');
+const InputContact = ({ handleInput }) => {
   const classes = useStyles();
-  const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
-    checkedF: true,
-    checkedG: true,
-  });
-
-  const handleChangeText = (event) => {
-    setSelectedValue(event.target.value);
-  };
-
-  const handleChangeButton = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
-
-    return(
-      <>
-    <Grid container spacing={6} >
+  return (
+    <>
+      <Grid container className={classes.root} spacing={6}>
         <Grid item xs={6}>
-        <p>Name</p>
-        <TextField
-          id="outlined-number"
-          type="string"
-          fullWidth
-          variant="filled"
-        />
-        <p>Email</p>
-        <TextField
-          id="outlined-number"
-          type="string"
-          fullWidth 
-          variant="filled"
-        />
+          <TextField
+            className={classes.input}
+            name="name"
+            type="string"
+            fullWidth
+            label="Name"
+            variant="outlined"
+            onChange={handleInput}
+          />
 
-        <p>Phone Number</p>
-        <TextField
-          id="outlined-number"
-          type="string"
-          fullWidth 
-          variant="filled"
-        />
-        
+          <TextField
+            className={classes.input}
+            name="email"
+            type="string"
+            fullWidth
+            label="Email"
+            variant="outlined"
+            onChange={handleInput}
+          />
+
+          <TextField
+            className={classes.input}
+            type="number"
+            name="phone"
+            fullWidth
+            label="Phone number"
+            placeholder="+60"
+            variant="outlined"
+            onChange={handleInput}
+          />
         </Grid>
 
         <Grid item xs={6}>
-        <p>Message</p>
-        <TextField
-          id="filled-multiline-static"
-          multiline
-          rows="8"
-          variant="filled"
-          fullWidth 
-        />
+          <TextField
+            id="filled-multiline-static"
+            className={classes.input}
+            multiline
+            name="message"
+            label="Message"
+            rows="10"
+            onChange={handleInput}
+            variant="outlined"
+            fullWidth
+          />
         </Grid>
+      </Grid>
+    </>
+  );
+};
 
-     </Grid>
-     </>
-    );
-}
+export default InputContact;

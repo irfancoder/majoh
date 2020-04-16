@@ -1,21 +1,42 @@
 import React from "react";
 import styled from "styled-components";
 import Card from "@material-ui/core/Card";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
+import {
+  useFirestoreCollectionData,
+  useFirestore,
+  SuspenseWithPerf,
+} from "reactfire";
 
-const Container = styled(Card)`
-  background-color: #6772e5;
-  color: #fff;
+const Container = styled.img`
+  border-radius: 8px;
+
   width: 100%;
-  height: 200px;
-  box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-  padding: 7px 14px;
-  &:hover {
-    background-color: #5469d4;
-  }
+  height: auto;
 `;
 
 const Banner = () => {
-  return <Container />;
+  const PromoBanner = () => {
+    const ref = useFirestore().collection("banners");
+
+    const bannerData = useFirestoreCollectionData(ref);
+
+    return bannerData.map((promo) => {
+      return <Container src={promo.image} alt={promo.alt} />;
+    });
+  };
+
+  return (
+    <SuspenseWithPerf
+      fallback={<p>opening the shop...</p>}
+      traceId={"load-burrito-status"}
+    >
+      <Carousel showStatus="false">
+        <PromoBanner />
+      </Carousel>
+    </SuspenseWithPerf>
+  );
 };
 
 export default Banner;

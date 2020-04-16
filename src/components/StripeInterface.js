@@ -17,9 +17,10 @@ import { Button } from "@material-ui/core";
    <StripeComponent orders= {obj}/>
 
 */
-function StripeComponent({ total, orders }) {
+function StripeComponent({ total, orders, setLoading }) {
   //const stripe =   window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
   const redirect = () => {
+    setLoading(true);
     let sessionId;
     const stripe = window.Stripe("pk_test_TTPQooORfZwk6rmGHLX7TKzh00W4AogtnU");
     fetch(

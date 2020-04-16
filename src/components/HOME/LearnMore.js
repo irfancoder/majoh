@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   description: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(2),
   },
   price: {
     textAlign: "right",
@@ -102,7 +102,7 @@ const LearnMore = ({ data, addOrder }) => {
                 </Typography>
               </div>
               <div>
-                <Typography className={classes.price} variant="caption">
+                <Typography className={classes.description} variant="caption">
                   Food will be fulfilled by delivery.
                 </Typography>
                 <Typography className={classes.price} variant="h5">

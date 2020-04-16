@@ -108,7 +108,7 @@ const Footer = () => {
         </Typography>
       </FooterDescription>
       <AdvertisingContainer>
-        <Link style={{ textDecoration: "none" }} to="/privacy-policy">
+        <Link style={{ textDecoration: "none" }} to="/privacypolicy">
           <Advertising variant="caption">Privacy policy</Advertising>
         </Link>
 
@@ -117,9 +117,8 @@ const Footer = () => {
         </Link>
       </AdvertisingContainer>
       <AdvertisingContainer>
-        <FooterCopyright>© Majoh {year}. All rights reserved.</FooterCopyright>
         <FooterCopyright>
-          Designed &amp; developed by{" "}
+          © Majoh {year}. All rights reserved. Designed &amp; developed by{" "}
           <a href="https://www.ombak.dev">ombak devhouse</a>
         </FooterCopyright>
       </AdvertisingContainer>

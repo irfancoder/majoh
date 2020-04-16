@@ -9,6 +9,7 @@ import {
   SuspenseWithPerf,
 } from "reactfire";
 import { groupBy } from "../utils";
+import { Helmet } from "react-helmet";
 
 const MenuHeader = styled(Typography)`
   text-transform: uppercase;
@@ -53,16 +54,24 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <Banner />
-      <MenuHeader variant="h6">menu</MenuHeader>
-      <SuspenseWithPerf
-        fallback={<p>loading delicious food</p>}
-        traceId={"load-burrito-status"}
-      >
-        <MenuData />;
-      </SuspenseWithPerf>
-    </div>
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>Majoh | Miri's Humble Kitchen Food Delivery</title>
+        <link rel="canonical" href="http://majoh.com.my" />
+      </Helmet>
+
+      <div>
+        <Banner />
+        <MenuHeader variant="h6">menu</MenuHeader>
+        <SuspenseWithPerf
+          fallback={<p>loading delicious food...</p>}
+          traceId={"load-burrito-status"}
+        >
+          <MenuData />
+        </SuspenseWithPerf>
+      </div>
+    </>
   );
 };
 

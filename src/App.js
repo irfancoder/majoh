@@ -7,8 +7,8 @@ import PaidOrders from "./pages/paidorders";
 import Account from "./pages/account";
 import Contact from "./pages/contact";
 import Home from "./pages/home";
+import PrivacyPolicy from "./pages/privacypolicy";
 import Layout from "./components/Layout";
-import Header from "./components/Header";
 import color from "./styles/color";
 
 const firebaseConfig = {
@@ -42,6 +42,7 @@ const App = () => {
               <Route path="/paidorders" component={PaidOrders} />
               <Route path="/account" component={Account} />
               <Route path="/contact" component={Contact} />
+              <Route path="/privacypolicy" component={PrivacyPolicy} />
             </Switch>
           </Layout>
         </ThemeProvider>

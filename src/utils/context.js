@@ -21,10 +21,12 @@ const OrderProvider = (props) => {
 
     return { item, qty, price, total };
   }
-  const TAX_RATE = 0.0;
+  const PERCENT_RATE = 0.1;
+  const FLAT_RATE = 1.5;
 
   const invoiceSubtotal = subtotal(orderState);
-  const invoiceTaxes = TAX_RATE * invoiceSubtotal;
+  const invoiceTaxes =
+    invoiceSubtotal > 15 ? PERCENT_RATE * invoiceSubtotal : FLAT_RATE;
   const invoiceTotal = invoiceTaxes + invoiceSubtotal;
 
   function subtotal(items) {
@@ -37,7 +39,9 @@ const OrderProvider = (props) => {
         order: orderState,
         invoice: {
           subtotal: ccyFormat(invoiceSubtotal),
-          tax: ccyFormat(invoiceTaxes),
+          serviceRate:
+            invoiceSubtotal > 15 ? PERCENT_RATE : ccyFormat(FLAT_RATE),
+          serviceCharge: ccyFormat(invoiceTaxes),
           total: ccyFormat(invoiceTotal),
         },
         addOrder: (item) => {
@@ -58,11 +62,9 @@ const OrderProvider = (props) => {
               Number(qty),
               Number(item.price)
             );
-            console.log({ prevOrder, test: "A" });
             setOrderState(prevOrder);
           } else {
             prevOrder.splice(i, 1);
-            console.log({ prevOrder, test: "B" });
             setOrderState(prevOrder);
           }
         },

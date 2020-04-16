@@ -1,42 +1,56 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Typography from '@material-ui/core/Typography';
-import InputContact from "./InputContact"
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
-import SubmitNewCreditCard from '../StripeInterface'
+import React, { useState } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Typography from "@material-ui/core/Typography";
+import InputContact from "./InputContact";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    maxWidth: 750,
-    flexGrow:1,
-  }
+    maxWidth: "120vh",
+    flexGrow: 1,
+    margin: "auto",
+  },
 }));
 
-export default function ContactCard() {
+const ContactCard = () => {
+  const [state, setState] = React.useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
   const classes = useStyles();
-  
+
+  const handleInput = (event) => {
+    setState({ ...state, [event.target.name]: event.target.value });
+  };
+
   return (
-    <>
-       
-            <Typography component="h1" align="left" variant="h6" color="textPrimary" gutterBottom>
-              Contact
-            </Typography>
-            <Card className={classes.root}>
-                <CardContent>
-                     {/*Pass in to InputText Later */}
-                    <InputContact/>
-                </CardContent>
-    
-                <CardActions style={{justifyContent: 'flex-end'}}>
-                    <Button>Submit</Button>
-                </CardActions>
-            </Card>
-    
-    </>
+    <div className={classes.root}>
+      <Typography
+        component="h1"
+        align="left"
+        variant="h6"
+        color="textPrimary"
+        gutterBottom
+      >
+        Contact
+      </Typography>
+      <Card className={classes.root}>
+        <CardContent>
+          {/*Pass in to InputText Later */}
+          <InputContact handleInput={handleInput} />
+        </CardContent>
+
+        <CardActions style={{ justifyContent: "flex-end" }}>
+          <Button onClick={null}>Submit</Button>
+        </CardActions>
+      </Card>
+    </div>
   );
-}
+};
+
+export default ContactCard;

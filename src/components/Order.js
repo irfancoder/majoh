@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { withStyles } from "@material-ui/core/styles";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Typography from "@material-ui/core/Typography";
 import OrderList from "./ORDER/OrderList";
@@ -12,6 +11,7 @@ import { OrderConsumer } from "../utils/context";
 import StripeButton from "./StripeInterface";
 import CloseIcon from "@material-ui/icons/Close";
 import dimensions from "../styles/dimensions";
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 import { useFirestoreDocData, useFirestore, SuspenseWithPerf } from "reactfire";
 import { isUserLoggedIn, getUserAddress } from "../utils";
@@ -32,10 +32,8 @@ const Container = styled.div`
   }
 `;
 
-const createPurchaseOrder = (order_list, userData, date) => {
-  console.log(order_list);
+const createPurchaseOrder = (order_list, userData, date, invoice) => {
   const purchaseOrder = {
-    customer_email: userData.email,
     metadata: {
       deliveryDate: date.toLocaleString().split(",")[0],
       deliveryAddress: getUserAddress(
@@ -47,15 +45,18 @@ const createPurchaseOrder = (order_list, userData, date) => {
       phoneNo: userData.phone,
       Name: userData.name,
       uID: userData.uid,
+      customerEmail: userData.email,
     },
-    order_items: createOrderItem(order_list),
+    order_items: createOrderItem(order_list, invoice),
   };
 
+  console.log(purchaseOrder);
   return purchaseOrder;
 };
 
-const createOrderItem = (order_list) => {
+const createOrderItem = (order_list, invoice) => {
   let newList = [];
+  console.log(invoice);
   order_list.forEach((order) => {
     let item = {
       currency: "myr",
@@ -66,11 +67,20 @@ const createOrderItem = (order_list) => {
     newList.push(item);
   });
 
+  let service = {
+    currency: "myr",
+    quantity: 1,
+    amount: invoice * 100,
+    name: "Service charge",
+  };
+  newList.push(service);
+
   return newList;
 };
 
 const Order = ({ open, handleDrawer }) => {
   const [deliveryDate, setDeliveryDate] = useState(new Date());
+  const [loading, setLoading] = useState(false);
 
   const handleSetDate = (date) => {
     setDeliveryDate(date);
@@ -82,19 +92,37 @@ const Order = ({ open, handleDrawer }) => {
       .doc(isUserLoggedIn().uid);
     const userData = useFirestoreDocData(userRef);
 
-    console.log(createPurchaseOrder(context.order, userData, deliveryDate));
-
     if (!userData.street) {
       return (
-        <Typography variant="body1">
-          Please insert your details before checkout
-        </Typography>
+        <Button
+          variant="contained"
+          style={{ width: "100%", marginTop: "1em" }}
+          disabled
+        >
+          Checkout
+        </Button>
+      );
+    } else if (context.invoice.subtotal <= 1.5) {
+      return (
+        <Button
+          variant="contained"
+          style={{ width: "100%", marginTop: "1em" }}
+          disabled
+        >
+          Checkout
+        </Button>
       );
     } else
       return (
         <StripeButton
           total={context.invoice.total}
-          orders={createPurchaseOrder(context.order, userData, deliveryDate)}
+          orders={createPurchaseOrder(
+            context.order,
+            userData,
+            deliveryDate,
+            Number(context.invoice.serviceCharge)
+          )}
+          setLoading={setLoading}
         />
       );
   };
@@ -133,16 +161,33 @@ const Order = ({ open, handleDrawer }) => {
                   fallback={<p>loading user info...</p>}
                   traceId={"load-burrito-status"}
                 >
+                  {loading ? (
+                    <div>
+                      <Typography
+                        style={{ textAlign: "center" }}
+                        variant="caption"
+                      >
+                        Bringing you to checkout...
+                      </Typography>
+                      <LinearProgress
+                        style={{ marginBotton: "1em", width: "100%" }}
+                      />
+                    </div>
+                  ) : (
+                    <LinearProgress style={{ width: "0" }} />
+                  )}
                   <Stripe context={context} />
                 </SuspenseWithPerf>
               ) : (
-                <Button
-                  variant="contained"
-                  style={{ width: "100%", marginTop: "1em" }}
-                  disabled
-                >
-                  Checkout
-                </Button>
+                <div>
+                  <Button
+                    variant="contained"
+                    style={{ width: "100%", marginTop: "1em" }}
+                    disabled
+                  >
+                    Checkout
+                  </Button>
+                </div>
               )}
             </Container>
           </SwipeableDrawer>

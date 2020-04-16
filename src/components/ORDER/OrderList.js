@@ -11,8 +11,6 @@ import Paper from "@material-ui/core/Paper";
 import { OrderConsumer } from "../../utils/context";
 import Divider from "@material-ui/core/Divider";
 
-const TAX_RATE = 0.0;
-
 const useStyles = makeStyles({
   table: {
     minWidth: "100%",
@@ -42,23 +40,6 @@ const TableCell = withStyles({
 function ccyFormat(num) {
   return `${num.toFixed(2)}`;
 }
-
-function priceRow(qty, unit) {
-  return qty * unit;
-}
-
-function createRow(desc, qty, unit) {
-  const price = priceRow(qty, unit);
-  return { desc, qty, unit, price };
-}
-
-// function subtotal(items) {
-//   return items.map(({ price }) => price).reduce((sum, i) => sum + i, 0);
-// }
-
-// const invoiceSubtotal = subtotal(rows);
-// const invoiceTaxes = TAX_RATE * invoiceSubtotal;
-// const invoiceTotal = invoiceTaxes + invoiceSubtotal;
 
 const OrderList = ({ order }) => {
   const classes = useStyles();
@@ -91,7 +72,7 @@ const OrderList = ({ order }) => {
                 colSpan={4}
                 style={{
                   textAlign: "center",
-
+                  color: "#a4a4a4",
                   boxSizing: "border-box",
                   padding: "6em",
                 }}
@@ -117,11 +98,15 @@ const OrderList = ({ order }) => {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Tax</TableCell>
-                    <TableCell align="right">{`${(TAX_RATE * 100).toFixed(
-                      0
-                    )} %`}</TableCell>
-                    <TableCell align="right">{context.invoice.tax}</TableCell>
+                    <TableCell>Service charge</TableCell>
+                    <TableCell align="right">
+                      {context.invoice.subtotal > 15
+                        ? `${context.invoice.serviceRate * 100} %`
+                        : `RM ${context.invoice.serviceRate}`}
+                    </TableCell>
+                    <TableCell align="right">
+                      {context.invoice.serviceCharge}
+                    </TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell colSpan={2}>Total (RM)</TableCell>
