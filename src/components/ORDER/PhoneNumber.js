@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-const PhoneNumber = () => {
+const PhoneNumber = ({ handleDrawer }) => {
   const classes = useStyles();
 
   const Phone = () => {
@@ -61,7 +61,9 @@ const PhoneNumber = () => {
       </CardContent>
       <CardActions className={classes.action}>
         <Link to="/account">
-          <Button size="small">edit</Button>
+          <Button onClick={handleDrawer(false)} size="small">
+            edit
+          </Button>
         </Link>
       </CardActions>
     </div>

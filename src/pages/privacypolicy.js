@@ -3,6 +3,7 @@ import { withStyles } from "@material-ui/core/styles";
 import MuiContainer from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { Helmet } from "react-helmet";
+import favicon from "../assets/images/favicon.ico";
 
 const Container = withStyles({
   root: {
@@ -22,8 +23,9 @@ const PrivacyPolicy = () => {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Account - Majoh</title>
-        <link rel="canonical" href="http://majoh.com.my/account" />
+        <title>Privacy Policy - Majoh</title>
+        <link rel="canonical" href="http://majoh.com.my/privacypolicy" />
+        <link rel="icon" type="image/png" href={favicon} sizes="16x16" />
       </Helmet>
       <Container>
         <Typography variant="h6" gutterBottom>

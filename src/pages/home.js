@@ -10,6 +10,7 @@ import {
 } from "reactfire";
 import { groupBy } from "../utils";
 import { Helmet } from "react-helmet";
+import favicon from "../assets/images/favicon.ico";
 
 const MenuHeader = styled(Typography)`
   text-transform: uppercase;
@@ -59,6 +60,7 @@ const Home = () => {
         <meta charSet="utf-8" />
         <title>Majoh | Miri's Humble Kitchen Food Delivery</title>
         <link rel="canonical" href="http://majoh.com.my" />
+        <link rel="icon" type="image/png" href={favicon} sizes="16x16" />
       </Helmet>
 
       <div>

@@ -58,7 +58,7 @@ function StripeComponent({ total, orders, setLoading }) {
       style={{ width: "100%", marginTop: "1em" }}
       onClick={redirect}
     >
-      Checkout {total ? "(RM" + total + ")" : ""}
+      Online Checkout {total ? "(RM" + total + ")" : ""}
     </Button>
   );
 }

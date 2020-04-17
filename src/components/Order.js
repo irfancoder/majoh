@@ -56,7 +56,6 @@ const createPurchaseOrder = (order_list, userData, date, invoice) => {
     order_items: createOrderItem(order_list, invoice),
   };
 
-  console.log(purchaseOrder);
   return purchaseOrder;
 };
 
@@ -126,7 +125,7 @@ const Order = ({ open, handleDrawer }) => {
             style={{ width: "100%", marginTop: "1em" }}
             disabled
           >
-            Checkout
+            Card / Online Banking
           </Button>
         );
       } else
@@ -190,8 +189,8 @@ const Order = ({ open, handleDrawer }) => {
                 My Orders
               </Typography>
               <OrderList order={context.order} />
-              <DeliveryAddress />
-              <PhoneNumber />
+              <DeliveryAddress handleDrawer={handleDrawer} />
+              <PhoneNumber handleDrawer={handleDrawer} />
               <DeliveryTimeDate
                 date={deliveryDate}
                 handleSetDate={handleSetDate}
@@ -219,15 +218,6 @@ const Order = ({ open, handleDrawer }) => {
                       traceId={"load-burrito-status"}
                     >
                       <Checkout context={context} tag="cod" />
-                      {/* <ModalCheckout
-                        total={context.invoice.total}
-                        orders={createPurchaseOrder(
-                          context.order,
-                          userData,
-                          deliveryDate,
-                          Number(context.invoice.serviceCharge)
-                        )}
-                      ></ModalCheckout> */}
                     </SuspenseWithPerf>
                   ) : (
                     <Button
@@ -253,7 +243,7 @@ const Order = ({ open, handleDrawer }) => {
                       style={{ width: "100%", marginTop: "1em" }}
                       disabled
                     >
-                      Stripe Checkout
+                      Card / Online Banking
                     </Button>
                   )}
                 </Grid>
