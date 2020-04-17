@@ -33,8 +33,14 @@ export default function ModalCheckout({ total, orders }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState("paper");
+  const [disabled, setDisabled] = useState(false);
 
   const redirect = () => {
+    if (disabled) {
+      return;
+    }
+    setDisabled(true);
+    // Send
     fetch(
       "https://us-central1-majoh-8eea2.cloudfunctions.net/payCashOnDelivery",
       {
@@ -113,8 +119,8 @@ export default function ModalCheckout({ total, orders }) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={redirect} color="primary">
-            Confirm {total ? "(RM" + total + ")" : ""}
+          <Button onClick={redirect} disabled={disabled} color="primary">
+            {disabled ? "Processing order..." : `Confirm (RM ${total})`}
           </Button>
         </DialogActions>
       </Dialog>

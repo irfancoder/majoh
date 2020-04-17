@@ -100,9 +100,9 @@ const OrderList = ({ order }) => {
                   <TableRow>
                     <TableCell>Service charge</TableCell>
                     <TableCell align="right">
-                      {context.invoice.subtotal > 15
+                      {/* {context.invoice.subtotal > 15
                         ? `${context.invoice.serviceRate * 100} %`
-                        : `RM ${context.invoice.serviceRate}`}
+                        : `RM ${context.invoice.serviceRate}`} */}
                     </TableCell>
                     <TableCell align="right">
                       {context.invoice.serviceCharge}
