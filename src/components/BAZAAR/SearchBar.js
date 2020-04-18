@@ -13,7 +13,7 @@ export default function SearchBar() {
       useEffect(()=> {
         firebase
         .firestore()
-        .collection("bazaar_vendors")
+        .collection("bazaar_menu")
         .onSnapshot((snapshot) => {
           const newData = snapshot.docs.map((doc) => ({
             id:doc.id,

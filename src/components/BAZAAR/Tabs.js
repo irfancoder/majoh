@@ -1,4 +1,5 @@
 import React from "react";
+import {useState, useEffect} from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
@@ -15,6 +16,7 @@ import ParentMenu from "/home/marcos/Documents/github-stuff/majoh/src/components
 import { Grid } from "@material-ui/core";
 import LocationDropDown from "../BAZAAR/LocationDropdown"
 import SearchBar from "../BAZAAR/SearchBar"
+import firebase from "../../fire"
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -136,6 +138,21 @@ function a11yProps(index) {
 }
 
 export default function TabComponent() {
+  const[bazaardata, setBazaarData] = useState([]);
+      useEffect(()=> {
+        firebase
+        .firestore()
+        .collection("bazaar_menu")
+        .onSnapshot((snapshot) => {
+          const newData = snapshot.docs.map((doc) => ({
+            id:doc.id,
+            ...doc.data()
+          }))
+          setBazaarData(newData)
+        })
+
+      }, [])
+
   const MenuData = () => {
     const menuRef = useFirestore()
       .collection("vendor")
@@ -152,6 +169,18 @@ export default function TabComponent() {
       return <ParentMenu meal={meal[key]} menu={sortedMenu[key]} />;
     });
   };
+
+
+  const BazaarMenuData = () => {
+    const sortedMenu = groupBy(bazaardata, "item");
+    console.log(sortedMenu);
+    /*
+    return Object.keys(sortedMenu).map((key, index) => {
+      return <ParentMenu meal={meal[key]} menu={sortedMenu[key]} />;
+    });
+    */
+    return(<div>Hi</div>);
+  }
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -193,11 +222,12 @@ export default function TabComponent() {
 
           </Grid>
       </Grid>
+
       <SuspenseWithPerf
           fallback={<p>loading delicious food...</p>}
           traceId={"load-burrito-status"}
         >
-          <MenuData />
+          <BazaarMenuData/>
         </SuspenseWithPerf>
 
       </TabPanel>
