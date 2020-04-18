@@ -11,6 +11,7 @@ import { isUserLoggedIn, splitOrderArray } from "../utils";
 import Firebase from "../fire";
 import { Helmet } from "react-helmet";
 import SignUpModal from "../components/SETTINGS/SignUpModal";
+import favicon from "../assets/images/favicon.ico";
 
 const useStyle = makeStyles({
   root: {
@@ -69,8 +70,9 @@ const PaidOrders = () => {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Paid Orders| Majoh</title>
+        <title>Paid Orders | Majoh</title>
         <link rel="canonical" href="http://majoh.com.my/paidorders" />
+        <link rel="icon" type="image/ico" href={favicon} sizes="16x16" />
       </Helmet>
       <div>
         {user !== null ? (

@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   },
 });
 
-const DeliveryAddress = () => {
+const DeliveryAddress = ({ handleDrawer }) => {
   const classes = useStyles();
 
   const Address = () => {
@@ -64,7 +64,9 @@ const DeliveryAddress = () => {
       </CardContent>
       <CardActions className={classes.action}>
         <Link to="/account">
-          <Button size="small">edit</Button>
+          <Button onClick={handleDrawer(false)} size="small">
+            edit
+          </Button>
         </Link>
       </CardActions>
     </div>

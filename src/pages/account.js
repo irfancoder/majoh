@@ -9,6 +9,7 @@ import { isUserLoggedIn, signOutUser } from "../utils/index";
 import Firebase from "../fire";
 import { Helmet } from "react-helmet";
 import StripeComponent from "../components/StripeInterface";
+import favicon from "../assets/images/favicon.ico";
 
 const Container = withStyles({
   root: {
@@ -37,35 +38,6 @@ const Account = () => {
     signOutUser();
     setUser(null);
   };
-  /*
-  const obj = {
-    mode: 'payment',
-    customer: 'cus_H5xdctLSPKqvTm',
-    metadata: {customerEmail: 'marcosjconcon@gmail.com',deliveryDate: '13/04/97', deliveryAddress: 'tress', phoneNo: 666, Name: 'Big Dick', uID: 'F4cobyo9JZZXw2Q4xTgV6VDaJJw1'},
-    order_items: [
-      {
-        currency: "myr",
-        quantity: 3,
-        amount: 15000,
-        name: "nasi vagene",
-        description: "good all stuff",
-        images: [
-          "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
-        ],
-      },
-      {
-        currency: "myr",
-        quantity: 7,
-        amount: 15000,
-        name: "nasi penis",
-        description: "good not stuff",
-        images: [
-          "https://i.pinimg.com/originals/ca/46/e0/ca46e012af90c5911733e3b0034ca385.jpg",
-        ],
-      },
-    ],
-  };
-*/
 
   return (
     <>
@@ -73,9 +45,9 @@ const Account = () => {
         <meta charSet="utf-8" />
         <title>Account - Majoh</title>
         <link rel="canonical" href="http://majoh.com.my/account" />
+        <link rel="icon" type="image/ico" href={favicon} sizes="16x16" />
       </Helmet>
       <Container>
-        {/* <StripeComponent orders={obj} /> */}
         {user !== null ? (
           <SettingsCard logout={handleUserLogout} />
         ) : (

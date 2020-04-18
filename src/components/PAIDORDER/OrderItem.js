@@ -5,15 +5,24 @@ import Typography from "@material-ui/core/Typography";
 const useStyle = makeStyles({
   root: {
     display: "flex",
+    width: "100%",
     alignItems: "center",
+    justifyContent: "flex-start",
     paddingLeft: "2em",
-    paddingRight: "2em",
   },
   order: {
     paddingLeft: "2em",
+    paddingRight: "1em",
+    flexGrow: 2,
+  },
+  price: {
+    marginRight: "2em",
   },
 });
 
+function ccyFormat(num) {
+  return `${num.toFixed(2)}`;
+}
 const OrderItem = ({ item }) => {
   const classes = useStyle();
   return (
@@ -21,7 +30,10 @@ const OrderItem = ({ item }) => {
       <Typography variant="subtitle1">{item.quantity} x</Typography>
 
       <Typography className={classes.order} variant="subtitle1">
-        {item.custom.name}
+        {item.custom ? item.custom.name : item.name}
+      </Typography>
+      <Typography className={classes.price} variant="subtitle1">
+        RM {ccyFormat(item.amount / 100)}
       </Typography>
     </div>
   );
