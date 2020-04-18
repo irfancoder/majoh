@@ -24,7 +24,6 @@ export default function SearchBar() {
 
   return (
     <div className="App">
-      {} /*
       <TextField
         type="search"
         variant="outlined"
@@ -44,8 +43,3 @@ export default function SearchBar() {
     </div>
   );
 }
-
-//           }}
-//           inputProps={{ 'aria-label': 'search' }}
-//         />
-//         */}

@@ -12,6 +12,7 @@ import {
 } from "reactfire";
 import { groupBy } from "../../utils/index";
 import ParentMenu from "../HOME/ParentMenu";
+import BazaarParentMenu from "../BAZAAR/BazaarParentMenu";
 import { Grid } from "@material-ui/core";
 import LocationDropDown from "../BAZAAR/LocationDropdown";
 import SearchBar from "../BAZAAR/SearchBar";
@@ -135,7 +136,7 @@ function a11yProps(index) {
 }
 
 export default function TabComponent() {
-  const MenuData = () => {
+  const MajohData = () => {
     const menuRef = useFirestore()
       .collection("vendor")
       .doc(" k8oheqc44eknonnybq8")
@@ -150,6 +151,13 @@ export default function TabComponent() {
     return Object.keys(sortedMenu).map((key, index) => {
       return <ParentMenu meal={meal[key]} menu={sortedMenu[key]} />;
     });
+  };
+
+  const BazaarData = () => {
+    const menuRef = useFirestore().collection("bazaar_menu");
+    const dataMenu = useFirestoreCollectionData(menuRef);
+
+    return <BazaarParentMenu menu={dataMenu} />;
   };
 
   const classes = useStyles();
@@ -175,7 +183,7 @@ export default function TabComponent() {
           fallback={<p>loading delicious food...</p>}
           traceId={"load-burrito-status"}
         >
-          <MenuData />
+          <MajohData />
         </SuspenseWithPerf>
       </TabPanel>
       <TabPanel value={value} index={1}>
@@ -191,7 +199,7 @@ export default function TabComponent() {
           fallback={<p>loading delicious food...</p>}
           traceId={"load-burrito-status"}
         >
-          <MenuData />
+          <BazaarData />
         </SuspenseWithPerf>
       </TabPanel>
     </div>
