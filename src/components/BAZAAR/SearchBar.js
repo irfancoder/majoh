@@ -35,6 +35,7 @@ export default function SearchBar() {
             )
           }}
         />
+        
          <Button onClick={getDataAlgolia} >
             Test
          </Button>
