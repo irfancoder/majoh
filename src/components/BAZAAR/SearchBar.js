@@ -4,20 +4,26 @@ import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from "@material-ui/icons/Search";
 import Button from "@material-ui/core/Button";
-import algoliasearch from 'algoliasearch';
-import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
+import {useState, useEffect} from "react";
+import firebase from "../../fire"
+
 
 export default function SearchBar() {
+  const[data, setData] = useState([]);
+      useEffect(()=> {
+        firebase
+        .firestore()
+        .collection("bazaar_vendors")
+        .onSnapshot((snapshot) => {
+          const newData = snapshot.docs.map((doc) => ({
+            id:doc.id,
+            ...doc.data()
+          }))
+          setData(newData)
+        })
 
-    const getDataAlgolia = () => 
-    {
-        var client = algoliasearch("07CVJHF6V6", "d7ecf94667407705380df31a5e263040");
-        var index = client.initIndex('test_search');
-        index.getObject("UQJSYf8mpiJZIbTo9bM9").then(results => {
-            console.log(results);
-          });
-    }
-            
+      }, [])
+
     return (
       <div className="App">
          {} /*
@@ -36,9 +42,12 @@ export default function SearchBar() {
           }}
         />
         
-         <Button onClick={getDataAlgolia} >
+         <Button  >
             Test
          </Button>
+         <div>
+         {console.log(data)}
+           </div>
       </div>
     );
   }
