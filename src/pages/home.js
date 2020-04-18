@@ -10,11 +10,15 @@ import {
 } from "reactfire";
 import { groupBy } from "../utils";
 import { Helmet } from "react-helmet";
+import TabComponent from "../components/BAZAAR/Tabs";
+import Box from '@material-ui/core/Box';
 
 const MenuHeader = styled(Typography)`
   text-transform: uppercase;
   margin: 1em;
   text-align: center;
+  alignItems: center;
+  justify:center;
 `;
 
 const meal = {
@@ -62,14 +66,19 @@ const Home = () => {
       </Helmet>
 
       <div>
+        
         <Banner />
-        <MenuHeader variant="h6">menu</MenuHeader>
-        <SuspenseWithPerf
-          fallback={<p>loading delicious food...</p>}
-          traceId={"load-burrito-status"}
-        >
-          <MenuData />
-        </SuspenseWithPerf>
+
+        {/*
+        <MenuHeader variant="h6">
+          menu
+      
+        </]MenuHeader>
+        */}
+      
+        <TabComponent>
+
+        </TabComponent>
       </div>
     </>
   );

@@ -20,6 +20,8 @@ import Order from "./Order";
 
 import { Link } from "react-router-dom";
 
+import TabComponent from "../components/BAZAAR/Tabs"
+
 const useStyles = makeStyles((theme) => ({
   appBar: {
     background: "transparent",
@@ -174,6 +176,7 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
+
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </Menu>
@@ -220,7 +223,11 @@ export default function PrimarySearchAppBar() {
             </Link>
           </div>
 
+      
           <div className={classes.sectionDesktop}>
+          
+      
+    
             <Link className={classes.navItem} to="/paidorders">
               <Typography variant="subheading1">paid orders</Typography>
             </Link>

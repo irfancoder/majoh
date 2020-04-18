@@ -12,9 +12,33 @@ var telegram = require('telegram-bot-api');
 require('dotenv').config()
 const Email = require('email-templates');
 var uuid = require('uuid-random');
+const algoliasearch = require('algoliasearch');
+const algoliaFunctions = require('algolia-firebase-functions');
+ 
 
 var api = new telegram({
 	token: process.env.TELEGRAM_TOKEN,
+});
+
+const ALGOLIA_ID = "07CVJHF6V6";
+const ALGOLIA_ADMIN_KEY = "5d01dfb41354dcccabde4967fc7e34d3";
+const ALGOLIA_SEARCH_KEY = "d7ecf94667407705380df31a5e263040";
+const ALGOLIA_INDEX_NAME = 'test_search';
+
+const client = algoliasearch(
+  ALGOLIA_ID,
+  ALGOLIA_ADMIN_KEY
+);
+exports.onDishCreated = functions.firestore.document('test_search/{noteId}').onCreate((snap, context) => {
+  // Get the note document
+  const note = snap.data();
+
+  // Add an 'objectID' field which Algolia requires
+  note.objectID = context.params.noteId;
+
+  // Write to the algolia index
+  const index = client.initIndex(ALGOLIA_INDEX_NAME);
+  return index.saveObject(note);
 });
 
 //const { MessengerClient } = require('messaging-api-messenger');
@@ -47,10 +71,12 @@ var dateTime = date+' '+time;
 
 
 // When a user is created, register them with Stripe
+/*
 exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
   console.log(user);
   const customer = await stripe.customers.create({ email: user.email });
   console.log(customer.id);
+  console.log(user.uid)
 
   const stripe_customer = {
     stripeAcc: customer,
@@ -65,6 +91,7 @@ exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
     .doc(user.uid)
     .set(stripe_customer);
 });
+*/
 
 /* Triggered when customers checksout by cash */
 const payCashOnDeliveryApp = express();
@@ -72,6 +99,12 @@ payCashOnDeliveryApp.use(cors);
 
 function payCashOnDelivery(req, res){
   const orderInfo = JSON.parse(req.body);
+  orderInfo['display_items'] = orderInfo['order_items'];
+  delete orderInfo.order_items;
+
+  const idexample = uuid();
+  const id = idexample.substr(idexample.length - 6);
+  orderInfo.id = id;
   let timeID = time();
   let batch = db.batch();
   let customerRef = db.collection('stripe_customers').doc(orderInfo.metadata.uID).collection('paid_orders').doc();
@@ -81,15 +114,13 @@ function payCashOnDelivery(req, res){
   console.log(orderInfo);
 
   let total = 0;
-  const idexample = uuid();
   let sendCustomer = {};
   let sendVendor =""; 
-  const id=  idexample.substr(idexample.length - 6);
-  for(i = 0; i<orderInfo.order_items.length; i++)
+  for(i = 0; i<orderInfo.display_items.length; i++)
   {
-    total+=(orderInfo.order_items[i].amount)*(orderInfo.order_items[i].quantity);
-    sendCustomer[orderInfo.order_items[i].name] = orderInfo.order_items[i].quantity + " x " + "RM "+ (orderInfo.order_items[i].amount/100);
-    sendVendor+= orderInfo.order_items[i].name + "x" + orderInfo.order_items[i].quantity + "\n";
+    total+=(orderInfo.display_items[i].amount)*(orderInfo.display_items[i].quantity);
+    sendCustomer[orderInfo.display_items[i].name] = orderInfo.display_items[i].quantity + " x " + "RM "+ (orderInfo.display_items[i].amount/100);
+    sendVendor+= orderInfo.display_items[i].name + "x" + orderInfo.display_items[i].quantity + "\n";
   }
   
   total = (total/100).toFixed(2);
@@ -159,6 +190,7 @@ exports.payCashOnDelivery = functions.https.onRequest(
   payCashOnDeliveryApp
 );
 
+/*
 // Our app has to use express
 const createOrderAndSessionApp = express();
 // Our app has to use cors
@@ -168,7 +200,8 @@ createOrderAndSessionApp.use(cors);
 function createOrderAndSession(req, res) {
   const body = JSON.parse(req.body);
   // Creating session data from payload
-  /*
+  
+  //code block below is to be commented out
   const currency = body.currency;
   const quantity = body.quantity;
   const amount = body.amount;
@@ -178,7 +211,7 @@ function createOrderAndSession(req, res) {
   images[0] = body.imageurl;
   const customerEmail = body.customerEmail;
   const metaData = body.metadata
-  */
+
   // Also we can process the order data, e.g. save it to firebase database
   // Creating session using the data above
   stripe.checkout.sessions
@@ -188,7 +221,7 @@ function createOrderAndSession(req, res) {
       customer: body.customer,
       metadata: body.metadata,
       mode: 'payment',
-      /* Redirect them to these URLS */
+      // Redirect them to these URLS 
       success_url: "https://majoh-8eea2.web.app/",
       cancel_url: "https://majoh-8eea2.web.app/",
     })
@@ -207,6 +240,7 @@ function createOrderAndSession(req, res) {
       return;
     });
 }
+
 // Creating a route
 createOrderAndSessionApp.post("/", (req, res) => {
   try {
@@ -218,11 +252,15 @@ createOrderAndSessionApp.post("/", (req, res) => {
     });
   }
 });
+
 // Exporting our http function
 exports.createOrderAndSession = functions.https.onRequest(
   createOrderAndSessionApp
 );
 
+*/
+
+/*
 const endpointSecret = process.env.ENDPOINT_SECRET;
 // Our app has to use express
 //https://us-central1-majoh-8eea2.cloudfunctions.net/processTheOrder
@@ -252,15 +290,16 @@ processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (reques
     let sendCustomer = {};
     let sendVendor =""; 
     const id =  orderInfo.id.substr(orderInfo.id.length - 6);
-    for(i = 0; i<orderInfo.order_items.length; i++)
+    for(i = 0; i<orderInfo.display_items.length; i++)
     {
-      total+=(orderInfo.order_items[i].amount)*(orderInfo.order_items[i].quantity);
-      sendCustomer[orderInfo.order_items[i].custom.name] = orderInfo.order_items[i].quantity + " x " + "RM "+ (orderInfo.order_items[i].amount/100);
-      sendVendor+= orderInfo.order_items[i].custom.name + "x" + orderInfo.order_items[i].quantity + "\n";
+      total+=(orderInfo.display_items[i].amount)*(orderInfo.display_items[i].quantity);
+      sendCustomer[orderInfo.display_items[i].custom.name] = orderInfo.display_items[i].quantity + " x " + "RM "+ (orderInfo.display_items[i].amount/100);
+      sendVendor+= orderInfo.display_items[i].custom.name + "x" + orderInfo.display_items[i].quantity + "\n";
     }
     
     total = (total/100).toFixed(2);
-    /* Send to vendor */
+    
+    //Send telegram to user
     api.sendMessage(
       {
         chat_id: process.env.CHAT_ID,
@@ -273,7 +312,7 @@ processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (reques
       });
   
 
-    /* Emailing invoice to customer */
+    //Email to customer
   
      
       let transporter = nodemailer.createTransport(options);
@@ -317,6 +356,7 @@ processTheOrderApp.post('/', bodyParser.raw({type: 'application/json'}), (reques
 // Exporting our http function
 exports.processTheOrder = functions.https.onRequest(processTheOrderApp);
 
+*/
 
 // When a user is created, register them with Stripe
 exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
