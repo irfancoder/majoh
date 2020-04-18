@@ -26,13 +26,10 @@ const Account = () => {
       Firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
           setUser(user);
-          console.log(user);
         }
       });
     }
   }, [user]);
-
-  console.log(user);
 
   const handleUserLogout = () => {
     signOutUser();
