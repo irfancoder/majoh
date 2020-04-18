@@ -45,9 +45,6 @@ export default function SearchBar() {
          <Button  >
             Test
          </Button>
-         <div>
-         {console.log(data)}
-           </div>
       </div>
     );
   }
