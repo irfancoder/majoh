@@ -13,19 +13,23 @@ const MenuContainer = styled(Container)`
   margin-bottom: 2em;
 `;
 
+// const Container = styled.div`
+// display: grid;
+// grid-template-columns: auto auto auto auto;
+// `
+
 const ParentMenu = ({ menu }) => {
   const initFuse = (menu) => {
-    const options = {
-      includeScore: true,
-      threshold: 1.0,
-      // Search in `author` and in `tags` array
-      keys: ["item"],
-    };
+    let tempArray = [];
 
-    const fuse = new Fuse(menu, options);
-    const result = fuse.search("a");
+    menu.forEach((element) => {
+      let item = {};
+      item.item = element;
+      tempArray.push(item);
+    });
+    console.log(tempArray);
 
-    return result;
+    return tempArray;
   };
   const [filterMenu, setFilterMenu] = useState(initFuse(menu));
 

@@ -13,9 +13,6 @@ import {
 import { groupBy } from "../../utils/index";
 import ParentMenu from "../HOME/ParentMenu";
 import BazaarParentMenu from "../BAZAAR/BazaarParentMenu";
-import { Grid } from "@material-ui/core";
-import LocationDropDown from "../BAZAAR/LocationDropdown";
-import SearchBar from "../BAZAAR/SearchBar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -157,7 +154,7 @@ export default function TabComponent() {
   const BazaarData = () => {
     const menuRef = useFirestore().collection("bazaar_menu");
     const dataMenu = useFirestoreCollectionData(menuRef);
-
+    console.log(dataMenu);
     return <BazaarParentMenu menu={dataMenu} />;
   };
 
@@ -179,14 +176,14 @@ export default function TabComponent() {
         <Tab disabled label="MAJOH" {...a11yProps(0)} />
         <Tab label="BAZAAR RAMADHAN" {...a11yProps(1)} />
       </Tabs>
-      <TabPanel value={value} index={0}>
+      {/* <TabPanel value={value} index={0}>
         <SuspenseWithPerf
           fallback={<p>loading delicious food...</p>}
           traceId={"load-burrito-status"}
         >
           <MajohData />
         </SuspenseWithPerf>
-      </TabPanel>
+      </TabPanel> */}
       <TabPanel value={value} index={1}>
         <SuspenseWithPerf
           fallback={<p>loading delicious food...</p>}
