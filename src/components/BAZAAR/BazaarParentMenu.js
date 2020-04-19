@@ -8,6 +8,8 @@ import ChildMenu from "./BazaarChildMenu";
 import SearchBar from "./SearchBar";
 import LocationDropDown from "./LocationDropdown";
 
+import Pagination from "@material-ui/lab/Pagination";
+
 const MenuContainer = styled(Container)`
   margin-top: 2em;
   margin-bottom: 2em;
@@ -27,11 +29,15 @@ const ParentMenu = ({ menu }) => {
       item.item = element;
       tempArray.push(item);
     });
-    console.log(tempArray);
 
     return tempArray;
   };
   const [filterMenu, setFilterMenu] = useState(initFuse(menu));
+  const [state, setState] = useState({
+    dataIndex: 20,
+    pageIndex: 0,
+    interval: 20,
+  });
 
   const handleSearch = (keyword) => {
     if (keyword !== "") {
@@ -50,6 +56,14 @@ const ParentMenu = ({ menu }) => {
     }
   };
 
+  const handleChange = (event, value) => {
+    setState({
+      ...state,
+      pageIndex: value,
+      dataIndex: value * state.interval,
+    });
+  };
+  console.log(state);
   return (
     <div>
       <Grid container spacing={3}>
@@ -62,14 +76,24 @@ const ParentMenu = ({ menu }) => {
       </Grid>
       <MenuContainer maxWidth="md">
         <Grid container direction="row" justify="flex-start" spacing={2}>
-          {filterMenu.map((list, index) => {
-            return (
-              <Grid key={index} item xs={12} md={3}>
-                <ChildMenu menu={list.item} />
-              </Grid>
-            );
-          })}
+          {filterMenu
+            .slice(state.dataIndex - state.interval, state.dataIndex)
+            .map((list, index) => {
+              return (
+                <Grid key={index} item xs={12} md={3}>
+                  <ChildMenu menu={list.item} />
+                </Grid>
+              );
+            })}
         </Grid>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Pagination
+            count={(filterMenu.length / state.interval).toFixed(1)}
+            variant="outlined"
+            shape="rounded"
+            onChange={handleChange}
+          />
+        </div>
       </MenuContainer>
     </div>
   );
