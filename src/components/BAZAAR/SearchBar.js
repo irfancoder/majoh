@@ -1,45 +1,50 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import { makeStyles } from "@material-ui/core/styles";
+import {
+  TextField,
+  InputAdornment,
+  InputBase,
+  FormControl,
+} from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
-import Button from "@material-ui/core/Button";
 import { useState, useEffect } from "react";
-import firebase from "../../fire";
 
-export default function SearchBar() {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection("bazaar_vendors")
-      .onSnapshot((snapshot) => {
-        const newData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setData(newData);
-      });
-  }, []);
+const SearchBar = ({ handleSearch }) => {
+  const [search, setSearch] = useState("");
+
+  const handleChange = (ev) => {
+    setSearch(ev.target.value);
+  };
 
   return (
     <div className="App">
-      <TextField
-        type="search"
-        variant="outlined"
-        placeholder="Search dishes"
-        size="small"
-        fullWidth
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
-      <Button>Test</Button>
-      <div>{console.log(data)}</div>
+      <FormControl variant="outlined" style={{ width: "100%" }}>
+        <TextField
+          type="search"
+          variant="outlined"
+          placeholder="Try 'Nasi Lemak' "
+          fullWidth
+          onChange={handleChange}
+          onKeyPress={(ev) => {
+            console.log(`Pressed keyCode ${ev.key}`);
+            if (ev.key === "Enter") {
+              // Do code here
+              ev.preventDefault();
+              handleSearch(search);
+            }
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </FormControl>
     </div>
   );
-}
+};
+
+export default SearchBar;

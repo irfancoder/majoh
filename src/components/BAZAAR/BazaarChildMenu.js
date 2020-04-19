@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 
 import LearnMore from "./BazaarLearnMore";
-import { OrderConsumer } from "../../utils/context";
+import { OrderConsumer } from "../../utils/contextbazaar";
 const useStyles = makeStyles({
   root: {
     marginBottom: "1em",
@@ -40,26 +40,31 @@ const ChildMenu = ({ menu }) => {
   return (
     <Card className={classes.root}>
       <CardActionArea>
-        <CardMedia className={classes.media} image={menu.thumbnail} />
+        <CardMedia className={classes.media} image={menu.thumbnail || ""} />
         <CardContent>
           <Typography gutterBottom variant="h6" component="h2">
             {menu.item}
           </Typography>
           <div className={classes.content}>
             <div style={{ display: "flex" }}>
-              <Avatar style={{ width: "1em", height: "1em" }}>M</Avatar>
+              <Avatar
+                style={{ width: "1em", height: "1em" }}
+                src={menu.vendor.profile}
+              >
+                M
+              </Avatar>
               <Typography
                 style={{ marginLeft: "0.5em" }}
                 className={classes.price}
                 variant="caption"
               >
-                Permyjaya
+                {menu.vendor.location || "Sarawak"}
               </Typography>
             </div>
-            <Typography className={classes.price} variant="body1">
-              RM {menu.price}
-            </Typography>
           </div>
+          <Typography className={classes.price} variant="body1">
+            RM {Number(menu.price).toFixed(2)}
+          </Typography>
         </CardContent>
       </CardActionArea>
       <CardActions className={classes.buttonAction}>

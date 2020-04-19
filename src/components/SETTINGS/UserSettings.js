@@ -153,8 +153,12 @@ const InputSettings = ({ userData }) => {
                   defaultValue={user.state}
                 >
                   <MenuItem value="State">State</MenuItem>
-                  {allMalaysianStates.map((state, i) => {
-                    return <MenuItem value={state}>{state}</MenuItem>;
+                  {allMalaysianStates.map((state, index) => {
+                    return (
+                      <MenuItem key={index} value={state}>
+                        {state}
+                      </MenuItem>
+                    );
                   })}
                 </Select>
               </Grid>

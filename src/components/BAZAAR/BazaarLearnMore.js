@@ -114,13 +114,13 @@ const LearnMore = ({ data, addOrder }) => {
                 </Typography>
               </div>
 
-              <VendorProfile />
+              <VendorProfile vendor={menu.vendor} />
               <BottomContent>
-                <Typography className={classes.description} variant="caption">
-                  Food will be fulfilled by delivery.
+                <Typography className={classes.description} variant="body1">
+                  Delivery time: <b>3-5pm</b>
                 </Typography>
                 <Typography className={classes.price} variant="h5">
-                  RM {menu.price}
+                  RM {Number(menu.price).toFixed(2)}
                   {/* <Tooltip title="pax = ~200g" placement="top-start">
                     <span style={{ fontSize: "14px" }}> / pax*</span>
                   </Tooltip> */}

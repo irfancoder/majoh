@@ -1,93 +1,73 @@
-import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
+import React, { useState } from "react";
+import { withStyles } from "@material-ui/core/styles";
+import { getLocations, joinChildren } from "../../utils";
 
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-  },
-})((props) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
-    }}
-    {...props}
-  />
-));
+import {
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select,
+  ListSubheader,
+} from "@material-ui/core";
 
-const StyledMenuItem = withStyles((theme) => ({
-  root: {
-    '&:focus': {
-      backgroundColor: theme.palette.primary.main,
-      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white,
-      },
-    },
-  },
-}))(MenuItem);
+const LocationDropDown = ({ handleSearch }) => {
+  const [location, setLocation] = useState("");
 
-export default function LocationDropDown() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleChange = (event) => {
+    setLocation(event.target.value);
+    handleSearch(event.target.value);
+    console.log(event.target.value);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const getAllLocations = () => {
+    let finalList = [];
+    Object.keys(getLocations()).map((key, index) => {
+      let header = <ListSubheader key={index}>{key}</ListSubheader>;
+      finalList.push(header);
+      getLocations()[key].map((item) => {
+        return finalList.push(
+          <MenuItem value={item} key={item}>
+            {item}
+          </MenuItem>
+        );
+      });
+    });
+    return (
+      <Select
+        name="location"
+        value={location}
+        onChange={handleChange}
+        defaultValue="ALL"
+      >
+        <MenuItem value="">ALL</MenuItem>
+        {finalList}
+      </Select>
+    );
   };
 
   return (
-    <div>
-      <Button
-        aria-controls="customized-menu"
-        aria-haspopup="true"
-        variant="contained"
-        color="primary"
-        onClick={handleClick}
+    <FormControl variant="outlined" style={{ width: "100%" }}>
+      <InputLabel htmlFor="grouped-select">Location</InputLabel>
+      {getAllLocations()}
+
+      {/* <Select
+        name="location"
+        value={location}
+        onChange={handleChange}
+        defaultValue="ALL"
       >
-        LOCATION
-      </Button>
-      <StyledMenu
-        id="customized-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <StyledMenuItem>
-          <ListItemIcon>
-            <SendIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Location" />
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <DraftsIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Location" />
-        </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <InboxIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Location" />
-        </StyledMenuItem>
-      </StyledMenu>
-    </div>
+        <MenuItem value="a">ALL</MenuItem>
+
+         {getLocations().map((item, index) => {
+          return (
+            <MenuItem value={item} key={index}>
+              {item}
+            </MenuItem>
+          );
+        })} 
+      </Select> */}
+    </FormControl>
   );
-}
+};
+
+export default LocationDropDown;

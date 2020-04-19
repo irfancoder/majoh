@@ -10,11 +10,15 @@ const Container = styled.div`
 const VendorProfile = ({ vendor }) => {
   return (
     <Container>
-      <Avatar>M</Avatar>
-      {/* src={vendor.profile} alt={vendor.businessName} */}
+      <Avatar src={vendor.profile} alt={vendor.businessName}>
+        M
+      </Avatar>
+
       <div style={{ marginLeft: "2em" }}>
-        <Typography variant="body2">vendor.businessName</Typography>
-        <Typography variant="body2">Location</Typography>
+        <Typography variant="body1">{vendor.businessName}</Typography>
+        <Typography variant="body2" color="textSecondary">
+          {vendor.location}
+        </Typography>
       </div>
     </Container>
   );

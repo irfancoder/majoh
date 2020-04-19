@@ -30,7 +30,7 @@ const useStyles = makeStyles({
 const getTotal = (orders) => {
   let total = 0;
   orders.forEach((order) => {
-    total += order.amount;
+    total += order.amount * order.quantity;
   });
   total = total / 100;
   return total.toFixed(2);

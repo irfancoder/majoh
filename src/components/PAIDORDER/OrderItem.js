@@ -33,7 +33,7 @@ const OrderItem = ({ item }) => {
         {item.custom ? item.custom.name : item.name}
       </Typography>
       <Typography className={classes.price} variant="subtitle1">
-        RM {ccyFormat(item.amount / 100)}
+        RM {ccyFormat((item.amount * item.quantity) / 100)}
       </Typography>
     </div>
   );

@@ -11,15 +11,15 @@ import {
 import { groupBy } from "../utils";
 import { Helmet } from "react-helmet";
 import TabComponent from "../components/BAZAAR/Tabs";
-import Box from '@material-ui/core/Box';
+import Box from "@material-ui/core/Box";
 import favicon from "../assets/images/favicon.ico";
 
 const MenuHeader = styled(Typography)`
   text-transform: uppercase;
   margin: 1em;
   text-align: center;
-  alignItems: center;
-  justify:center;
+  alignitems: center;
+  justify: center;
 `;
 
 const meal = {
@@ -54,7 +54,7 @@ const Home = () => {
     console.log(sortedMenu);
 
     return Object.keys(sortedMenu).map((key, index) => {
-      return <ParentMenu meal={meal[key]} menu={sortedMenu[key]} />;
+      return <ParentMenu key={index} meal={meal[key]} menu={sortedMenu[key]} />;
     });
   };
 
@@ -68,7 +68,6 @@ const Home = () => {
       </Helmet>
 
       <div>
-        
         <Banner />
 
         {/*
@@ -77,10 +76,8 @@ const Home = () => {
       
         </]MenuHeader>
         */}
-      
-        <TabComponent>
 
-        </TabComponent>
+        <TabComponent></TabComponent>
       </div>
     </>
   );

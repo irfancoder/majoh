@@ -53,15 +53,15 @@ const PaidOrders = () => {
         <Typography className={classes.sectionHeader} variant="h6">
           Upcoming Order
         </Typography>
-        {splitOrders.upcomingOrders.map((order) => {
-          return <OrderEntry order={order.orderInfo} />;
+        {splitOrders.upcomingOrders.map((order, index) => {
+          return <OrderEntry order={order.orderInfo} key={index} />;
         })}
 
         <Typography className={classes.sectionHeader} variant="h6">
           Order History
         </Typography>
-        {splitOrders.pastOrders.map((order) => {
-          return <OrderEntry order={order.orderInfo} />;
+        {splitOrders.pastOrders.map((order, index) => {
+          return <OrderEntry order={order.orderInfo} key={index} />;
         })}
       </div>
     );
