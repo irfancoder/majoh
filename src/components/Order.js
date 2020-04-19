@@ -173,7 +173,7 @@ const Order = ({ open, handleDrawer }) => {
             style={{ width: "100%", marginTop: "1em" }}
             disabled
           >
-            Cash on Delivery
+            Cash on Delivery (Pilih order)
           </Button>
         );
       } else

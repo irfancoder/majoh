@@ -419,6 +419,46 @@ payBazaarCoDApp.post("/", (req, res) => {
 
 exports.payBazaarCoD = functions.https.onRequest(payBazaarCoDApp);
 
+const contactMajohApp = express();
+contactMajohApp.use(cors);
+function contactMajoh(req, res) {
+  const enquiry = JSON.parse(req.body);
+
+  let text =
+    "name: " +
+    enquiry.name +
+    "\n" +
+    "email: " +
+    enquiry.email +
+    "\n" +
+    "phone: " +
+    enquiry.phone +
+    "\n\n" +
+    "message: \n" +
+    enquiry.message;
+
+  return api
+    .sendMessage({
+      chat_id: process.env.CHAT_ID,
+      text: text,
+    })
+    .then(function (data) {
+      console.log("Telegram message sent");
+    });
+}
+contactMajohApp.post("/", (req, res) => {
+  try {
+    contactMajoh(req, res);
+  } catch (e) {
+    console.log(e);
+    send(res, 500, {
+      error: `The server received an unexpected error. Please try again and contact the site admin if the error persists.`,
+    });
+  }
+});
+
+exports.contactMajoh = functions.https.onRequest(contactMajohApp);
+
 /*
 // Our app has to use express
 const createOrderAndSessionApp = express();

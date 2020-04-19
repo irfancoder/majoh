@@ -56,11 +56,13 @@ const PhoneNumber = ({ handleDrawer }) => {
             <Phone />
           </SuspenseWithPerf>
         ) : (
-          <Typography variant="body">Sign in/up at Account</Typography>
+          <Typography variant="body" color="primary">
+            Sign in/up at Account
+          </Typography>
         )}
       </CardContent>
       <CardActions className={classes.action}>
-        <Link to="/account">
+        <Link style={{ textDecoration: "none" }} to="/account">
           <Button onClick={handleDrawer(false)} size="small">
             edit
           </Button>

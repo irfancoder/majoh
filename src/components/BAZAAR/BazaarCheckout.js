@@ -133,6 +133,17 @@ export default function ModalCheckout({ total, orders }) {
           <Typography variant="body2" component="p">
             {orders.metadata.deliveryDate}
           </Typography>
+          <Typography
+            className={classes.sectionHeader}
+            variant="body1"
+            color="textSecondary"
+            gutterBottom
+          >
+            Delivery Time
+          </Typography>
+          <Typography variant="body2" component="p">
+            3 PM - 5 PM
+          </Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

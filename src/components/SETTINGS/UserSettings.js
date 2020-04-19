@@ -4,8 +4,15 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
+import MuiAlert from "@material-ui/lab/Alert";
 
-import { Card, CardActions, CardContent, Button } from "@material-ui/core";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  Button,
+  Snackbar,
+} from "@material-ui/core";
 
 import Firebase from "firebase";
 import instance from "../../fire";
@@ -41,6 +48,9 @@ const allMalaysianStates = [
   "Putrajaya",
   "Labuan",
 ];
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const db = Firebase.firestore(instance);
 
@@ -50,6 +60,19 @@ const InputSettings = ({ userData }) => {
   const classes = useStyles();
 
   const [checked, setChecked] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   const handleInput = (event) => {
     setUser({
@@ -69,6 +92,7 @@ const InputSettings = ({ userData }) => {
       .doc(user.uid)
       .set(user)
       .then(function () {
+        handleClick();
         console.log("Document successfully written!");
       })
       .catch(function (error) {
@@ -181,6 +205,11 @@ const InputSettings = ({ userData }) => {
       <CardActions style={{ justifyContent: "flex-end" }}>
         <Button onClick={onSubmit}>Save</Button>
       </CardActions>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Account saved successfully!
+        </Alert>
+      </Snackbar>
     </Card>
   );
 };

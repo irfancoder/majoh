@@ -59,8 +59,23 @@ const DeliveryTimeDate = ({ date, handleSetDate }) => {
           <em>Food delivery will be made within the following timeframe:</em>
           <br />
         </Typography>
-        <Typography variant="body2" gutterBottom style={{ marginLeft: "2em" }}>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          gutterBottom
+          style={{ marginLeft: "2em" }}
+        >
           <p>3PM-5PM</p>
+        </Typography>
+        <Typography
+          variant="body2"
+          gutterBottom
+          style={{ marginTop: "2em", fontWeight: "500" }}
+        >
+          Buat masa ini, hanya Cash on Delivery sahaja
+          <br />
+          <em>Only Cash on Delivery is available </em>
+          <br />
         </Typography>
       </div>
     </MuiPickersUtilsProvider>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { withStyles } from "@material-ui/core/styles";
-import { getLocations, joinChildren } from "../../utils";
+import { getLocations } from "../../utils";
 
 import {
   MenuItem,
