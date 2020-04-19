@@ -20,8 +20,8 @@ var api = new telegram({
 });
 
 var twilio = require("twilio");
-var accountSid = "AC3140e0f1ee0dc79a3e42352fdc0e7838"; // Twilio Account SID
-var authToken = "2516d0b9afd33e9eb86dc2506b925c74"; // Twilio Auth Token
+var accountSid = process.env.TWILIO_SID; // Twilio Account SID
+var authToken = process.env.TWILIO_TOKEN; // Twilio Auth Token
 
 var client = new twilio(accountSid, authToken);
 
@@ -100,10 +100,9 @@ exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
 });
 */
 
-/* Triggered when customers checksout by cash */
+/* (Majoh) Cash on Delivery Checkout */
 const payCashOnDeliveryApp = express();
 payCashOnDeliveryApp.use(cors);
-
 async function payCashOnDelivery(req, res) {
   const orderInfo = JSON.parse(req.body);
   orderInfo["display_items"] = orderInfo["order_items"];
@@ -207,6 +206,7 @@ async function payCashOnDelivery(req, res) {
       template: "html",
       message: {
         to: orderInfo.metadata.customerEmail,
+        cc: process.env.EMAIL_USER,
       },
       locals: {
         orderData: sendCustomer,
@@ -238,16 +238,14 @@ payCashOnDeliveryApp.post("/", (req, res) => {
     });
   }
 });
-
 exports.payCashOnDelivery = functions.https.onRequest(payCashOnDeliveryApp);
 
+/* (Bazaar) Cash on Delivery Checkout */
 const payBazaarCoDApp = express();
 payBazaarCoDApp.use(cors);
 
 function payBazaarCoD(req, res) {
   const orderInfo = JSON.parse(req.body);
-  // orderInfo["display_items"] = orderInfo["order_items"];
-  // delete orderInfo.order_items;
 
   const idexample = uuid();
   const id = idexample.substr(idexample.length - 6);
@@ -261,6 +259,7 @@ function payBazaarCoD(req, res) {
     .collection("paid_orders")
     .doc(orderInfo.id);
 
+  /* (Bazaar) Logs all orders inside 'bazaar_orderlogs collection' */
   let ownRef = db.collection("bazaar_orderlogs").doc(timeID);
   batch.set(customerRef, { orderInfo });
   batch.set(ownRef, { orderInfo });
@@ -284,6 +283,7 @@ function payBazaarCoD(req, res) {
       "RM " +
       orderInfo.display_items[i].amount / 100;
   }
+
   Object.keys(results).map((key, index) => {
     var sendVendorText = "";
     let totalVendor = 0;
@@ -315,11 +315,10 @@ function payBazaarCoD(req, res) {
       "Date - " +
       orderInfo.metadata.deliveryDate;
 
-    /* Telegram */
-
+    /**  (Vendor) Notify each vendor involved inside the order */
     return api
       .sendMessage({
-        chat_id: process.env.CHAT_ID,
+        chat_id: results[key][0].vendor.telegramId,
         text: text,
       })
       .then(function (data) {
@@ -329,29 +328,6 @@ function payBazaarCoD(req, res) {
   });
 
   total = (total / 100).toFixed(2);
-
-  // let text =
-  //   "Order ID: " +
-  //   id +
-  //   "\n" +
-  //   "Payment Method: Cash on delivery\nOrders: \n" +
-  //   sendVendor +
-  //   "Total: " +
-  //   "RM" +
-  //   total +
-  //   "\n" +
-  //   "\nDelivery: \n" +
-  //   "Name - " +
-  //   customerTicket.metadata.Name +
-  //   "\n" +
-  //   "Address - " +
-  //   customerTicket.metadata.deliveryAddress +
-  //   "\n" +
-  //   "PhoneNo - " +
-  //   customerTicket.metadata.phoneNo +
-  //   "\n" +
-  //   "Date - " +
-  //   customerTicket.metadata.deliveryDate;
 
   /* Twilio WhatsApp 
   client.messages
@@ -366,35 +342,37 @@ function payBazaarCoD(req, res) {
     .then((message) => console.log(message.sid));
     */
 
-  /* Email */
+  /* (Customer) Email setup*/
   let transporter = nodemailer.createTransport(options);
   const email = new Email({
     message: {
-      from: "sprouty.co@gmail.com",
-      subject: "Your Majoh E-receipt",
+      from: process.env.EMAIL_USER,
+      subject: `Order #${orderInfo.id} Majoh Receipt`,
     },
     // uncomment below to send emails in development/test env:
     // send: true
     transport: transporter,
   });
 
-  // email
-  //   .send({
-  //     template: "html",
-  //     message: {
-  //       to: orderInfo.metadata.customerEmail,
-  //     },
-  //     locals: {
-  //       orderData: sendCustomer,
-  //       orderID: id,
-  //       orderTotal: total,
-  //       address: orderInfo.metadata.deliveryAddress,
-  //     },
-  //   })
-  //  .then((res) => {
-  //    console.log("res.originalMessage", res.originalMessage);
-  //  })
-  //  .catch(console.error);
+  /** (Customer) Send receipt & keep a copy in our inbox*/
+  email
+    .send({
+      template: "html",
+      message: {
+        to: orderInfo.metadata.customerEmail,
+        cc: process.env.EMAIL_USER,
+      },
+      locals: {
+        orderData: sendCustomer,
+        orderID: id,
+        orderTotal: total,
+        address: orderInfo.metadata.deliveryAddress,
+      },
+    })
+    .then((res) => {
+      console.log("res.originalMessage", res.originalMessage);
+    })
+    .catch(console.error);
 
   return batch
     .commit()
@@ -419,6 +397,7 @@ payBazaarCoDApp.post("/", (req, res) => {
 
 exports.payBazaarCoD = functions.https.onRequest(payBazaarCoDApp);
 
+/* (Majoh) Contact form through Telegram */
 const contactMajohApp = express();
 contactMajohApp.use(cors);
 function contactMajoh(req, res) {

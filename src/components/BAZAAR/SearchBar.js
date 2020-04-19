@@ -23,7 +23,7 @@ const SearchBar = ({ handleSearch }) => {
         <TextField
           type="search"
           variant="outlined"
-          placeholder="Try 'Nasi Lemak' "
+          placeholder="Cuba 'Nasi Lemak' atau nama gerai  "
           fullWidth
           onChange={handleChange}
           onKeyPress={(ev) => {
