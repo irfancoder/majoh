@@ -44,7 +44,7 @@ const ParentMenu = ({ menu }) => {
       const options = {
         includeScore: true,
         // Search in `author` and in `tags` array
-        keys: ["item", "vendor.location"],
+        keys: ["item", "vendor.location", "vendor.businessName"],
       };
 
       const fuse = new Fuse(menu, options);
