@@ -62,7 +62,7 @@ const Home = () => {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Majoh | Miri's Humble Kitchen Food Delivery</title>
+        <title>Majoh | A Humble Kitchen Food Delivery</title>
         <link rel="canonical" href="http://majoh.com.my" />
         <link rel="icon" type="image/png" href={favicon} sizes="16x16" />
       </Helmet>
@@ -77,7 +77,7 @@ const Home = () => {
         </]MenuHeader>
         */}
 
-        <TabComponent></TabComponent>
+        <TabComponent />
       </div>
     </>
   );
