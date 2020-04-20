@@ -33,7 +33,9 @@ const PhoneNumber = ({ handleDrawer }) => {
         {userData.phone}
       </Typography>
     ) : (
-      <Typography variant="body">Fill your address in Account.</Typography>
+      <Typography variant="body" color="primary">
+        Fill in your phone number in Account
+      </Typography>
     );
   };
 

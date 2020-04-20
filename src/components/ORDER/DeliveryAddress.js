@@ -37,7 +37,9 @@ const DeliveryAddress = ({ handleDrawer }) => {
         </span>
       </Typography>
     ) : (
-      <Typography variant="body">Fill your address in Account.</Typography>
+      <Typography variant="body" color="primary">
+        Fill in your address in Account
+      </Typography>
     );
   };
 

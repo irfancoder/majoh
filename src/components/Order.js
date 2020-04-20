@@ -166,7 +166,17 @@ const Order = ({ open, handleDrawer }) => {
           // />
         );
     } else {
-      if (context.invoice.subtotal <= 1.5) {
+      if (!userData.street) {
+        return (
+          <Button
+            variant="contained"
+            style={{ width: "100%", marginTop: "1em" }}
+            disabled
+          >
+            Cash on Delivery (Isi alamat)
+          </Button>
+        );
+      } else if (context.invoice.subtotal <= 1.5) {
         return (
           <Button
             variant="contained"

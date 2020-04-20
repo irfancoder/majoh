@@ -59,8 +59,8 @@ const InputSettings = ({ userData }) => {
   const [user, setUser] = useState(userData);
   const classes = useStyles();
 
-  const [checked, setChecked] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [checked, setChecked] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(true);

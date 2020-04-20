@@ -155,7 +155,7 @@ const OrderItem = ({ item, classes }) => {
               />
               x
             </TableCell>
-            <TableCell align="right">{item.price}</TableCell>
+            <TableCell align="right">{ccyFormat(item.price)}</TableCell>
             <TableCell align="right">{ccyFormat(item.total)}</TableCell>
           </TableRow>
         );
