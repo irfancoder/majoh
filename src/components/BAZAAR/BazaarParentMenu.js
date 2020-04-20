@@ -15,11 +15,6 @@ const MenuContainer = styled(Container)`
   margin-bottom: 2em;
 `;
 
-// const Container = styled.div`
-// display: grid;
-// grid-template-columns: auto auto auto auto;
-// `
-
 const ParentMenu = ({ menu }) => {
   const initFuse = (menu) => {
     let tempArray = [];
