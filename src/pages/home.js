@@ -96,8 +96,6 @@ const Home = () => {
             alignSelf: "center",
             color: color.red,
           }}
-          target="_blank"
-          rel="noopener noreferrer"
           to="/register-vendor"
         >
           Daftar sebagai vendor

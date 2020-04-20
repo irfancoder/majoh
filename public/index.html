@@ -20,7 +20,7 @@
 
     <!--  Facebook Pixel -->
 
-    <script>
+    <script type="text/javascript">
       !(function (f, b, e, v, n, t, s) {
         if (f.fbq) return;
         n = f.fbq = function () {
@@ -46,6 +46,10 @@
       );
       fbq("init", "691378428346130");
       fbq("track", "PageView");
+      function registerVendor() {
+        fbq("track", "Lead");
+        fbq("track", "PageView");
+      }
     </script>
     <noscript>
       <img

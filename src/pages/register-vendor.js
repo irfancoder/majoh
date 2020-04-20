@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Helmet } from "react-helmet";
 import favicon from "../assets/images/favicon.ico";
 
 const VendorRegistration = () => {
+  useEffect(() => {
+    window.registerVendor();
+  }, []);
   return (
     <>
       <Helmet>
