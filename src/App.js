@@ -8,6 +8,7 @@ import Account from "./pages/account";
 import Contact from "./pages/contact";
 import Home from "./pages/home";
 import PrivacyPolicy from "./pages/privacypolicy";
+import RegisterVendor from "./pages/register-vendor";
 import Layout from "./components/Layout";
 import color from "./styles/color";
 
@@ -43,6 +44,7 @@ const App = () => {
               <Route path="/account" component={Account} />
               <Route path="/contact" component={Contact} />
               <Route path="/privacypolicy" component={PrivacyPolicy} />
+              <Route path="/register-vendor" component={RegisterVendor} />
             </Switch>
           </Layout>
         </ThemeProvider>
