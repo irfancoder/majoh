@@ -12,23 +12,12 @@ var telegram = require('telegram-bot-api');
 require('dotenv').config()
 const Email = require('email-templates');
 var uuid = require('uuid-random');
-const algoliasearch = require('algoliasearch');
-const algoliaFunctions = require('algolia-firebase-functions');
- 
-
+const client = require('twilio')(ACd5dd547737971988ec77e6014c9d290e, ba4e35dab390c16ff9786bfbc0a86300);
 var api = new telegram({
 	token: process.env.TELEGRAM_TOKEN,
 });
 
-const ALGOLIA_ID = "07CVJHF6V6";
-const ALGOLIA_ADMIN_KEY = "5d01dfb41354dcccabde4967fc7e34d3";
-const ALGOLIA_SEARCH_KEY = "d7ecf94667407705380df31a5e263040";
-const ALGOLIA_INDEX_NAME = 'test_search';
 
-const client = algoliasearch(
-  ALGOLIA_ID,
-  ALGOLIA_ADMIN_KEY
-);
 exports.onDishCreated = functions.firestore.document('test_search/{noteId}').onCreate((snap, context) => {
   // Get the note document
   const note = snap.data();
@@ -92,6 +81,34 @@ exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
     .set(stripe_customer);
 });
 */
+const whatsappNotifApp = express();
+whatsappNotifApp.use(cors);
+function whatsappNotif(req, res){
+  client.messages
+  .create({
+     mediaUrl: ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'],
+     from: 'whatsapp:+14155238886',
+     body: `It's taco time!`,
+     to: 'whatsapp:+15017122661'
+   })
+  .then(message => console.log(message.sid));
+  return res.send(200);
+}
+
+payCashOnDeliveryApp.post("/", (req, res) => {
+  try {
+    whatsappNotif(req, res);
+  } catch (e) {
+    console.log(e);
+    send(res, 500, {
+      error: `The server received an unexpected error. Please try again and contact the site admin if the error persists.`,
+    });
+  }
+});
+
+exports.whatsappNotif = functions.https.onRequest(
+  whatsappNotifApp
+);
 
 /* Triggered when customers checksout by cash */
 const payCashOnDeliveryApp = express();
@@ -189,6 +206,8 @@ payCashOnDeliveryApp.post("/", (req, res) => {
 exports.payCashOnDelivery = functions.https.onRequest(
   payCashOnDeliveryApp
 );
+
+
 
 /*
 // Our app has to use express

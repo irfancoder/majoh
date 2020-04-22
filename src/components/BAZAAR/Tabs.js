@@ -11,16 +11,16 @@ import {
   useFirestore,
   SuspenseWithPerf,
 } from "reactfire";
-import { groupBy } from "/home/marcos/Documents/github-stuff/majoh/src/utils/index"
-import ParentMenu from "/home/marcos/Documents/github-stuff/majoh/src/components/HOME/ParentMenu";
+import { groupBy } from "../../utils/index";
+import ParentMenu from "../HOME/ParentMenu";
+import BazaarParentMenu from "../BAZAAR/BazaarParentMenu";
 import { Grid } from "@material-ui/core";
-import LocationDropDown from "../BAZAAR/LocationDropdown"
-import SearchBar from "../BAZAAR/SearchBar"
-import firebase from "../../fire"
+import LocationDropDown from "../BAZAAR/LocationDropdown";
+import SearchBar from "../BAZAAR/SearchBar";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.paper
+    backgroundColor: theme.palette.background.paper,
   },
   grow: {
     flexGrow: 1,
@@ -29,13 +29,13 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
-    display: 'none',
-    [theme.breakpoints.up('sm')]: {
-      display: 'block',
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
     },
   },
   search: {
-    position: 'relative',
+    position: "relative",
     borderRadius: theme.shape.borderRadius,
     /*
     backgroundColor: (theme.palette.common.white, 0.15),
@@ -43,51 +43,50 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: (theme.palette.common.white, 0.25),
     },
     */
-    color: 'primary',
+    color: "primary",
     marginRight: theme.spacing(2),
     marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    width: "100%",
+    [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
-      width: 'auto',
+      width: "auto",
     },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: "100%",
+    position: "absolute",
+    pointerEvents: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
   inputRoot: {
-    color: 'inherit',
+    color: "inherit",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
+    transition: theme.transitions.create("width"),
+    width: "100%",
+    [theme.breakpoints.up("md")]: {
+      width: "20ch",
     },
   },
   sectionDesktop: {
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-      display: 'flex',
+    display: "none",
+    [theme.breakpoints.up("md")]: {
+      display: "flex",
     },
   },
   sectionMobile: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'none',
+    display: "flex",
+    [theme.breakpoints.up("md")]: {
+      display: "none",
     },
   },
 }));
-
 
 const meal = {
   breakfast: {
@@ -127,33 +126,18 @@ function TabPanel(props) {
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired
+  value: PropTypes.any.isRequired,
 };
 
 function a11yProps(index) {
   return {
     id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`
+    "aria-controls": `simple-tabpanel-${index}`,
   };
 }
 
 export default function TabComponent() {
-  const[bazaardata, setBazaarData] = useState([]);
-      useEffect(()=> {
-        firebase
-        .firestore()
-        .collection("bazaar_menu")
-        .onSnapshot((snapshot) => {
-          const newData = snapshot.docs.map((doc) => ({
-            id:doc.id,
-            ...doc.data()
-          }))
-          setBazaarData(newData)
-        })
-
-      }, [])
-
-  const MenuData = () => {
+  const MajohData = () => {
     const menuRef = useFirestore()
       .collection("vendor")
       .doc(" k8oheqc44eknonnybq8")
@@ -170,17 +154,12 @@ export default function TabComponent() {
     });
   };
 
+  const BazaarData = () => {
+    const menuRef = useFirestore().collection("bazaar_menu");
+    const dataMenu = useFirestoreCollectionData(menuRef);
 
-  const BazaarMenuData = () => {
-    const sortedMenu = groupBy(bazaardata, "item");
-    console.log(sortedMenu);
-    /*
-    return Object.keys(sortedMenu).map((key, index) => {
-      return <ParentMenu meal={meal[key]} menu={sortedMenu[key]} />;
-    });
-    */
-    return(<div>Hi</div>);
-  }
+    return <BazaarParentMenu menu={dataMenu} />;
+  };
 
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
@@ -191,45 +170,38 @@ export default function TabComponent() {
 
   return (
     <div className={classes.root}>
-        <Tabs
+      <Tabs
         centered
-          value={value}
-          onChange={handleChange}
-          aria-label="simple tabs example"
-        >
-          <Tab label="MAJOH" {...a11yProps(0)} />
-          <Tab label="BAZAAR" {...a11yProps(1)} />
-        </Tabs>
+        value={value}
+        onChange={handleChange}
+        aria-label="simple tabs example"
+      >
+        <Tab label="MAJOH" {...a11yProps(0)} />
+        <Tab label="BAZAAR" {...a11yProps(1)} />
+      </Tabs>
       <TabPanel value={value} index={0}>
-        
         <SuspenseWithPerf
           fallback={<p>loading delicious food...</p>}
           traceId={"load-burrito-status"}
         >
-          <MenuData />
+          <MajohData />
         </SuspenseWithPerf>
-
       </TabPanel>
       <TabPanel value={value} index={1}>
-      <Grid container spacing={3}>
-      <Grid item xs={10}>
-        <SearchBar></SearchBar>
-
-        </Grid>
-          <Grid item xs={2}>
-
-          <LocationDropDown></LocationDropDown>
-
+        <Grid container spacing={3}>
+          <Grid item xs={10}>
+            <SearchBar></SearchBar>
           </Grid>
-      </Grid>
-
-      <SuspenseWithPerf
+          <Grid item xs={2}>
+            <LocationDropDown></LocationDropDown>
+          </Grid>
+        </Grid>
+        <SuspenseWithPerf
           fallback={<p>loading delicious food...</p>}
           traceId={"load-burrito-status"}
         >
-          <BazaarMenuData/>
+          <BazaarData />
         </SuspenseWithPerf>
-
       </TabPanel>
     </div>
   );
