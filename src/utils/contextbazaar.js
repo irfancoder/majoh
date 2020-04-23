@@ -15,11 +15,20 @@ const OrderProvider = (props) => {
     return qty * unit;
   }
 
-  function createRow(item, qty, price) {
+  function createRow(item, qty, price, vendor) {
     const cUnit = Number(price);
     const total = priceRow(qty, cUnit);
 
-    return { item, qty, price, total };
+    let orderItem = {
+      item: item,
+      qty: qty,
+      price: price,
+      total: total,
+      vendor: vendor,
+    };
+    console.log(orderItem);
+
+    return orderItem;
   }
   // const PERCENT_RATE = 0.1;
   // const FLAT_RATE = 1.5;
@@ -49,7 +58,7 @@ const OrderProvider = (props) => {
           if (i === -1) {
             setOrderState([
               ...orderState,
-              createRow(item.item, 1, Number(item.price)),
+              createRow(item.item, 1, Number(item.price), item.vendor),
             ]);
           }
         },
@@ -60,7 +69,8 @@ const OrderProvider = (props) => {
             prevOrder[i] = createRow(
               item.item,
               Number(qty),
-              Number(item.price)
+              Number(item.price),
+              item.vendor
             );
             setOrderState(prevOrder);
           } else {

@@ -22,7 +22,7 @@ const InputContact = ({ handleInput }) => {
   return (
     <>
       <Grid container className={classes.root} spacing={6}>
-        <Grid item xs={6}>
+        <Grid item md={6} xs={12}>
           <TextField
             className={classes.input}
             name="name"
@@ -55,7 +55,7 @@ const InputContact = ({ handleInput }) => {
           />
         </Grid>
 
-        <Grid item xs={6}>
+        <Grid item md={6} xs={12}>
           <TextField
             id="filled-multiline-static"
             className={classes.input}

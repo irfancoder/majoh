@@ -7,7 +7,7 @@ import DeliveryTimeDate from "./ORDER/DeliveryTimeDate";
 import PhoneNumber from "./ORDER/PhoneNumber";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
-import { OrderConsumer } from "../utils/context";
+import { OrderConsumer } from "../utils/contextbazaar";
 import StripeButton from "./StripeInterface";
 import CloseIcon from "@material-ui/icons/Close";
 import dimensions from "../styles/dimensions";
@@ -17,7 +17,8 @@ import Modal from "@material-ui/core/Modal";
 import { makeStyles } from "@material-ui/core/styles";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import ModalCheckout from "../components/ORDER/ModalCheckout";
+// import ModalCheckout from "../components/ORDER/ModalCheckout"; (Majoh)
+import ModalCheckout from "../components/BAZAAR/BazaarCheckout";
 
 import { useFirestoreDocData, useFirestore, SuspenseWithPerf } from "reactfire";
 import { isUserLoggedIn, getUserAddress } from "../utils";
@@ -53,15 +54,15 @@ const createPurchaseOrder = (order_list, userData, date, invoice) => {
       uID: userData.uid,
       customerEmail: userData.email,
     },
-    order_items: createOrderItem(order_list, invoice),
+    display_items: createBazaarOrderItem(order_list, invoice) /**(Bazaar) */,
+    /* (Majoh) order_items: createOrderItem(order_list, invoice), */
   };
 
   return purchaseOrder;
 };
-
+/** Arranging to Stripe's configuration*/
 const createOrderItem = (order_list, invoice) => {
   let newList = [];
-  console.log(invoice);
   order_list.forEach((order) => {
     let item = {
       currency: "myr",
@@ -82,23 +83,37 @@ const createOrderItem = (order_list, invoice) => {
 
   return newList;
 };
+/** Arranging to BazaarCoD configuration*/
+const createBazaarOrderItem = (order_list, invoice) => {
+  let newList = [];
+  order_list.forEach((order) => {
+    let item = {
+      currency: "myr",
+      quantity: order.qty,
+      amount: order.price * 100,
+      name: order.item,
+      vendor: order.vendor,
+    };
+    newList.push(item);
+  });
+
+  // let service = {
+  //   currency: "myr",
+  //   quantity: 1,
+  //   amount: invoice * 100,
+  //   name: "Service charge",
+  // };
+  // newList.push(service);
+
+  return newList;
+};
 
 const Order = ({ open, handleDrawer }) => {
-  const [openModal, setOpenModal] = useState(false);
   const [deliveryDate, setDeliveryDate] = useState(new Date());
   const [loading, setLoading] = useState(false);
 
   const handleSetDate = (date) => {
     setDeliveryDate(date);
-  };
-
-  const handleOpenModal = () => {
-    setOpenModal(true);
-    console.log("Pressed yes");
-  };
-
-  const handleClose = () => {
-    setOpenModal(false);
   };
 
   const Checkout = ({ context, tag }) => {
@@ -130,26 +145,45 @@ const Order = ({ open, handleDrawer }) => {
         );
       } else
         return (
-          <StripeButton
-            total={context.invoice.total}
-            orders={createPurchaseOrder(
-              context.order,
-              userData,
-              deliveryDate,
-              Number(context.invoice.serviceCharge)
-            )}
-            setLoading={setLoading}
-          />
+          <Button
+            variant="contained"
+            style={{ width: "100%", marginTop: "1em" }}
+            disabled
+          >
+            Card / Online Banking
+          </Button>
+          /** Uncomment when the BAZAAR is over */
+          // <StripeButton
+          //   total={context.invoice.total}
+          //   disabled
+          //   orders={createPurchaseOrder(
+          //     context.order,
+          //     userData,
+          //     deliveryDate,
+          //     Number(context.invoice.serviceCharge)
+          //   )}
+          //   setLoading={setLoading}
+          // />
         );
     } else {
-      if (context.invoice.subtotal <= 1.5) {
+      if (!userData.street) {
         return (
           <Button
             variant="contained"
             style={{ width: "100%", marginTop: "1em" }}
             disabled
           >
-            Cash on Delivery
+            Cash on Delivery (Isi alamat)
+          </Button>
+        );
+      } else if (context.invoice.subtotal <= 1.5) {
+        return (
+          <Button
+            variant="contained"
+            style={{ width: "100%", marginTop: "1em" }}
+            disabled
+          >
+            Cash on Delivery (Pilih order)
           </Button>
         );
       } else

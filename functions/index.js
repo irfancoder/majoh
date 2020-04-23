@@ -1,6 +1,6 @@
-const nodemailer = require('nodemailer');
-const admin = require('firebase-admin');
-const functions = require('firebase-functions');
+const nodemailer = require("nodemailer");
+const admin = require("firebase-admin");
+const functions = require("firebase-functions");
 // We should install required packages (stripe, body-parser) using npm install inside /functions/ folder
 const bodyParser = require("body-parser");
 const cors = require("cors")({ origin: true });
@@ -8,29 +8,46 @@ const express = require("express");
 const stripe = require("stripe")(functions.config().stripe.token);
 var app = admin.initializeApp(functions.config().firebase);
 let db = admin.firestore();
-var telegram = require('telegram-bot-api');
-require('dotenv').config()
-const Email = require('email-templates');
-var uuid = require('uuid-random');
-const client = require('twilio')(ACd5dd547737971988ec77e6014c9d290e, ba4e35dab390c16ff9786bfbc0a86300);
+var telegram = require("telegram-bot-api");
+require("dotenv").config();
+const Email = require("email-templates");
+var uuid = require("uuid-random");
+// const algoliasearch = require("algoliasearch");
+// const algoliaFunctions = require("algolia-firebase-functions");
+
 var api = new telegram({
-	token: process.env.TELEGRAM_TOKEN,
+  token: process.env.TELEGRAM_TOKEN,
 });
 
+var twilio = require("twilio");
+var accountSid = process.env.TWILIO_SID; // Twilio Account SID
+var authToken = process.env.TWILIO_TOKEN; // Twilio Auth Token
 
-exports.onDishCreated = functions.firestore.document('test_search/{noteId}').onCreate((snap, context) => {
-  // Get the note document
-  const note = snap.data();
+var client = new twilio(accountSid, authToken);
 
-  // Add an 'objectID' field which Algolia requires
-  note.objectID = context.params.noteId;
+/*
+const ALGOLIA_ID = "07CVJHF6V6";
+const ALGOLIA_ADMIN_KEY = "5d01dfb41354dcccabde4967fc7e34d3";
+const ALGOLIA_SEARCH_KEY = "d7ecf94667407705380df31a5e263040";
+const ALGOLIA_INDEX_NAME = "test_search";
 
-  // Write to the algolia index
-  const index = client.initIndex(ALGOLIA_INDEX_NAME);
-  return index.saveObject(note);
-});
+const client = algoliasearch(ALGOLIA_ID, ALGOLIA_ADMIN_KEY);
+exports.onDishCreated = functions.firestore
+  .document("test_search/{noteId}")
+  .onCreate((snap, context) => {
+    // Get the note document
+    const note = snap.data();
 
-//const { MessengerClient } = require('messaging-api-messenger');
+    // Add an 'objectID' field which Algolia requires
+    note.objectID = context.params.noteId;
+
+    // Write to the algolia index
+    const index = client.initIndex(ALGOLIA_INDEX_NAME);
+    return index.saveObject(note);
+  });
+
+const { MessengerClient } = require('messaging-api-messenger');
+*/
 
 // Secret Key from Stripe Dashboard
 // The function for sending responses
@@ -43,21 +60,22 @@ function send(res, code, body) {
 }
 
 const options = {
-  service: 'gmail',
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-}
+    pass: process.env.EMAIL_PASS,
+  },
+};
 
 const time = () => {
-var today = new Date();
-var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-var dateTime = date+' '+time;
-  return dateTime
-}
-
+  var today = new Date();
+  var date =
+    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+  var time =
+    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  var dateTime = date + " " + time;
+  return dateTime;
+};
 
 // When a user is created, register them with Stripe
 /*
@@ -110,13 +128,12 @@ exports.whatsappNotif = functions.https.onRequest(
   whatsappNotifApp
 );
 
-/* Triggered when customers checksout by cash */
+/* (Majoh) Cash on Delivery Checkout */
 const payCashOnDeliveryApp = express();
 payCashOnDeliveryApp.use(cors);
-
-function payCashOnDelivery(req, res){
+async function payCashOnDelivery(req, res) {
   const orderInfo = JSON.parse(req.body);
-  orderInfo['display_items'] = orderInfo['order_items'];
+  orderInfo["display_items"] = orderInfo["order_items"];
   delete orderInfo.order_items;
 
   const idexample = uuid();
@@ -124,73 +141,120 @@ function payCashOnDelivery(req, res){
   orderInfo.id = id;
   let timeID = time();
   let batch = db.batch();
-  let customerRef = db.collection('stripe_customers').doc(orderInfo.metadata.uID).collection('paid_orders').doc();
-  let ownRef = db.collection('success_orders').doc(timeID);
-  batch.set(customerRef, {orderInfo});
-  batch.set(ownRef, {orderInfo});
+  let customerRef = db
+    .collection("stripe_customers")
+    .doc(orderInfo.metadata.uID)
+    .collection("paid_orders")
+    .doc();
+  let ownRef = db.collection("success_orders").doc(timeID);
+  batch.set(customerRef, { orderInfo });
+  batch.set(ownRef, { orderInfo });
   console.log(orderInfo);
 
   let total = 0;
   let sendCustomer = {};
-  let sendVendor =""; 
-  for(i = 0; i<orderInfo.display_items.length; i++)
-  {
-    total+=(orderInfo.display_items[i].amount)*(orderInfo.display_items[i].quantity);
-    sendCustomer[orderInfo.display_items[i].name] = orderInfo.display_items[i].quantity + " x " + "RM "+ (orderInfo.display_items[i].amount/100);
-    sendVendor+= orderInfo.display_items[i].name + "x" + orderInfo.display_items[i].quantity + "\n";
+  let sendVendor = "";
+  let i;
+
+  for (i = 0; i < orderInfo.display_items.length; i++) {
+    total +=
+      orderInfo.display_items[i].amount * orderInfo.display_items[i].quantity;
+    sendCustomer[orderInfo.display_items[i].name] =
+      orderInfo.display_items[i].quantity +
+      "   x   " +
+      "RM " +
+      orderInfo.display_items[i].amount / 100;
+    sendVendor +=
+      orderInfo.display_items[i].quantity +
+      "   x   " +
+      orderInfo.display_items[i].name +
+      "\n";
   }
-  
-  total = (total/100).toFixed(2);
- 
-  api.sendMessage(
-    {
+
+  total = (total / 100).toFixed(2);
+
+  let text =
+    "Order ID: " +
+    id +
+    "\n" +
+    "Payment Method: Cash on delivery\nOrders: \n" +
+    sendVendor +
+    "Total: " +
+    "RM" +
+    total +
+    "\n" +
+    "\nDelivery: \n" +
+    "Nama - " +
+    orderInfo.metadata.Name +
+    "\n" +
+    "Alamat - " +
+    orderInfo.metadata.deliveryAddress +
+    "\n" +
+    "Telefon - " +
+    orderInfo.metadata.phoneNo +
+    "\n" +
+    "Tarikh Delivery - " +
+    orderInfo.metadata.deliveryDate;
+
+  /* Twilio WhatsApp */
+  client.messages
+    .create({
+      mediaUrl: [
+        "https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80",
+      ],
+      from: "whatsapp:+14155238886",
+      body: text,
+      to: "whatsapp:+60136887507",
+    })
+    .then((message) => console.log(message.sid));
+  /* Telegram */
+  api
+    .sendMessage({
       chat_id: process.env.CHAT_ID,
-      text: "Order ID: " +  id  + "\n"+ "Payment Method: Cash on delivery\nOrders: \n" + sendVendor + "Total: " + "RM" + total + "\n" + "\nDelivery: \n" + "Name - " + orderInfo.metadata.Name + "\n" + "Address - " + orderInfo.metadata.deliveryAddress + "\n" + "PhoneNo - " + orderInfo.metadata.phoneNo + "\n" + "Date - " + orderInfo.metadata.deliveryDate
-    }
-    ).then(function(data)
-    {
+      text: text,
+    })
+    .then(function (data) {
       console.log("Telegram message sent");
       console.log(sendCustomer);
     });
-   
-    let transporter = nodemailer.createTransport(options);
-    const email = new Email({
-      message: {
-        from: 'sprouty.co@gmail.com',
-        subject: "Your Majoh E-receipt"
-      },
-      // uncomment below to send emails in development/test env:
-      // send: true
-      transport: transporter,
-      
-    });
+  /* Email */
+  let transporter = nodemailer.createTransport(options);
+  const email = new Email({
+    message: {
+      from: "sprouty.co@gmail.com",
+      subject: "Your Majoh E-receipt",
+    },
+    // uncomment below to send emails in development/test env:
+    // send: true
+    transport: transporter,
+  });
 
-    email
+  email
     .send({
-      template: 'html',
+      template: "html",
       message: {
-        to: orderInfo.metadata.customerEmail
+        to: orderInfo.metadata.customerEmail,
+        cc: process.env.EMAIL_USER,
       },
       locals: {
         orderData: sendCustomer,
         orderID: id,
-        orderTotal: total ,
-        address: orderInfo.metadata.deliveryAddress
-      }
+        orderTotal: total,
+        address: orderInfo.metadata.deliveryAddress,
+      },
     })
-    .then(res => {
-      console.log('res.originalMessage', res.originalMessage)
-    
+    .then((res) => {
+      console.log("res.originalMessage", res.originalMessage);
     })
     .catch(console.error);
-  
-    return batch.commit().then(function () {
-      res.json({received: true});
-    }).catch((error) => {
-      console.log(error);
-      return;
-    });
 
+  try {
+    await batch.commit();
+    res.json({ received: true });
+  } catch (error) {
+    console.log(error);
+    return;
+  }
 }
 payCashOnDeliveryApp.post("/", (req, res) => {
   try {
@@ -202,10 +266,205 @@ payCashOnDeliveryApp.post("/", (req, res) => {
     });
   }
 });
+exports.payCashOnDelivery = functions.https.onRequest(payCashOnDeliveryApp);
 
-exports.payCashOnDelivery = functions.https.onRequest(
-  payCashOnDeliveryApp
-);
+/* (Bazaar) Cash on Delivery Checkout */
+const payBazaarCoDApp = express();
+payBazaarCoDApp.use(cors);
+
+function payBazaarCoD(req, res) {
+  const orderInfo = JSON.parse(req.body);
+
+  const idexample = uuid();
+  const id = idexample.substr(idexample.length - 6);
+  orderInfo.id = id;
+
+  let timeID = time();
+  let batch = db.batch();
+  let customerRef = db
+    .collection("stripe_customers")
+    .doc(orderInfo.metadata.uID)
+    .collection("paid_orders")
+    .doc(orderInfo.id);
+
+  /* (Bazaar) Logs all orders inside 'bazaar_orderlogs collection' */
+  let ownRef = db.collection("bazaar_orderlogs").doc(timeID);
+  batch.set(customerRef, { orderInfo });
+  batch.set(ownRef, { orderInfo });
+  console.log(orderInfo);
+
+  let total = 0;
+  let sendCustomer = {};
+  let i;
+
+  let results = orderInfo.display_items.reduce(function (results, org) {
+    (results[org.vendor.uid] = results[org.vendor.uid] || []).push(org);
+    return results;
+  }, {});
+
+  for (i = 0; i < orderInfo.display_items.length; i++) {
+    total +=
+      orderInfo.display_items[i].amount * orderInfo.display_items[i].quantity;
+    sendCustomer[orderInfo.display_items[i].name] =
+      orderInfo.display_items[i].quantity +
+      "   x   " +
+      "RM " +
+      orderInfo.display_items[i].amount / 100;
+  }
+
+  Object.keys(results).map((key, index) => {
+    var sendVendorText = "";
+    let totalVendor = 0;
+    for (i = 0; i < results[key].length; i++) {
+      totalVendor += results[key][i].amount * results[key][i].quantity;
+      sendVendorText +=
+        results[key][i].quantity + "   x   " + results[key][i].name + "\n";
+    }
+    let text =
+      "Order ID: " +
+      id +
+      "\n" +
+      "Payment Method: Cash on delivery\nOrders: \n" +
+      sendVendorText +
+      "Total: " +
+      "RM " +
+      (totalVendor / 100).toFixed(2) +
+      "\n" +
+      "\nDelivery: \n" +
+      "Name - " +
+      orderInfo.metadata.Name +
+      "\n" +
+      "Address - " +
+      orderInfo.metadata.deliveryAddress +
+      "\n" +
+      "PhoneNo - " +
+      orderInfo.metadata.phoneNo +
+      "\n" +
+      "Date - " +
+      orderInfo.metadata.deliveryDate;
+
+    /**  (Vendor) Notify each vendor involved inside the order */
+    return api
+      .sendMessage({
+        chat_id: results[key][0].vendor.telegramId,
+        text: text,
+      })
+      .then(function (data) {
+        console.log("Telegram message sent");
+        console.log(sendCustomer);
+      });
+  });
+
+  total = (total / 100).toFixed(2);
+
+  /* Twilio WhatsApp 
+  client.messages
+    .create({
+      mediaUrl: [
+        "https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80",
+      ],
+      from: "whatsapp:+14155238886",
+      body: text,
+      to: "whatsapp:+60136887507",
+    })
+    .then((message) => console.log(message.sid));
+    */
+
+  /* (Customer) Email setup*/
+  let transporter = nodemailer.createTransport(options);
+  const email = new Email({
+    message: {
+      from: process.env.EMAIL_USER,
+      subject: `Order #${orderInfo.id} Majoh Receipt`,
+    },
+    // uncomment below to send emails in development/test env:
+    // send: true
+    transport: transporter,
+  });
+
+  /** (Customer) Send receipt & keep a copy in our inbox*/
+  email
+    .send({
+      template: "html",
+      message: {
+        to: orderInfo.metadata.customerEmail,
+        cc: process.env.EMAIL_USER,
+      },
+      locals: {
+        orderData: sendCustomer,
+        orderID: id,
+        orderTotal: total,
+        address: orderInfo.metadata.deliveryAddress,
+      },
+    })
+    .then((res) => {
+      console.log("res.originalMessage", res.originalMessage);
+    })
+    .catch(console.error);
+
+  return batch
+    .commit()
+    .then(function () {
+      res.json({ received: true });
+    })
+    .catch((error) => {
+      console.log(error);
+      return;
+    });
+}
+payBazaarCoDApp.post("/", (req, res) => {
+  try {
+    payBazaarCoD(req, res);
+  } catch (e) {
+    console.log(e);
+    send(res, 500, {
+      error: `The server received an unexpected error. Please try again and contact the site admin if the error persists.`,
+    });
+  }
+});
+
+exports.payBazaarCoD = functions.https.onRequest(payBazaarCoDApp);
+
+/* (Majoh) Contact form through Telegram */
+const contactMajohApp = express();
+contactMajohApp.use(cors);
+function contactMajoh(req, res) {
+  const enquiry = JSON.parse(req.body);
+
+  let text =
+    "name: " +
+    enquiry.name +
+    "\n" +
+    "email: " +
+    enquiry.email +
+    "\n" +
+    "phone: " +
+    enquiry.phone +
+    "\n\n" +
+    "message: \n" +
+    enquiry.message;
+
+  return api
+    .sendMessage({
+      chat_id: process.env.CHAT_ID,
+      text: text,
+    })
+    .then(function (data) {
+      console.log("Telegram message sent");
+    });
+}
+contactMajohApp.post("/", (req, res) => {
+  try {
+    contactMajoh(req, res);
+  } catch (e) {
+    console.log(e);
+    send(res, 500, {
+      error: `The server received an unexpected error. Please try again and contact the site admin if the error persists.`,
+    });
+  }
+});
+
+exports.contactMajoh = functions.https.onRequest(contactMajohApp);
 
 
 

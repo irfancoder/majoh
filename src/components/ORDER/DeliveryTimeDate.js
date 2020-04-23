@@ -54,12 +54,28 @@ const DeliveryTimeDate = ({ date, handleSetDate }) => {
           gutterBottom
           style={{ marginTop: "2em", fontWeight: "500" }}
         >
-          Deliveries will be made within the following timeframe:
+          Penghantaran makanan akan dibuat pada waktu tertera:
+          <br />
+          <em>Food delivery will be made within the following timeframe:</em>
+          <br />
         </Typography>
-        <Typography variant="body2" gutterBottom style={{ marginLeft: "2em" }}>
-          <p>BREAKFAST - 8AM-9AM</p>
-          <p>LUNCH - 11AM-12PM</p>
-          <p>DINNER - 5PM-6PM</p>
+        <Typography
+          variant="body2"
+          color="textSecondary"
+          gutterBottom
+          style={{ marginLeft: "2em" }}
+        >
+          <p>3PM-5PM</p>
+        </Typography>
+        <Typography
+          variant="body2"
+          gutterBottom
+          style={{ marginTop: "2em", fontWeight: "500" }}
+        >
+          Buat masa ini, hanya Cash on Delivery sahaja
+          <br />
+          <em>Only Cash on Delivery is available </em>
+          <br />
         </Typography>
       </div>
     </MuiPickersUtilsProvider>

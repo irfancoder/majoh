@@ -16,15 +16,24 @@ const SignUpModal = () => {
             email: authResult.user.email,
             uid: authResult.user.uid,
           };
+
           db.collection("stripe_customers")
             .doc(customer.uid)
-            .set(customer)
-            .then(function () {
-              console.log("Document successfully written!");
-            })
-            .catch(function (error) {
-              console.error("Error writing document: ", error);
+            .get()
+            .then((doc) => {
+              if (!doc.exists) {
+                db.collection("stripe_customers")
+                  .doc(customer.uid)
+                  .set(customer)
+                  .then(function () {
+                    console.log("Document successfully written!");
+                  })
+                  .catch(function (error) {
+                    console.error("Error writing document: ", error);
+                  });
+              }
             });
+
           return console.log(customer);
         },
         uiShown: function () {
@@ -33,7 +42,8 @@ const SignUpModal = () => {
           // document.getElementById("loader").style.display = "none";
         },
       },
-      signInSuccessUrl: "/account",
+      signInSuccessUrl:
+        window.location.protocol + "//" + window.location.host + "/account",
       signInOptions: [
         instance.auth.EmailAuthProvider.PROVIDER_ID,
         instance.auth.GoogleAuthProvider.PROVIDER_ID,

@@ -104,7 +104,7 @@ const Footer = () => {
         <Typography variant="body2">
           Majoh is a kitchen food delivery service company. We deliver food that
           belongs to the Malaysian families for breakfast, lunch &amp; dinner.
-          Kita mula di Miri!
+          Kita mula dari Sarawak!
         </Typography>
       </FooterDescription>
       <AdvertisingContainer>

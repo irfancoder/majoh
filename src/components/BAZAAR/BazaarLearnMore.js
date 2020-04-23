@@ -71,10 +71,11 @@ const Thumbnail = styled.img`
   width: 100%;
 `;
 
-const LearnMore = ({ data, addOrder }) => {
+const LearnMore = ({ data, context, addOrder }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [menu, setMenu] = React.useState({});
+  const [openOrder, setOpenOrder] = React.useState(false);
   const handleClickOpen = (info) => {
     setOpen(true);
     setMenu(info);
@@ -114,13 +115,13 @@ const LearnMore = ({ data, addOrder }) => {
                 </Typography>
               </div>
 
-              <VendorProfile />
+              <VendorProfile vendor={menu.vendor} />
               <BottomContent>
-                <Typography className={classes.description} variant="caption">
-                  Food will be fulfilled by delivery.
+                <Typography className={classes.description} variant="body1">
+                  Delivery time: <b>3-5pm</b>
                 </Typography>
                 <Typography className={classes.price} variant="h5">
-                  RM {menu.price}
+                  RM {Number(menu.price).toFixed(2)}
                   {/* <Tooltip title="pax = ~200g" placement="top-start">
                     <span style={{ fontSize: "14px" }}> / pax*</span>
                   </Tooltip> */}
@@ -135,7 +136,7 @@ const LearnMore = ({ data, addOrder }) => {
             variant="outlined"
             color="primary"
             disableElevation
-            onClick={() => addOrder(menu)}
+            onClick={() => addOrder(context)}
           >
             Order
           </Button>

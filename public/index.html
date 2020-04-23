@@ -3,6 +3,63 @@
   <head>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-160052906-3"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "UA-160052906-3");
+    </script>
+
+    <!--  Facebook Pixel -->
+
+    <script type="text/javascript">
+      !(function (f, b, e, v, n, t, s) {
+        if (f.fbq) return;
+        n = f.fbq = function () {
+          n.callMethod
+            ? n.callMethod.apply(n, arguments)
+            : n.queue.push(arguments);
+        };
+        if (!f._fbq) f._fbq = n;
+        n.push = n;
+        n.loaded = !0;
+        n.version = "2.0";
+        n.queue = [];
+        t = b.createElement(e);
+        t.async = !0;
+        t.src = v;
+        s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s);
+      })(
+        window,
+        document,
+        "script",
+        "https://connect.facebook.net/en_US/fbevents.js"
+      );
+      fbq("init", "691378428346130");
+      fbq("track", "PageView");
+      function registerVendor() {
+        fbq("track", "Lead");
+        fbq("track", "PageView");
+      }
+    </script>
+    <noscript>
+      <img
+        height="1"
+        width="1"
+        src="https://www.facebook.com/tr?id=691378428346130&ev=PageView
+      &noscript=1"
+      />
+    </noscript>
+
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,7 +67,7 @@
     <meta name="title" content="Majoh" />
     <meta
       name="description"
-      content="Majoh is a kitchen food delivery service company. We deliver food that belongs to the Malaysian families for breakfast, lunch & dinner. Kita mula di Miri!"
+      content="Majoh is a kitchen food delivery service company. We deliver food that belongs to the Malaysian families for breakfast, lunch & dinner. Kita mula dari Sarawak!"
     />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
@@ -33,7 +90,7 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Majoh | Miri's Humble Kitchen Food Delivery</title>
+    <title>Majoh | A Humble Kitchen Food Delivery</title>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

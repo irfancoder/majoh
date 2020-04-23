@@ -8,7 +8,7 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
-import { OrderConsumer } from "../../utils/context";
+import { OrderConsumer } from "../../utils/contextbazaar";
 import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles({
@@ -49,8 +49,8 @@ const OrderList = ({ order }) => {
       <Table className={classes.table} aria-label="spanning table">
         <TableHead>
           <TableRow>
-            <TableCell align="center">Qty</TableCell>
             <TableCell>Item</TableCell>
+            <TableCell align="center">Qty</TableCell>
 
             <TableCell align="right">Unit (RM)</TableCell>
             <TableCell align="right">Price (RM)</TableCell>
@@ -63,8 +63,8 @@ const OrderList = ({ order }) => {
           }}
         >
           {order.length > 0 ? (
-            order.map((item) => {
-              return <OrderItem item={item} classes={classes} />;
+            order.map((item, index) => {
+              return <OrderItem key={index} item={item} classes={classes} />;
             })
           ) : (
             <TableRow>
@@ -94,11 +94,11 @@ const OrderList = ({ order }) => {
                     <TableCell rowSpan={3} />
                     <TableCell colSpan={2}>Subtotal (RM)</TableCell>
                     <TableCell align="right">
-                      {context.invoice.subtotal}
+                      RM {context.invoice.subtotal}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Service charge</TableCell>
+                    <TableCell>Service charge (RM 0)</TableCell>
                     <TableCell align="right">
                       {/* {context.invoice.subtotal > 15
                         ? `${context.invoice.serviceRate * 100} %`
@@ -110,7 +110,9 @@ const OrderList = ({ order }) => {
                   </TableRow>
                   <TableRow>
                     <TableCell colSpan={2}>Total (RM)</TableCell>
-                    <TableCell align="right">{context.invoice.total}</TableCell>
+                    <TableCell align="right">
+                      RM {context.invoice.total}
+                    </TableCell>
                   </TableRow>
                 </React.Fragment>
               );
@@ -128,6 +130,7 @@ const OrderItem = ({ item, classes }) => {
       {(context) => {
         return (
           <TableRow key={item.item}>
+            <TableCell>{item.item}</TableCell>
             <TableCell align="center">
               <TextField
                 className={classes.qty}
@@ -152,8 +155,7 @@ const OrderItem = ({ item, classes }) => {
               />
               x
             </TableCell>
-            <TableCell>{item.item}</TableCell>
-            <TableCell align="right">{item.price}</TableCell>
+            <TableCell align="right">{ccyFormat(item.price)}</TableCell>
             <TableCell align="right">{ccyFormat(item.total)}</TableCell>
           </TableRow>
         );

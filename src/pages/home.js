@@ -11,16 +11,16 @@ import {
 import { groupBy } from "../utils";
 import { Helmet } from "react-helmet";
 import TabComponent from "../components/BAZAAR/Tabs";
-import Box from '@material-ui/core/Box';
+import Box from "@material-ui/core/Box";
 import favicon from "../assets/images/favicon.ico";
+import color from "../styles/color";
+import { Link } from "react-router-dom";
 
-const MenuHeader = styled(Typography)`
-  text-transform: uppercase;
-  margin: 1em;
-  text-align: center;
-  alignItems: center;
-  justify:center;
-`;
+// const Link = styled.a`
+//   margin-top: 2em;
+//   align-self: center;
+//   color: ${color.red};
+// `;
 
 const meal = {
   breakfast: {
@@ -54,7 +54,7 @@ const Home = () => {
     console.log(sortedMenu);
 
     return Object.keys(sortedMenu).map((key, index) => {
-      return <ParentMenu meal={meal[key]} menu={sortedMenu[key]} />;
+      return <ParentMenu key={index} meal={meal[key]} menu={sortedMenu[key]} />;
     });
   };
 
@@ -62,13 +62,18 @@ const Home = () => {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Majoh | Miri's Humble Kitchen Food Delivery</title>
+        <title>Majoh | A Humble Kitchen Food Delivery</title>
         <link rel="canonical" href="http://majoh.com.my" />
         <link rel="icon" type="image/png" href={favicon} sizes="16x16" />
       </Helmet>
 
-      <div>
-        
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
         <Banner />
 
         {/*
@@ -77,10 +82,24 @@ const Home = () => {
       
         </]MenuHeader>
         */}
-      
-        <TabComponent>
 
-        </TabComponent>
+        <TabComponent />
+        <Typography
+          style={{ alignSelf: "center", marginTop: "4em" }}
+          variant="body1"
+        >
+          Berminat untuk berniaga dengan Majoh?
+        </Typography>
+        <Link
+          style={{
+            marginTop: "2em",
+            alignSelf: "center",
+            color: color.red,
+          }}
+          to="/register-vendor"
+        >
+          Daftar sebagai vendor
+        </Link>
       </div>
     </>
   );

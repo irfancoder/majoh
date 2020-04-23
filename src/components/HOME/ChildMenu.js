@@ -59,7 +59,7 @@ const ChildMenu = ({ menu }) => {
                 >
                   Order
                 </Button>
-                <LearnMore data={menu} addOrder={context.addOrder} />
+                {/* <LearnMore data={menu} addOrder={context.addOrder} /> */}
               </Fragment>
             );
           }}

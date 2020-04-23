@@ -11,7 +11,6 @@ import {
 
 const Container = styled.img`
   border-radius: 8px;
-
   width: 100%;
   height: auto;
 `;
@@ -22,8 +21,8 @@ const Banner = () => {
 
     const bannerData = useFirestoreCollectionData(ref);
 
-    return bannerData.map((promo) => {
-      return <Container src={promo.image} alt={promo.alt} />;
+    return bannerData.map((promo, index) => {
+      return <Container key={index} src={promo.image} alt={promo.alt} />;
     });
   };
 
@@ -32,7 +31,7 @@ const Banner = () => {
       fallback={<p>opening the shop...</p>}
       traceId={"load-burrito-status"}
     >
-      <Carousel showStatus="false">
+      <Carousel showStatus={false}>
         <PromoBanner />
       </Carousel>
     </SuspenseWithPerf>

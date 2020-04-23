@@ -37,7 +37,9 @@ const DeliveryAddress = ({ handleDrawer }) => {
         </span>
       </Typography>
     ) : (
-      <Typography variant="body">Fill your address in Account.</Typography>
+      <Typography variant="body" color="primary">
+        Fill in your address in Account
+      </Typography>
     );
   };
 
@@ -59,11 +61,13 @@ const DeliveryAddress = ({ handleDrawer }) => {
             <Address />
           </SuspenseWithPerf>
         ) : (
-          <Typography variant="body">Sign in/up at Account</Typography>
+          <Typography variant="body" color="primary">
+            Sign in/up at Account
+          </Typography>
         )}
       </CardContent>
       <CardActions className={classes.action}>
-        <Link to="/account">
+        <Link style={{ textDecoration: "none" }} to="/account">
           <Button onClick={handleDrawer(false)} size="small">
             edit
           </Button>

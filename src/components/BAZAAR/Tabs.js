@@ -1,5 +1,4 @@
-import React from "react";
-import {useState, useEffect} from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
@@ -14,9 +13,7 @@ import {
 import { groupBy } from "../../utils/index";
 import ParentMenu from "../HOME/ParentMenu";
 import BazaarParentMenu from "../BAZAAR/BazaarParentMenu";
-import { Grid } from "@material-ui/core";
-import LocationDropDown from "../BAZAAR/LocationDropdown";
-import SearchBar from "../BAZAAR/SearchBar";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -150,19 +147,19 @@ export default function TabComponent() {
     console.log(sortedMenu);
 
     return Object.keys(sortedMenu).map((key, index) => {
-      return <ParentMenu meal={meal[key]} menu={sortedMenu[key]} />;
+      return <ParentMenu key={index} meal={meal[key]} menu={sortedMenu[key]} />;
     });
   };
 
   const BazaarData = () => {
     const menuRef = useFirestore().collection("bazaar_menu");
     const dataMenu = useFirestoreCollectionData(menuRef);
-
+    console.log(dataMenu);
     return <BazaarParentMenu menu={dataMenu} />;
   };
 
   const classes = useStyles();
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(1);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -176,26 +173,18 @@ export default function TabComponent() {
         onChange={handleChange}
         aria-label="simple tabs example"
       >
-        <Tab label="MAJOH" {...a11yProps(0)} />
-        <Tab label="BAZAAR" {...a11yProps(1)} />
+        <Tab disabled label="MAJOH" {...a11yProps(0)} />
+        <Tab label="BAZAAR RAMADHAN" {...a11yProps(1)} />
       </Tabs>
-      <TabPanel value={value} index={0}>
+      {/* <TabPanel value={value} index={0}>
         <SuspenseWithPerf
           fallback={<p>loading delicious food...</p>}
           traceId={"load-burrito-status"}
         >
           <MajohData />
         </SuspenseWithPerf>
-      </TabPanel>
+      </TabPanel> */}
       <TabPanel value={value} index={1}>
-        <Grid container spacing={3}>
-          <Grid item xs={10}>
-            <SearchBar></SearchBar>
-          </Grid>
-          <Grid item xs={2}>
-            <LocationDropDown></LocationDropDown>
-          </Grid>
-        </Grid>
         <SuspenseWithPerf
           fallback={<p>loading delicious food...</p>}
           traceId={"load-burrito-status"}

@@ -16,16 +16,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ContactCard = () => {
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     name: "",
     email: "",
     phone: "",
     message: "",
   });
+  const [disabled, setDisabled] = useState(false);
+
   const classes = useStyles();
 
   const handleInput = (event) => {
     setState({ ...state, [event.target.name]: event.target.value });
+  };
+
+  const redirect = () => {
+    if (disabled) {
+      return;
+    }
+    setDisabled(true);
+    // Send
+    fetch(" https://us-central1-majoh-8eea2.cloudfunctions.net/contactMajoh", {
+      method: "POST",
+      body: JSON.stringify(state),
+    }).then((response) => {
+      return console.log(response.json());
+    });
+    setDisabled(false);
+    setState({
+      name: "",
+      email: "",
+      phone: "",
+      message: "",
+    });
+    alert("Message sent. We will contact you soon");
   };
 
   return (
@@ -46,7 +70,9 @@ const ContactCard = () => {
         </CardContent>
 
         <CardActions style={{ justifyContent: "flex-end" }}>
-          <Button onClick={null}>Submit</Button>
+          <Button disabled={disabled} onClick={redirect}>
+            {disabled ? "Submitting..." : `Submit`}
+          </Button>
         </CardActions>
       </Card>
     </div>

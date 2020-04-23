@@ -67,3 +67,50 @@ export function stringToDate(_date) {
   var formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
   return formatedDate;
 }
+
+export function getLocations() {
+  const location = {
+    MIRI: [
+      "Piasau",
+      "Krokop",
+      "Pujut",
+      "Padang Kerbau",
+      "Bandar Miri",
+      "Senadin",
+      "Permyjaya",
+      "Tudan",
+      "Vista",
+      "Lutong",
+      "Lambir",
+      "Taman Tunku",
+      "Lopeng",
+      "Morsjaya",
+      "Hospital Miri",
+      "Riam",
+      "Airport",
+      "Bumiko",
+      "Tanjong",
+      "Bekenu",
+      "Sibuti",
+    ],
+    KUCHING: [
+      "Batu Kawa",
+      "Bandar Kuching",
+      "Petrajaya",
+      "Bintawa",
+      "Waterfront",
+      "Tabuan Jaya",
+      "Padawan",
+      "Kota Sentosa",
+      "Kampung Stutong",
+    ],
+    BINTULU: [
+      "Parkcity Commerce Square",
+      "Kampung Baru Sebuan Besar",
+      "Tanjung Kidurong",
+      "Medan Mall",
+      "Kampung Assyakirin",
+    ],
+  };
+  return location;
+}
