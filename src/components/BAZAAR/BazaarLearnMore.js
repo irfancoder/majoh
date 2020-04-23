@@ -4,13 +4,13 @@ import styled from "styled-components";
 import dimensions from "../../styles/dimensions";
 import {
   Typography,
-  Tooltip,
   Dialog,
   Button,
   DialogActions,
   DialogContent,
 } from "@material-ui/core";
 import VendorProfile from "./VendorProfile";
+import { formatAMPM } from "../../utils";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
   price: {
     textAlign: "right",
+    alignSelf: "bottom",
   },
 }));
 
@@ -60,6 +61,7 @@ const BottomContent = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: flex-end;
   margin-top: 1em;
 
   @media (max-width: ${dimensions.maxwidthTablet}px) {
@@ -75,7 +77,7 @@ const LearnMore = ({ data, context, addOrder }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [menu, setMenu] = React.useState({});
-  const [openOrder, setOpenOrder] = React.useState(false);
+
   const handleClickOpen = (info) => {
     setOpen(true);
     setMenu(info);
@@ -83,6 +85,25 @@ const LearnMore = ({ data, context, addOrder }) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const Timing = ({ vendor, classes }) => {
+    console.log(vendor);
+    return (
+      <Typography className={classes.description} variant="body1">
+        {vendor.start ? (
+          <div>
+            <p>Delivery time:</p> <br />
+            <b>
+              {formatAMPM(vendor.start.toDate()) || " 3 PM"}-
+              {formatAMPM(vendor.end.toDate()) || "5 PM"}
+            </b>
+          </div>
+        ) : (
+          "No delivery time set"
+        )}
+      </Typography>
+    );
   };
 
   return (
@@ -114,19 +135,23 @@ const LearnMore = ({ data, context, addOrder }) => {
                   {menu.description}
                 </Typography>
               </div>
+              <div>
+                {/* <Typography className={classes.description} variant="body1">
+                  Delivery time:
+                  <b>
+                    {/* {menu.vendor.start.toDate() || " 3 PM"}-
+                    {menu.vendor.end.toDate() || "5 PM"} 
+                  </b>
+                </Typography> */}
 
-              <VendorProfile vendor={menu.vendor} />
-              <BottomContent>
-                <Typography className={classes.description} variant="body1">
-                  Delivery time: <b>3-5pm</b>
-                </Typography>
-                <Typography className={classes.price} variant="h5">
-                  RM {Number(menu.price).toFixed(2)}
-                  {/* <Tooltip title="pax = ~200g" placement="top-start">
-                    <span style={{ fontSize: "14px" }}> / pax*</span>
-                  </Tooltip> */}
-                </Typography>
-              </BottomContent>
+                <Timing vendor={menu.vendor} classes={classes} />
+                <BottomContent>
+                  <VendorProfile vendor={menu.vendor} />
+                  <Typography className={classes.price} variant="h5">
+                    RM {Number(menu.price).toFixed(2)}
+                  </Typography>
+                </BottomContent>
+              </div>
             </Content>
           </Container>
         </DialogContent>

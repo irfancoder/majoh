@@ -1,8 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-
 import Typography from "@material-ui/core/Typography";
-
 import DateFnsUtils from "@date-io/date-fns";
 import {
   MuiPickersUtilsProvider,
@@ -49,7 +47,7 @@ const DeliveryTimeDate = ({ date, handleSetDate }) => {
           }}
         />
 
-        <Typography
+        {/* <Typography
           variant="body2"
           gutterBottom
           style={{ marginTop: "2em", fontWeight: "500" }}
@@ -66,13 +64,13 @@ const DeliveryTimeDate = ({ date, handleSetDate }) => {
           style={{ marginLeft: "2em" }}
         >
           <p>3PM-5PM</p>
-        </Typography>
+        </Typography> */}
         <Typography
           variant="body2"
           gutterBottom
           style={{ marginTop: "2em", fontWeight: "500" }}
         >
-          Buat masa ini, hanya Cash on Delivery sahaja
+          Buat masa ini, hanya Cash on Delivery sahaja diterima
           <br />
           <em>Only Cash on Delivery is available </em>
           <br />

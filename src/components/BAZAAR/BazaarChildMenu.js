@@ -15,6 +15,7 @@ import LearnMore from "./BazaarLearnMore";
 import { OrderConsumer } from "../../utils/contextbazaar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { Snackbar } from "@material-ui/core";
+import { isUserLoggedIn } from "../../utils";
 const useStyles = makeStyles({
   root: {
     marginBottom: "1em",
@@ -43,6 +44,7 @@ function Alert(props) {
 const ChildMenu = ({ menu }) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [openSignUp, setOpenSignUp] = useState(false);
 
   const orderSuccess = () => {
     setOpen(true);
@@ -54,11 +56,16 @@ const ChildMenu = ({ menu }) => {
     }
 
     setOpen(false);
+    setOpenSignUp(false);
   };
 
   const addOrderToCart = (context) => {
-    context.addOrder(menu);
-    orderSuccess();
+    if (isUserLoggedIn()) {
+      context.addOrder(menu);
+      orderSuccess();
+    } else {
+      setOpenSignUp(true);
+    }
   };
 
   return (
@@ -119,6 +126,11 @@ const ChildMenu = ({ menu }) => {
       <Snackbar open={open} autoHideDuration={1500} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
           {menu.item} is added to your order!
+        </Alert>
+      </Snackbar>
+      <Snackbar open={openSignUp} autoHideDuration={2000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="info">
+          Please sign up in Account
         </Alert>
       </Snackbar>
     </Card>

@@ -62,7 +62,7 @@ const Home = () => {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Majoh | A Humble Kitchen Food Delivery</title>
+        <title>Majoh | Bazaar Ramadhan Online</title>
         <link rel="canonical" href="http://majoh.com.my" />
         <link rel="icon" type="image/png" href={favicon} sizes="16x16" />
       </Helmet>

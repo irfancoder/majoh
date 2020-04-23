@@ -133,7 +133,7 @@ export default function ModalCheckout({ total, orders }) {
           <Typography variant="body2" component="p">
             {orders.metadata.deliveryDate}
           </Typography>
-          <Typography
+          {/* <Typography
             className={classes.sectionHeader}
             variant="body1"
             color="textSecondary"
@@ -143,7 +143,7 @@ export default function ModalCheckout({ total, orders }) {
           </Typography>
           <Typography variant="body2" component="p">
             3 PM - 5 PM
-          </Typography>
+          </Typography> */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
