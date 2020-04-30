@@ -98,7 +98,7 @@ const OrderList = ({ order }) => {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Service charge (RM 0)</TableCell>
+                    <TableCell>Delivery Service</TableCell>
                     <TableCell align="right">
                       {/* {context.invoice.subtotal > 15
                         ? `${context.invoice.serviceRate * 100} %`

@@ -18,12 +18,15 @@ var uuid = require("uuid-random");
 var api = new telegram({
   token: process.env.TELEGRAM_TOKEN,
 });
-
-var twilio = require("twilio");
+// require("dotenv").load();
+// var twilio = require("twilio");
 var accountSid = process.env.TWILIO_SID; // Twilio Account SID
 var authToken = process.env.TWILIO_TOKEN; // Twilio Auth Token
-
-var client = new twilio(accountSid, authToken);
+// console.log("AC3140e0f1ee0dc79a3e42352fdc0e7838", authToken);
+var client = require("twilio")(
+  "AC3140e0f1ee0dc79a3e42352fdc0e7838",
+  "2516d0b9afd33e9eb86dc2506b925c74"
+);
 
 /*
 const ALGOLIA_ID = "07CVJHF6V6";
@@ -101,32 +104,21 @@ exports.createStripeCustomer = functions.auth.user().onCreate(async (user) => {
 */
 const whatsappNotifApp = express();
 whatsappNotifApp.use(cors);
-function whatsappNotif(req, res){
+function whatsappNotif(req, res) {
   client.messages
-  .create({
-     mediaUrl: ['https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80'],
-     from: 'whatsapp:+14155238886',
-     body: `It's taco time!`,
-     to: 'whatsapp:+15017122661'
-   })
-  .then(message => console.log(message.sid));
+    .create({
+      mediaUrl: [
+        "https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80",
+      ],
+      from: "whatsapp:+14155238886",
+      body: `It's taco time!`,
+      to: "whatsapp:+15017122661",
+    })
+    .then((message) => console.log(message.sid));
   return res.send(200);
 }
 
-payCashOnDeliveryApp.post("/", (req, res) => {
-  try {
-    whatsappNotif(req, res);
-  } catch (e) {
-    console.log(e);
-    send(res, 500, {
-      error: `The server received an unexpected error. Please try again and contact the site admin if the error persists.`,
-    });
-  }
-});
-
-exports.whatsappNotif = functions.https.onRequest(
-  whatsappNotifApp
-);
+exports.whatsappNotif = functions.https.onRequest(whatsappNotifApp);
 
 /* (Majoh) Cash on Delivery Checkout */
 const payCashOnDeliveryApp = express();
@@ -266,6 +258,18 @@ payCashOnDeliveryApp.post("/", (req, res) => {
     });
   }
 });
+
+payCashOnDeliveryApp.post("/", (req, res) => {
+  try {
+    whatsappNotif(req, res);
+  } catch (e) {
+    console.log(e);
+    send(res, 500, {
+      error: `The server received an unexpected error. Please try again and contact the site admin if the error persists.`,
+    });
+  }
+});
+
 exports.payCashOnDelivery = functions.https.onRequest(payCashOnDeliveryApp);
 
 /* (Bazaar) Cash on Delivery Checkout */
@@ -343,8 +347,8 @@ function payBazaarCoD(req, res) {
       "Date - " +
       orderInfo.metadata.deliveryDate;
 
-    /**  (Vendor) Notify each vendor involved inside the order */
-    return api
+    /**  (Vendor) Notify each vendor involved inside the order through Telegram*/
+    api
       .sendMessage({
         chat_id: results[key][0].vendor.telegramId,
         text: text,
@@ -353,22 +357,21 @@ function payBazaarCoD(req, res) {
         console.log("Telegram message sent");
         console.log(sendCustomer);
       });
+
+    /* (Vendor) Twilio WhatsApp Trial */
+    return client.messages
+      .create({
+        mediaUrl: [
+          "https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80",
+        ],
+        from: "whatsapp:+14155238886",
+        body: text,
+        to: "whatsapp:+" + results[key][0].vendor.phone,
+      })
+      .then((message) => console.log(message.sid));
   });
 
   total = (total / 100).toFixed(2);
-
-  /* Twilio WhatsApp 
-  client.messages
-    .create({
-      mediaUrl: [
-        "https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80",
-      ],
-      from: "whatsapp:+14155238886",
-      body: text,
-      to: "whatsapp:+60136887507",
-    })
-    .then((message) => console.log(message.sid));
-    */
 
   /* (Customer) Email setup*/
   let transporter = nodemailer.createTransport(options);
@@ -465,8 +468,6 @@ contactMajohApp.post("/", (req, res) => {
 });
 
 exports.contactMajoh = functions.https.onRequest(contactMajohApp);
-
-
 
 /*
 // Our app has to use express

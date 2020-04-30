@@ -34,7 +34,7 @@ const OrderProvider = (props) => {
   // const FLAT_RATE = 1.5;
   const invoiceSubtotal = subtotal(orderState);
   // const SERVICE_CHARGE = 0.2 * invoiceSubtotal + 1;
-  const SERVICE_CHARGE = 0;
+  const SERVICE_CHARGE = 3.0;
   const invoiceTaxes = SERVICE_CHARGE;
   const invoiceTotal = invoiceTaxes + invoiceSubtotal;
 

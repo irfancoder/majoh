@@ -77,7 +77,7 @@ const createOrderItem = (order_list, invoice) => {
     currency: "myr",
     quantity: 1,
     amount: invoice * 100,
-    name: "Service charge",
+    name: "Delivery service",
   };
   newList.push(service);
 
