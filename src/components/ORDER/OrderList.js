@@ -1,14 +1,20 @@
 import React from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
+import {
+  Table,
+  MenuItem,
+  TableBody,
+  TableContainer,
+  TableHead,
+  TableRow,
+  NativeSelect,
+} from "@material-ui/core";
+
 import MuiTableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TextField from "@material-ui/core/TextField";
+// import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
 import { OrderConsumer } from "../../utils/contextbazaar";
+import { getMaxNumberofOrders } from "../../utils";
 import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles({
@@ -91,26 +97,26 @@ const OrderList = ({ order }) => {
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell rowSpan={3} />
-                    <TableCell colSpan={2}>Subtotal (RM)</TableCell>
-                    <TableCell align="right">
+                    {/* <TableCell rowSpan={3} /> */}
+                    <TableCell>Subtotal (RM)</TableCell>
+                    <TableCell colSpan={3} align="right">
                       RM {context.invoice.subtotal}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell>Delivery Service</TableCell>
-                    <TableCell align="right">
-                      {/* {context.invoice.subtotal > 15
+                    <TableCell>Service charge (RM)</TableCell>
+                    {/* <TableCell colSpan={2} align="right">
+                      {context.invoice.subtotal > 15
                         ? `${context.invoice.serviceRate * 100} %`
-                        : `RM ${context.invoice.serviceRate}`} */}
-                    </TableCell>
-                    <TableCell align="right">
-                      {context.invoice.serviceCharge}
+                        : `RM ${context.invoice.serviceRate}`} 
+                    </TableCell>*/}
+                    <TableCell colSpan={3} align="right">
+                      RM {context.invoice.serviceCharge}
                     </TableCell>
                   </TableRow>
                   <TableRow>
-                    <TableCell colSpan={2}>Total (RM)</TableCell>
-                    <TableCell align="right">
+                    <TableCell>Total (RM)</TableCell>
+                    <TableCell colSpan={3} align="right">
                       RM {context.invoice.total}
                     </TableCell>
                   </TableRow>
@@ -132,7 +138,24 @@ const OrderItem = ({ item, classes }) => {
           <TableRow key={item.item}>
             <TableCell>{item.item}</TableCell>
             <TableCell align="center">
-              <TextField
+              <NativeSelect
+                name="quantity"
+                value={item.qty}
+                variant="outlined"
+                onChange={(e) =>
+                  context.editOrder({ item: item, qty: e.target.value })
+                }
+                defaultValue="1"
+              >
+                {getMaxNumberofOrders().map((value) => {
+                  return (
+                    <option value={value} key={value}>
+                      {value}
+                    </option>
+                  );
+                })}
+              </NativeSelect>
+              {/* <TextField
                 className={classes.qty}
                 id="filled-number"
                 type="number"
@@ -142,6 +165,7 @@ const OrderItem = ({ item, classes }) => {
                   shrink: true,
                 }}
                 variant="standard"
+                autoFocus
                 InputProps={{
                   classes,
                   inputProps: {
@@ -152,8 +176,7 @@ const OrderItem = ({ item, classes }) => {
                 onChange={(e) =>
                   context.editOrder({ item: item, qty: e.target.value })
                 }
-              />
-              x
+              /> */}
             </TableCell>
             <TableCell align="right">{ccyFormat(item.price)}</TableCell>
             <TableCell align="right">{ccyFormat(item.total)}</TableCell>

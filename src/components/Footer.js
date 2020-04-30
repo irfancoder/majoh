@@ -54,6 +54,7 @@ const FooterCopyright = styled.div`
   text-align: center;
   padding-bottom: 0.5em;
   @media (max-width: ${dimensions.maxwidthTablet}px) {
+    display: none;
   }
 `;
 

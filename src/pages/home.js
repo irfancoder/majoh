@@ -74,7 +74,7 @@ const Home = () => {
           flexDirection: "column",
         }}
       >
-        <Banner />
+        {/* <Banner /> */}
 
         {/*
         <MenuHeader variant="h6">

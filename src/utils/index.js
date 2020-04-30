@@ -93,26 +93,31 @@ export function getLocations() {
       "Bekenu",
       "Sibuti",
     ],
-    KUCHING: [
-      "Batu Kawa",
-      "Bandar Kuching",
-      "Petrajaya",
-      "Bintawa",
-      "Waterfront",
-      "Tabuan Jaya",
-      "Padawan",
-      "Kota Sentosa",
-      "Kampung Stutong",
-    ],
-    BINTULU: [
-      "Parkcity Commerce Square",
-      "Kampung Baru Sebuan Besar",
-      "Tanjung Kidurong",
-      "Medan Mall",
-      "Kampung Assyakirin",
-    ],
+    // ,
+    // KUCHING: [
+    //   "Batu Kawa",
+    //   "Bandar Kuching",
+    //   "Petrajaya",
+    //   "Bintawa",
+    //   "Waterfront",
+    //   "Tabuan Jaya",
+    //   "Padawan",
+    //   "Kota Sentosa",
+    //   "Kampung Stutong",
+    // ],
+    // BINTULU: [
+    //   "Parkcity Commerce Square",
+    //   "Kampung Baru Sebuan Besar",
+    //   "Tanjung Kidurong",
+    //   "Medan Mall",
+    //   "Kampung Assyakirin",
+    // ],
   };
   return location;
+}
+
+export function getMaxNumberofOrders() {
+  return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 }
 
 export function formatAMPM(date) {
