@@ -83,7 +83,7 @@ const ParentMenu = ({ menu }) => {
         </Grid>
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Pagination
-            count={(filterMenu.length / state.interval).toFixed(1)}
+            count={(filterMenu.length / state.interval).toFixed(0)}
             variant="outlined"
             shape="rounded"
             onChange={handleChange}
