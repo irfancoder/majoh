@@ -2,39 +2,63 @@ import React, { useState, Fragment } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Card,
-  CardActionArea,
   CardActions,
   CardContent,
   CardMedia,
-  Button,
   Typography,
-  Avatar,
+  Chip,
+  Button
 } from "@material-ui/core";
-
+import { Link } from "react-router-dom";
 import LearnMore from "./BazaarLearnMore";
 import { OrderConsumer } from "../../utils/contextbazaar";
 import MuiAlert from "@material-ui/lab/Alert";
 import { Snackbar } from "@material-ui/core";
 import { isUserLoggedIn } from "../../utils";
+import { LocationOn, Business, Star, AccountBalanceRounded } from '@material-ui/icons';
 const useStyles = makeStyles({
   root: {
     marginBottom: "1em",
   },
   media: {
-    height: "140px",
+    height: "300px",
+    
+    paddingTop: '56.25%', // 16:9
   },
   price: {
+    display: "flex",
     textAlign: "end",
+    justifyContent: "flex-end",
+    alignItems: "baseline",
+    fontSize: "1em"
+  },
+  minOrder: {
+    textAlign: "end",
+    fontSize: "10px",
+    color: "#a4a4a4"
   },
   buttonAction: {
     display: "grid",
-    gridTemplateColumns: "1fr 3fr",
+    gridTemplateColumns: "2fr 2fr",
+  },
+  ratingArea: {
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center"
   },
   content: {
     display: "flex",
     justifyContent: "space-between",
     flexDirection: "row",
   },
+  link:{
+    textDecoration:"none",
+    color:"black",
+    "a:hover":{
+      textDecoration: "underline"
+    }
+  },
+
 });
 
 function Alert(props) {
@@ -70,30 +94,45 @@ const ChildMenu = ({ menu }) => {
 
   return (
     <Card className={classes.root}>
-      <CardMedia className={classes.media} image={menu.thumbnail || ""} />
+      {/* <a href={`/product/${menu.uid}`}> */}
+        <CardMedia className={classes.media}
+        image={menu.thumbnail || ""}
+        title={menu.item}
+        />
+          
+        
+      {/* </a>s */}
       <CardContent>
-        <Typography gutterBottom variant="h6" component="h2">
-          {menu.item}
-        </Typography>
+        <a className={classes.link} href={`/product/${menu.uid}`}>
+          <Typography gutterBottom variant="body2" component="h4">
+            {menu.item}
+          </Typography>
+        </a>
         <div className={classes.content}>
           <div style={{ display: "flex" }}>
-            <Avatar
+            {/* <Avatar
               style={{ width: "1em", height: "1em" }}
               src={menu.vendor.profile}
             >
               M
-            </Avatar>
-            <Typography
-              style={{ marginLeft: "0.5em" }}
-              className={classes.price}
-              variant="caption"
-            >
-              {menu.vendor.location || "Sarawak"}
-            </Typography>
+            </Avatar> */}
+
           </div>
         </div>
-        <Typography className={classes.price} variant="body1">
-          RM {Number(menu.price).toFixed(2)}
+        <Typography className={classes.price} variant="h6" component="h2">
+          RM {menu.price_min || ""}-{menu.price_max}<Typography className={classes.minOrder} variant="caption" component="p">
+            /kg
+          </Typography>
+        </Typography>
+        <Typography gutterBottom className={classes.minOrder} variant="caption" component="p">
+          {menu.moq || "-"}kg (Min Order)
+          </Typography>
+
+        <Typography className={classes.company} variant="body2" component="h2">
+          <Business color="disabled" fontSize="small" /> {menu.vendor.businessName || ""}
+        </Typography>
+        <Typography variant="body2" component="h2">
+          <LocationOn color="disabled" fontSize="small" /> {menu.vendor.location || ""}
         </Typography>
       </CardContent>
 
@@ -102,21 +141,26 @@ const ChildMenu = ({ menu }) => {
           {(context) => {
             return (
               <Fragment>
+                <div className={classes.ratingArea}>
+                  <Chip icon={<Star />} label="4.8" size="small" />
+                  <AccountBalanceRounded style={{ marginLeft: "0.5em" }} fontSize="small" color="disabled" />
+
+                </div>
                 <Button
                   size="small"
                   variant="outlined"
                   color="primary"
+                  href={`/product/${menu.uid}`}
                   disableElevation
-                  onClick={() => addOrderToCart(context)}
-                  // onClick={() => context.addOrder(menu)}
+                // onClick={() => addOrderToCart(context)}
                 >
-                  Order
+                  View
                 </Button>
-                <LearnMore
+                {/* <LearnMore
                   data={menu}
                   context={context}
                   addOrder={addOrderToCart}
-                />
+                /> */}
               </Fragment>
             );
           }}

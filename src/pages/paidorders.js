@@ -70,7 +70,7 @@ const PaidOrders = () => {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Paid Orders | Majoh</title>
+        <title>Orders | Majoh</title>
         <link rel="canonical" href="http://majoh.com.my/paidorders" />
         <link rel="icon" type="image/ico" href={favicon} sizes="16x16" />
       </Helmet>

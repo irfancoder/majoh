@@ -111,12 +111,12 @@ const LearnMore = ({ data, context, addOrder }) => {
       <Button
         style={{ width: "100%" }}
         size="small"
-        variant="contained"
+        variant="outlined"
         color="primary"
         disableElevation
         onClick={() => handleClickOpen(data)}
       >
-        Learn more
+        Contact
       </Button>
       <Dialog
         fullWidth={true}

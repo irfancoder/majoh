@@ -33,11 +33,11 @@ const DeliveryTimes = styled(Typography)`
 
 const ParentMenu = ({ meal, menu }) => {
   return (
-    <MenuContainer maxWidth="md">
+    <MenuContainer >
       <HeaderContainer>
         <Typography variant="h6"> {meal.title}</Typography>
         <DeliveryNote variant="caption" color="textSecondary">
-          Delivery time:{" "}
+          Delivery time:
         </DeliveryNote>
         <DeliveryTimes variant="subtitle2">
           {meal.start} - {meal.end}
@@ -47,7 +47,7 @@ const ParentMenu = ({ meal, menu }) => {
       <Grid container direction="row" justify="flex-start" xs={12} spacing={2}>
         {menu.map((item, index) => {
           return (
-            <Grid key={index} item xs={12} md={4}>
+            <Grid key={index} item xs={12} md={3}>
               <ChildMenu menu={item} />
             </Grid>
           );

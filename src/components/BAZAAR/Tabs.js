@@ -13,6 +13,8 @@ import {
 import { groupBy } from "../../utils/index";
 import ParentMenu from "../HOME/ParentMenu";
 import BazaarParentMenu from "../BAZAAR/BazaarParentMenu";
+import Tender from "../TENDER/Tender";
+import TenderTable from "../TENDER/TenderTable";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,12 +36,7 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
-    /*
-    backgroundColor: (theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: (theme.palette.common.white, 0.25),
-    },
-    */
+ 
     color: "primary",
     marginRight: theme.spacing(2),
     marginLeft: 0,
@@ -87,17 +84,17 @@ const useStyles = makeStyles((theme) => ({
 
 const meal = {
   breakfast: {
-    title: "Breakfast",
+    title: "Vegetable",
     start: "8AM",
     end: "9AM",
   },
   lunch: {
-    title: "Lunch",
+    title: "Poultry & Meat",
     start: "11AM",
     end: "12PM",
   },
   dinner: {
-    title: "Dinner",
+    title: "Fisheries",
     start: "5PM",
     end: "6PM",
   },
@@ -141,7 +138,6 @@ export default function TabComponent() {
       .collection("menu");
 
     const dataMenu = useFirestoreCollectionData(menuRef);
-
     const sortedMenu = groupBy(dataMenu, "type");
 
     console.log(sortedMenu);
@@ -171,19 +167,20 @@ export default function TabComponent() {
         centered
         value={value}
         onChange={handleChange}
-        aria-label="simple tabs example"
+        aria-label="tabs"
       >
         <Tab disabled label="MAJOH" {...a11yProps(0)} />
-        <Tab label="BAZAAR RAMADHAN" {...a11yProps(1)} />
+        <Tab label="MARKETPLACE" {...a11yProps(1)} />
+        <Tab label="TENDER" {...a11yProps(2)} />
       </Tabs>
-      {/* <TabPanel value={value} index={0}>
+      <TabPanel value={value} index={0}>
         <SuspenseWithPerf
           fallback={<p>loading delicious food...</p>}
           traceId={"load-burrito-status"}
         >
           <MajohData />
         </SuspenseWithPerf>
-      </TabPanel> */}
+      </TabPanel>
       <TabPanel value={value} index={1}>
         <SuspenseWithPerf
           fallback={<p>loading delicious food...</p>}
@@ -191,6 +188,12 @@ export default function TabComponent() {
         >
           <BazaarData />
         </SuspenseWithPerf>
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <div>
+        <TenderTable/>
+        <Tender />
+        </div>
       </TabPanel>
     </div>
   );

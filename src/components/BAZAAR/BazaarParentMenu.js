@@ -69,7 +69,7 @@ const ParentMenu = ({ menu }) => {
           <LocationDropDown handleSearch={handleSearch} />
         </Grid>
       </Grid>
-      <MenuContainer maxWidth="md">
+      <MenuContainer>
         <Grid container direction="row" justify="flex-start" spacing={2}>
           {filterMenu
             .slice(state.dataIndex - state.interval, state.dataIndex)

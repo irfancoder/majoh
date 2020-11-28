@@ -9,6 +9,7 @@ import Contact from "./pages/contact";
 import Home from "./pages/home";
 import PrivacyPolicy from "./pages/privacypolicy";
 import RegisterVendor from "./pages/register-vendor";
+import Product from './pages/product';
 import Layout from "./components/Layout";
 import color from "./styles/color";
 
@@ -45,6 +46,10 @@ const App = () => {
               <Route path="/contact" component={Contact} />
               <Route path="/privacypolicy" component={PrivacyPolicy} />
               <Route path="/register-vendor" component={RegisterVendor} />
+              <Route path="/product/:id" 
+                render={(props)=><Product {...props}/>}
+              //component={Product}
+               />
             </Switch>
           </Layout>
         </ThemeProvider>

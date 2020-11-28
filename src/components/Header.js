@@ -14,7 +14,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import color from "../styles/color";
 import Button from "@material-ui/core/Button";
 import ReceiptIcon from "@material-ui/icons/Receipt";
-import Majoh from "../assets/images/majoh_logo.png";
+import Agrobuzz from "../assets/images/agrobuzz_logo.png";
 
 import Order from "./Order";
 
@@ -24,7 +24,7 @@ import TabComponent from "../components/BAZAAR/Tabs";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
-    background: "transparent",
+    background: "white",
     boxShadow: "0 4px 8px 0 rgba(0,0,0,0);",
     [theme.breakpoints.down("xs")]: {
       top: "auto",
@@ -39,8 +39,13 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     display: "block",
-
     color: color.black,
+  },
+  logo:{
+    width: "120px",
+    [theme.breakpoints.down("xs")]: {
+      width: "80px"
+    },
   },
   search: {
     position: "relative",
@@ -92,8 +97,10 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     width: "100%",
     justifyContent: "flex-end",
+    maxHeight: "50px",
     [theme.breakpoints.up("md")]: {
       display: "none",
+      
     },
   },
   toolbar: {
@@ -194,7 +201,7 @@ export default function PrimarySearchAppBar() {
     >
       <MenuItem>
         <Link className={classes.navItem} to="/paidorders">
-          <Typography variant="subtitle1">paid orders</Typography>
+          <Typography variant="subtitle1">orders</Typography>
         </Link>
       </MenuItem>
 
@@ -218,13 +225,13 @@ export default function PrimarySearchAppBar() {
             }}
           >
             <Link to="/">
-              <img style={{ width: "120px" }} src={Majoh} alt="Majoh Logo" />
+              <img className={classes.logo} src={Agrobuzz} alt="Agrobuzz Logo" />
             </Link>
           </div>
 
           <div className={classes.sectionDesktop}>
             <Link className={classes.navItem} to="/paidorders">
-              <Typography variant="subtitle1">paid orders</Typography>
+              <Typography variant="subtitle1">orders</Typography>
             </Link>
             <Link className={classes.navItem} to="/account">
               <Typography variant="subtitle1">account</Typography>

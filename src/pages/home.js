@@ -14,6 +14,7 @@ import TabComponent from "../components/BAZAAR/Tabs";
 import Box from "@material-ui/core/Box";
 import favicon from "../assets/images/favicon.ico";
 import color from "../styles/color";
+import strings from '../styles/strings'
 import { Link } from "react-router-dom";
 
 // const Link = styled.a`
@@ -24,17 +25,17 @@ import { Link } from "react-router-dom";
 
 const meal = {
   breakfast: {
-    title: "Breakfast",
+    title: "Vegetables",
     start: "8AM",
     end: "9AM",
   },
   lunch: {
-    title: "Lunch",
+    title: "Poultry & Meat",
     start: "11AM",
     end: "12PM",
   },
   dinner: {
-    title: "Dinner",
+    title: "Fisheries",
     start: "5PM",
     end: "6PM",
   },
@@ -62,7 +63,7 @@ const Home = () => {
     <>
       <Helmet>
         <meta charSet="utf-8" />
-        <title>Majoh | Bazaar Ramadhan Online</title>
+        <title>{strings.title} | Farm to Retail B2B Marketplace</title>
         <link rel="canonical" href="http://majoh.com.my" />
         <link rel="icon" type="image/png" href={favicon} sizes="16x16" />
       </Helmet>
@@ -88,7 +89,7 @@ const Home = () => {
           style={{ alignSelf: "center", marginTop: "4em" }}
           variant="body1"
         >
-          Berminat untuk berniaga dengan Majoh?
+          Berminat untuk berniaga dengan Agrobuzz?
         </Typography>
         <Link
           style={{
