@@ -3,6 +3,7 @@ import styled from "styled-components";
 import color from "../styles/color";
 import dimensions from "../styles/dimensions";
 import Majoh from "../assets/images/majoh_logo.png";
+import Agrobuzz from '../assets/images/agrobuzz_logo.png'
 
 import { Link } from "react-router-dom";
 import { Typography } from "@material-ui/core";
@@ -98,13 +99,13 @@ const Footer = () => {
     <FooterContainer>
       <TopContent>
         <Link to="/">
-          <Logo src={Majoh} alt="Majoh Logo" />
+          <Logo src={Agrobuzz} alt="Agrobuzz Logo" />
         </Link>
       </TopContent>
       <FooterDescription>
         <Typography variant="body2">
-          Majoh is a kitchen food delivery service company. We deliver food that
-          belongs to the Malaysian families for breakfast, lunch &amp; dinner.
+          Agrobuzz is an up &amp; coming farmer-to-retail marketplace for Malaysians and beyond. 
+          We showcase the best farm produces made by local farmers and connect them to businesses like you!
           Kita mula dari Sarawak!
         </Typography>
       </FooterDescription>
@@ -119,8 +120,8 @@ const Footer = () => {
       </AdvertisingContainer>
       <AdvertisingContainer>
         <FooterCopyright>
-          © Majoh {year}. All rights reserved. Designed &amp; developed by{" "}
-          <a href="https://www.ombak.dev">ombak devhouse</a>
+          © Agrobuzz {year}. All rights reserved. Designed &amp; developed by{" "}
+          <a href="https://www.ombak.dev">Irfan Ismail</a>
         </FooterCopyright>
       </AdvertisingContainer>
     </FooterContainer>
